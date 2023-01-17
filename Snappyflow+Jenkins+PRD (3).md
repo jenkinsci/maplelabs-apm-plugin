@@ -17,7 +17,7 @@ It is a Jenkins plugin for automatically forwarding metrics, events, and service
 This plugin must be able to trouble shoot issues in jenkins using the dashboards and user must be alerted when jenkins is not working as expected. It must also collect information about the nodes and jobs running in a jenkins instance.
 
 This plugin can be installed from the Update Center (found at Manage Jenkins -> Manage Plugins) in local Jenkins installation.
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.002.png) **Success metrics**
+## **Success metrics**
 
 |**Goal**|**Metric**|
 | :-: | :-: |
@@ -28,13 +28,13 @@ This plugin can be installed from the Update Center (found at Manage Jenkins -> 
 |End User Guide||
 |Documenation for snappyflow website **(TBD with Deepa)**||
 |Usecase where jekins monitoring is helpful in debugging jenkins performance issues **(TDB with Deepa)**||
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.003.png) **Assumptions**
+##  **Assumptions**
 TBD
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.004.png) **Milestones**
+##  **Milestones**
 TBD
 
-![](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.005.png)
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.006.png) **Requirements**
+
+## **Requirements**
 
 |**Requirement**|**User Story**|**Importance**|**Jira Issue**|**Notes**|||
 | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -49,11 +49,11 @@ TBD
 |Unit-Test cases|||||||
 |End User Documentation|||||||
 |Document it per snappy flow documentation|||||||
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.007.png) **User interaction and design**
-## ![(question)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.008.png) **Open Questions**
+## **User interaction and design**
+## **Open Questions**
 
 |**Question**|**Answer**|**Date Answered**|
 | :-: | :-: | :-: |
 ||||
-## ![(warning)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.009.png) **Out of Scope**
+## **Out of Scope**
 
