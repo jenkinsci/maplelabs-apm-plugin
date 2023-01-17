@@ -9,7 +9,7 @@
 |**Tech lead**|@ lead|
 |**Technical writers**|@ writers|
 |**QA**||
-## ![(blue star)](Aspose.Words.9636b9e4-7d28-47e8-8ec7-f4ab8d44c506.001.png) **Objective**
+## **Objective**
 This document captures the requirements of snappyflow Jenkins plugin.
 
 It is a Jenkins plugin for automatically forwarding metrics, events, and service checks to a snappyflow account.
