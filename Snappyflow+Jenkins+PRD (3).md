@@ -19,7 +19,7 @@ This plugin can be installed from the Update Center (found at Manage Jenkins -> 
 ## **Success metrics**
 
 |**Goal**|**Metric**|
-|:-: |:-: |
+| :- | :- |
 |Jenkins plugin has to be in published state|Code to be reviewed and approved by jenkins team|
 |Dashboard **(TBD with Deepa)**||
 |User must be alerted when jenkins is not working as expected||
