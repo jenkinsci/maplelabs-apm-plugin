@@ -21,7 +21,7 @@ public class SnappyflowBuildListener extends RunListener<Run> {
 	
 	@Override
     public void onStarted(Run run, TaskListener listener) {
-		logger.info("Inside onStarted method");
+		logger.info("Inside onStarted method");		
 	}
 	
 	@Override

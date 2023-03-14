@@ -53,6 +53,7 @@ public class SnappyflowQueuePublisher extends PeriodicWork{
                 } else {
                     job_name = "unknown";
                 }
+                                        
                 boolean isStuck = false;
                 boolean isBuildable = false;
                 boolean isBlocked = false;
