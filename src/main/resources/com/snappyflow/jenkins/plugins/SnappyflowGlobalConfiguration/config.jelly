@@ -12,20 +12,24 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-  <f:section title="Snappyflow Plugin">
-  
-        <f:entry title="Snappyflow Jenkins Receiver URL" field="metricsReceiverUrlEntry" description="URL which the plugin reports metrics to." >
-          <f:textbox field="metricsReceiverUrl" default="${metricsReceiverUrl}" checkMethod="post" />
+  <f:section title="Snappyflow Plugin"> 
+          
+        <f:entry title="Snappyflow Project Name" field="targetProjectNameEntry" description="Project Name where API key is validated." >
+          <f:textbox field="targetProjectName" default="${targetProjectName}" checkMethod="post" />
         </f:entry>
-  
-        <f:entry title="Snappyflow API URL" field="targetApiUrlEntry" description="URL where API key is validated." >
-          <f:textbox field="targetApiUrl" default="${targetApiUrl}" checkMethod="post" />
+        
+        <f:entry title="Snappyflow Application Name" field="targetAppNameEntry" description="Application Name where API key is validated." >
+          <f:textbox field="targetAppName" default="${targetAppName}" checkMethod="post" />
+        </f:entry>
+        
+        <f:entry title="Snappyflow Instance Name" field="targetInstanceNameEntry" description="Instance Name where API key is validated." >
+          <f:textbox field="targetInstanceName" default="${targetInstanceName}" checkMethod="post" />
         </f:entry>
 
         <f:entry title="Snappyflow API Key" field="targetApiKeyEntry">
           <f:password field="targetApiKey" default="${targetApiKey}" checkMethod="post" />
         </f:entry>
-        <f:validateButton title="${%Test Key}" progress="${%Testing...}" method="testConnection" with="targetApiKey,targetApiUrl" checkMethod="post" />
+        <f:validateButton title="${%Test Key}" progress="${%Testing...}" method="testConnection" with="targetApiKey,targetProjectName,targetAppName,targetInstanceName" checkMethod="post" />
         
   </f:section>
 </j:jelly>
