@@ -17,7 +17,7 @@ It takes four simple steps to gain observability into Jenkins CI/CD pipeline.
 To configure your snappyflow-jenkins-Plugin, navigate to the Manage Jenkins -> Configure System page on your Jenkins installation.  
 Once there, scroll down to find the SnappyflowPlugin section:
 
-https://github.com/snappyflow/snappyflow-jenkins-plugin/issues/13
+[screenshot](https://github.com/snappyflow/snappyflow-jenkins-plugin/issues/13)
 
 # Contribution
 This plugin is in development phase currently.  
