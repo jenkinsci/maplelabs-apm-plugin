@@ -22,5 +22,5 @@ Once there, scroll down to find the SnappyflowPlugin section:
 # Contribution
 This plugin is in development phase currently.  
 If you are willing to contribute, follow below link  
-https://github.com/snappyflow/snappyflow-jenkins-plugin/blob/releasev1_dev/Contribution.md
+[Details](https://github.com/snappyflow/snappyflow-jenkins-plugin/blob/releasev1_dev/Contribution.md)
 
