@@ -35,7 +35,7 @@ This plugin can be installed from the Update Center (found at Manage Jenkins -> 
 NA
 
 ## **Requirements**
-|**ID**|**Requirement**|**Description**|**User Story**|**GitHub Issue ID**|**Importance**|**Notes**|
+|**ID**|**Requirement**|**Description**|**User Story**|**Issue ID**|**Importance**|**Notes**|
 | :- |:-| :- | :- | :- | :- | :- |
 |1|This plugin should have an option for the user to configure the profile key and other parameters required for forwarding the metrics to specific snappyflow instance.|The plugin accepts below inputs from user:<br>Profile key - snappyflow profile key( used to send the collected metrics to target)<br>Project name - Project name under which monitoring data appears<br>Application name - Application name under which monitoring data appears<br>Instance name - instance name used to identify the jenkins instance|Based on these values, plugin should decode the profile key and build request URL to push the metrics|https://github.com/maplelabs/apm-jenkins-plugin/issues/9 ||**Specific to Snappyflow**|
 |2|Design Document|||https://github.com/maplelabs/apm-jenkins-plugin/issues/2 |HIGH||
