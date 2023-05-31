@@ -19,17 +19,17 @@ This plugin must be able to trouble shoot issues in jenkins using the dashboards
 This plugin can be installed from the Update Center (found at Manage Jenkins -> Manage Plugins) in local Jenkins installation.
 ## **Tasks & Milestones**
 
-|**Task**|**Acceptance Rule**|**MileStone**|
-|:-|:-|:-|
-|PRD has to be in published state|Review & Approval by SF team|**1**|
-|Usecase where jekins monitoring is helpful in debugging jenkins performance issues|Review & Approval by SF team|**1**|
-|Design Doc|Review & Approval by SF team|**1**|
-|Jenkins plugin has to be in published state|Review & Approval by SF team|**1**|
-|Dashboard|Template Review & Approval by snappyflow team by SF team|**2**|
-|User must be alerted when jenkins is not working as expected|Details of alerts Review & Approval by SF team|**2**|
-|Documenation for snappyflow website|Review & Approval by SF team|**2**|
-|Jenkins plugin has to be in published state| Code Review & Approval by Jenkins team|**3**|
-|End User Guide|Review & Approval by SF team|**3**|
+|**Task**|**Acceptance Rule**|**MileStone**|**Acceptance Criteria**|
+|:-|:-|:-|:-|
+|PRD has to be in published state|Review & Approval by SF team|**1**<td rowspan="4">1. This plugin must be available under the list of install plugins in Jenkins page.</br> 2. Users must be able to configure the desired project name, application name, instance name and profile key of target Snappyflow where data can be visualized. </br> 3. User can be on on-premise SnappyFlow or Appliance. Monitoring must be supported on both ES & Kafka. </br> 4. Data should be available in SF browse data.</td>
+|Usecase where jekins monitoring is helpful in debugging jenkins performance issues|Review & Approval by SF team|**1** 
+|Design Doc|Review & Approval by SF team|**1**
+|Coding & UT Complete|Review & Approval by SF team|**1**
+|Dashboard|Template Review & Approval by snappyflow team by SF team|**2** <td rowspan="3"> 5. Using Collected monitoring data, User must be able to trouble shoot at least 2 problems faced by Jenkins users. </br> 6. Dashboards and alerts created and trouble shooting must be demonstrated using the alerts and dashboards. </br> 7.Documentation required as part of acceptance criteria: </br>  a. User guide </br> b. Explaination of every metric collected. </br>  c. Test cases executed. </br> d. Known issues.</td>
+|User must be alerted when jenkins is not working as expected|Details of alerts Review & Approval by SF team|**2**
+|Documenation for snappyflow website|Review & Approval by SF team|**2**
+|Jenkins plugin has to be in published state| Code Review & Approval by Jenkins team|**3**
+|End User Guide|Review & Approval by SF team|**3**
 
 ##  **Assumptions**
 NA
