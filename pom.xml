@@ -10,11 +10,11 @@
 		<relativePath />
 	</parent>
 	<groupId>io.jenkins.plugins</groupId>
-	<artifactId>snappyflow</artifactId>
+	<artifactId>apm</artifactId>
 	<version>${revision}${changelist}</version>
 	<packaging>hpi</packaging>
-	<name>Snappyflow Plugin</name>
-	<url>https://github.com/jenkinsci/snappyflow-plugin</url>
+	<name>APM Jenkins Plugin</name>
+	<url>https://github.com/jenkinsci/apm-jenkins-plugin</url>
 
 	<licenses>
 		<license>
@@ -34,6 +34,9 @@
 		<revision>1.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
+		<!--configuration>
+                <useIncrementalCompilation>true</useIncrementalCompilation>
+        </configuration -->
 		<jenkins.version>2.361.4</jenkins.version>
 		<gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 	</properties>
@@ -84,9 +87,34 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.10</version>
+			<version>4.5.13</version>
 		</dependency>
-	</dependencies>
-	
+		<dependency>
+    			<groupId>com.timgroup</groupId>
+    			<artifactId>java-statsd-client</artifactId>
+    			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+    			<groupId>com.cloudbees.jenkins.plugins</groupId>
+    			<artifactId>cloudbees-credentials</artifactId>
+    			<version>3.3</version>
+		</dependency>
+		<dependency>
+    			<groupId>org.jenkins-ci.plugins</groupId>
+    			<artifactId>mailer</artifactId>
+    			<version>438.v02c7f0a_12fa_4</version>
+		</dependency>
+		<dependency>
+    			<groupId>org.jenkins-ci.plugins</groupId>
+    			<artifactId>git</artifactId>
+    			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+   			<groupId>org.jenkins-ci.plugins</groupId>
+    			<artifactId>git-client</artifactId>
+    			<version>2.5.0</version>
+		</dependency>
+					
+	</dependencies>	
 	
 </project>
