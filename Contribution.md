@@ -30,5 +30,5 @@ https://github.com/jenkinsci/schedule-build-plugin/blob/master/pom.xml  --> refe
 https://medium.com/@pavithra_38952/managing-and-monitoring-jenkins-6df681813c0a  ---> How to add multiple agent nodes on jenkins master
 
 # Recording on POC code:
-[Code Deep dive](https://maplelabsblr-my.sharepoint.com/:v:/r/personal/deepa_martin_maplelabs_com/Documents/Recordings/jenkins%20plugin-20221208_182438-Meeting%20Recording.mp4?csf=1&web=1)
+[Code Deep dive](https://maplelabsblr-my.sharepoint.com/:v:/g/personal/bhagavad_geetha_maplelabs_com/EfH9q6bkdgJAkm2CF9Xh2SAB2ITehBjhNao7qsmOREm2aw?e=Zhd4Yu)
 
