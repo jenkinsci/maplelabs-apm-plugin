@@ -3,8 +3,7 @@
 - [Design Architecture](#design-architecture)
   - [List of features:](#list-of-features)
   - [Working Principle of APM Jenkins Plugin](#working-principle-of-apm-jenkins-plugin)
-  - [APM Jenkins Plugin Flow Diagram](#apm-jenkins-plugin-flow-diagram)
-  - [APM Jenkins Plugin Architecture](#apm-jenkins-plugin-architecture)  
+  - [APM Jenkins Plugin Flow Diagram](#apm-jenkins-plugin-flow-diagram)  
   - [APM Jenkins Plugin Configuration](#apm-jenkins-plugin-configuration)
 
 ## **List of features:**
@@ -27,9 +26,8 @@
     2. System Events - (Change in files or system related config change, user details etc)
     3. Security Events - (user authentication, authentication failure, login, logout, login failures etc). 
     
-    **Note: To support sending of events to snappyflow, sfagent needs to be installed on the machine where master jenkins instance is running.**
+    **Note: Sending of events to snappyflow is reported as metrics for now, as snappyflow doesn't support events currently.**
 
-<img src="https://github.com/maplelabs/opensearch-scaling-manager/blob/master/images/ScalingManagerArchitecture.png" alt="ScalingManagerArchitecture">
 
 ## Working Principle of APM Jenkins Plugin
 
@@ -44,7 +42,7 @@ APM jenkins plugin has following modules
 
 - APM Jenkins Plugin once installed will be running on Jenkins to collect the metrics at regular intervals.
 - Node metrics, job metrics & jenkins metrics (as mentioned above) are collected at regular intervals.
-- In addition to the metrics, various events are also collected in the form of logs by sfagent.
+- In addition to the metrics, various events are also collected in the form of metrics and reported on event basis.
 
 **Index & Store Data in Snappyflow (Elasticsearch & Kafka):** 
 
@@ -53,6 +51,8 @@ APM jenkins plugin has following modules
 - Once the metrics are received by snappyflow, they are indexed into ES/kafka on snappyflow at regular intervals.
 - sfagent takes care of parsing the event logs and pushing them to snappyflow at regular intervals.
 - Once the events are recevied as logs, snappyflow takes care of storing them as well.
+  
+<img src="https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/apmJenkinsPluginConfiguration.png" alt="APMConfiguration">
 
 **Visualize with snappyflow Dashboards:** 
 
@@ -66,17 +66,8 @@ APM jenkins plugin has following modules
   
 ## APM Jenkins plugin Flow Diagram 
 
-<img src="https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/APMPluginFlowChart.png" alt="DetailedFlowAPMJenkinsPlugin">
+<img src="https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/APMJenkinsPluginFlowChart.png" alt="DetailedFlowAPMJenkinsPlugin">
 
+## APM Jenkins Plugin Configuration
 
-
-## Scaling Manager Architecture
-
-1. Scaling Manager is deployed in all the nodes in cluster. Lets say cluster has 3 nodes. Now resource utilization went high and there is a need of new node in cluster.
-2. When a new node is added to the cluster ansible scripts will run in new node and it will install Scaling Manger, OpenSearch, All the necessary details which is needed and the new node details will be added to the available nodes list in order to monitor it
-
-<img src="https://github.com/maplelabs/opensearch-scaling-manager/blob/master/images/BasicFlowScalingManager.png" alt="BasicFlowScalingManager">
-
-## Scaling Manager Configuration
-
-Please check [config file](https://github.com/maplelabs/opensearch-scaling-manager/blob/master/docs/Config.md) to know more about scaling manager configuration
+Please check [config file]() to know more about APM Jenkins Plugin configuration
