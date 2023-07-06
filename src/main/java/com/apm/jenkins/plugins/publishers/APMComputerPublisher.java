@@ -52,7 +52,7 @@ public class APMComputerPublisher extends PeriodicWork {
             
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
-            String hostname = APMUtil.getHostname(null);
+            // String hostname = APMUtil.getHostname(null);
             if(client == null){
                 return;
             }

@@ -20,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.net.ssl.SSLContext;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 
@@ -54,11 +55,11 @@ public class APMHttpClient implements APMClient {
     private static final String METRIC = "v1/series";
         
     // @SuppressFBWarnings(value="MS_SHOULD_BE_FINAL")
-    public static boolean enableValidations = true;
+    public final static boolean enableValidations = true;
     
     private static final String ALGORITHM = "AES";
 	private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-	static byte[] sessionKey = null;
+	private byte[] sessionKey = null;
 	private  HashMap<String,String> target = new HashMap<String,String>();
 	    
     private boolean defaultIntakeConnectionBroken = false;
@@ -171,7 +172,7 @@ public class APMHttpClient implements APMClient {
     
     private String getBasicAuthenticationHeader(String username, String password) {
     	String valueToEncode = username+":"+password;
-    	return "Basic "+Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+    	return "Basic "+Base64.getEncoder().encodeToString(valueToEncode.getBytes(Charset.forName("UTF-8"))).toString();
     }
     
     public void getKafkaHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl, HashMap<String, String> targetMap) {
@@ -200,13 +201,7 @@ public class APMHttpClient implements APMClient {
     	String ds_host = targetMap.get("host");
     	String ds_port = targetMap.get("port");    	  	
     	String ds_index = "metric-"+targetMap.get("profile_id")+"-"+projName+"-$_write";
-    	String ds_type;
-
-    	if (targetMap.get("es_7x") == "true")
-    		ds_type = "_doc";
-    	else
-    		ds_type = "_doc";
-
+    	String ds_type = "_doc";
     	targetApiUrl.append(ds_protocol+"://"+ds_host+":"+ds_port+"/"+ds_index+"/"+ds_type);    		
     	logger.info("targetApi URL for ES is:"+targetApiUrl.toString());
     }  
@@ -234,8 +229,7 @@ public class APMHttpClient implements APMClient {
         }
 
         try {
-            JSONObject payload = new JSONObject();
-            payload = TagsUtil.convertHashMapToJSONObject(event.getSnappyflowTags());
+            JSONObject payload = TagsUtil.convertHashMapToJSONObject(event.getSnappyflowTags());
             payload.put("title", event.getTitle());
             payload.put("text", event.getText());
             payload.put("host", event.getHost());
@@ -296,8 +290,7 @@ public class APMHttpClient implements APMClient {
             return false;
         }
   
-        JSONObject payload = new JSONObject();
-        payload = TagsUtil.convertHashMapToJSONObject(metrics);
+        JSONObject payload = TagsUtil.convertHashMapToJSONObject(metrics);
         
         logger.info(String.format("payload: %s", payload.toString()));
 

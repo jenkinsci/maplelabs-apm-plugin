@@ -102,7 +102,7 @@ public class APMUtil {
 	
 	    	try {
 	    		return ExtensionList.lookupSingleton(APMGlobalConfiguration.class);
-	    	} catch (IllegalStateException | NullPointerException e) {
+	    	} catch ( RuntimeException e) {
 	    		// It can only throw such an exception when running tests
 	    		return null;
 	    	}
@@ -153,8 +153,8 @@ public class APMUtil {
 	    	// Check hostname configuration from Jenkins
 	    	String hostname = null;
 	    	try {
-	    		hostname = getAPMGlobalDescriptor().getHostname();
-	    	} catch (NullPointerException e){
+				hostname = getAPMGlobalDescriptor().getHostname();
+	    	} catch (RuntimeException e){
 	    		// noop
 	    	}
 
@@ -308,39 +308,34 @@ public class APMUtil {
 	        return tags;
 	    }
 	    
-	    public static Map<String, Set<String>> getComputerTags(Computer computer) {
-	        Set<LabelAtom> labels = null;
-	        try {
-	            labels = computer.getNode().getAssignedLabels();
-	        } catch (NullPointerException e){
-	            logger.fine("Could not retrieve labels");
-	        }
-	        String nodeHostname = null;
-	        try {
-	            nodeHostname = computer.getHostName();
-	        } catch (IOException | InterruptedException e) {
-	            logger.fine("Could not retrieve hostname");
-	        }
-	        String nodeName = getNodeName(computer);
-	        Map<String, Set<String>> result = new HashMap<>();
-	        Set<String> nodeNameValues = new HashSet<>();
-	        nodeNameValues.add(nodeName);
-	        result.put("node_name", nodeNameValues);
-	        if(nodeHostname != null){
-	            Set<String> nodeHostnameValues = new HashSet<>();
-	            nodeHostnameValues.add(nodeHostname);
-	            result.put("node_hostname", nodeHostnameValues);
-	        }
-	        if(labels != null){
-	            Set<String> nodeLabelsValues = new HashSet<>();
-	            for (LabelAtom label: labels){
-	                nodeLabelsValues.add(label.getName());
-	            }
-	            result.put("node_label", nodeLabelsValues);
-	        }
-
-	        return result;
-	    }
+	    // public static Map<String, Set<String>> getComputerTags(Computer computer) {
+		// 	Set<LabelAtom> labels = null;
+		// 	Map<String, Set<String>> result = new HashMap<>();
+		// 	labels = computer.getNode().getAssignedLabels();
+		// 	if(labels != null) {
+		// 			String nodeHostname = null;
+		// 			try {
+		// 				nodeHostname = computer.getHostName();
+		// 			} catch (IOException | InterruptedException e) {
+		// 				logger.fine("Could not retrieve hostname");
+		// 			}
+		// 			String nodeName = getNodeName(computer);
+		// 			Set<String> nodeNameValues = new HashSet<>();
+		// 			nodeNameValues.add(nodeName);
+		// 			result.put("node_name", nodeNameValues);
+		// 			if(nodeHostname != null){
+		// 				Set<String> nodeHostnameValues = new HashSet<>();
+		// 				nodeHostnameValues.add(nodeHostname);
+		// 				result.put("node_hostname", nodeHostnameValues);
+		// 			}
+		// 				Set<String> nodeLabelsValues = new HashSet<>();
+		// 				for (LabelAtom label: labels){
+		// 					nodeLabelsValues.add(label.getName());
+		// 				}
+		// 				result.put("node_label", nodeLabelsValues);
+		// 		} 			
+		// 	return result;
+	    // }
 	    
 	    public static HashMap<String, Object> getSnappyflowTags(String docType) {
 	        	    	

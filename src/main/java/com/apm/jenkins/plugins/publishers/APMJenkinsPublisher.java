@@ -46,9 +46,8 @@ public class APMJenkinsPublisher extends PeriodicWork {
             APMClient client = ClientBase.getClient();
             String hostname = APMUtil.getHostname(null);
             
-            Map<String, Set<String>> tags = APMUtil.getTagsFromGlobalTags();
             // Add JenkinsUrl Tag
-            tags = TagsUtil.addTagToTags(tags, "jenkins_url", APMUtil.getJenkinsUrl());
+            // Map<String, Set<String>> tags = TagsUtil.addTagToTags(APMUtil.getTagsFromGlobalTags(), "jenkins_url", APMUtil.getJenkinsUrl());
 
             long projectCount = 0;
             Jenkins instance = Jenkins.getInstanceOrNull();
