@@ -17,8 +17,24 @@ mvn versions:update-parent
 
 Step 3: To test development changes locally  
 mvn clean hpi:run -Djetty.port=8090  
+# 3. To extend the plugin.
+  1. [Clone the Repo](https://github.com/maplelabs/apm-jenkins-plugin) 
 
-# 3. Clone the plugin code repo.  
+  2. Navigate to the plugin folder and run `mvn clean install`
+  ![build](images/build.png)
+
+  3. After the build succed artifact file will be generated on the location /target  folder (`.hpi`)
+  ![target](images/artifact.png)
+
+  4. Upload the hpi file in jenkin's manage jenkins page `http://localhost:8080/manage/pluginManager/advanced` under **Deploy Plugin** option
+  ![deploy](images/deploy_page.png)
+
+  5. Click choose file and upload the hpi file and click deploy
+
+  6. Once the process is over restart jenkins
+
+  7. Options are listing under jenkin's configure page
+  ![apm](images/apmJenkinsPluginConfiguration.png)
 
 # Useful docs to develop or improve Jenkins-plugin  
 ---------------------------------------------------  
