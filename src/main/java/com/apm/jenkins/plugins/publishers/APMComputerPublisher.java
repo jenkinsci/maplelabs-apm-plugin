@@ -1,24 +1,20 @@
 
 package com.apm.jenkins.plugins.publishers;
 
-import java.util.concurrent.TimeUnit;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 
 import hudson.Extension;
-import hudson.PluginManager;
-import hudson.PluginWrapper;
 import hudson.model.Computer;
-import hudson.model.PeriodicWork;
 import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
-
+import hudson.model.PeriodicWork;
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.TagsUtil;
 import com.apm.jenkins.plugins.Client.ClientBase;
 import com.apm.jenkins.plugins.interfaces.APMClient;
-
-
+import hudson.node_monitors.ResponseTimeMonitor.Data;
+import hudson.node_monitors.SwapSpaceMonitor.MemoryUsage2;
+import hudson.node_monitors.DiskSpaceMonitorDescriptor.DiskSpace;
 
 @Extension
 public class APMComputerPublisher extends PeriodicWork {
@@ -85,8 +81,33 @@ public class APMComputerPublisher extends PeriodicWork {
                 nodeStats_dict.put("connectTime", connectTime);
                 nodeStats_dict.put("nodeName", nodeName);
                 
-                // logger.info("Node stats dict: " +  nodeStats_dict); 
-                client.postSnappyflowMetric(nodeStats_dict, "metric");                
+                Map<String,Object> moniter  = computer.getMonitorData();
+                if(moniter != null) {
+                    // RAM, SWAP 
+                    MemoryUsage2 memory = (MemoryUsage2)moniter.get("hudson.node_monitors.SwapSpaceMonitor");
+
+                    nodeStats_dict.put("memory_available",memory != null ? memory.getAvailablePhysicalMemory() : null);
+                    nodeStats_dict.put("memory_total",memory != null ? memory.getTotalPhysicalMemory() : null);
+                    nodeStats_dict.put("swap_available",memory != null ? memory.getAvailableSwapSpace() : null);
+                    nodeStats_dict.put("swap_total",memory != null ? memory.getTotalSwapSpace() : null);
+
+                    // Disk
+                    DiskSpace diskSpaceMonitor = (DiskSpace) moniter.get("hudson.node_monitors.DiskSpaceMonitor");
+                    nodeStats_dict.put("disk_path", diskSpaceMonitor  != null? diskSpaceMonitor.getPath() : null);
+                    nodeStats_dict.put("disk_available",diskSpaceMonitor  != null? diskSpaceMonitor.getFreeSize() : null);
+
+                    // Temp
+                    diskSpaceMonitor = (DiskSpace)moniter.get("hudson.node_monitors.TemporarySpaceMonitor");
+                    nodeStats_dict.put("temp_path", diskSpaceMonitor != null? diskSpaceMonitor.getPath() : null);
+                    nodeStats_dict.put("temp_available",diskSpaceMonitor != null ? diskSpaceMonitor.getFreeSize() : null);
+
+                    // Response
+                    Data responseData = (Data)moniter.get("hudson.node_monitors.ResponseTimeMonitor");
+                    nodeStats_dict.put("response_time",responseData != null ? responseData.getAverage() : null);
+                    //Architect
+                    nodeStats_dict.put("arch",moniter.get("hudson.node_monitors.ArchitectureMonitor"));
+                }
+                client.postSnappyflowMetric(nodeStats_dict, "metric");
             }
             
             /*
