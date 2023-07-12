@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 import java.util.concurrent.TimeUnit;
 
 import hudson.Extension;
+import hudson.model.Run;
+import hudson.model.Job;
+import hudson.model.Result;
 import hudson.model.Computer;
 import jenkins.model.Jenkins;
 import hudson.model.PeriodicWork;
@@ -85,7 +88,6 @@ public class APMComputerPublisher extends PeriodicWork {
                 if(moniter != null) {
                     // RAM, SWAP 
                     MemoryUsage2 memory = (MemoryUsage2)moniter.get("hudson.node_monitors.SwapSpaceMonitor");
-
                     nodeStats_dict.put("memory_available",memory != null ? memory.getAvailablePhysicalMemory() : null);
                     nodeStats_dict.put("memory_total",memory != null ? memory.getTotalPhysicalMemory() : null);
                     nodeStats_dict.put("swap_available",memory != null ? memory.getAvailableSwapSpace() : null);
@@ -104,9 +106,33 @@ public class APMComputerPublisher extends PeriodicWork {
                     // Response
                     Data responseData = (Data)moniter.get("hudson.node_monitors.ResponseTimeMonitor");
                     nodeStats_dict.put("response_time",responseData != null ? responseData.getAverage() : null);
+
                     //Architect
                     nodeStats_dict.put("arch",moniter.get("hudson.node_monitors.ArchitectureMonitor"));
                 }
+                // Job
+                int numJobAborted = 0;
+                int numJobCompleted = 0;
+                int numJobStarted = 0;
+                for (Job job : Jenkins.get().getAllItems(Job.class)) {
+                    SortedMap<Integer,Run> builds = job.getBuildsAsMap();
+                    for (Run run : builds.values()) {
+                        // @TODO
+                        // want to find which computer is executed this particular run and compare with computer
+                        // find there is any possible way ro retrive run executed by a computer
+                        Result result = run.getResult();
+                        numJobStarted++;
+                        if (result == Result.SUCCESS) {
+                            numJobCompleted++;
+                        } else if (result == Result.ABORTED) {
+                            numJobAborted++;
+                        }
+                    }
+                }
+                nodeStats_dict.put("num_job_aborted",numJobAborted);
+                nodeStats_dict.put("num_job_completed",numJobCompleted);
+                nodeStats_dict.put("num_job_started",numJobStarted);
+
                 client.postSnappyflowMetric(nodeStats_dict, "metric");
             }
             
