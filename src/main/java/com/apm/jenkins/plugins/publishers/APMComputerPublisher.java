@@ -133,8 +133,7 @@ public class APMComputerPublisher extends PeriodicWork {
                 nodeStats_dict.put("num_job_completed",numJobCompleted);
                 nodeStats_dict.put("num_job_started",numJobStarted);
 
-                logger.info("Data : "+nodeStats_dict);
-                // client.postSnappyflowMetric(nodeStats_dict, "metric");
+                client.postSnappyflowMetric(nodeStats_dict, "metric");
             }
             
             /*
