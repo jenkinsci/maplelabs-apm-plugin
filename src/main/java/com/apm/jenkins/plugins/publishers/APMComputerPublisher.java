@@ -96,12 +96,12 @@ public class APMComputerPublisher extends PeriodicWork {
                     // Disk
                     DiskSpace diskSpaceMonitor = (DiskSpace) moniter.get("hudson.node_monitors.DiskSpaceMonitor");
                     nodeStats_dict.put("disk_path", diskSpaceMonitor  != null? diskSpaceMonitor.getPath() : null);
-                    nodeStats_dict.put("disk_available",diskSpaceMonitor  != null? diskSpaceMonitor.getFreeSize() : null);
+                    nodeStats_dict.put("disk_available",diskSpaceMonitor  != null? diskSpaceMonitor.size : null);
 
                     // Temp
                     diskSpaceMonitor = (DiskSpace)moniter.get("hudson.node_monitors.TemporarySpaceMonitor");
                     nodeStats_dict.put("temp_path", diskSpaceMonitor != null? diskSpaceMonitor.getPath() : null);
-                    nodeStats_dict.put("temp_available",diskSpaceMonitor != null ? diskSpaceMonitor.getFreeSize() : null);
+                    nodeStats_dict.put("temp_available",diskSpaceMonitor != null ? diskSpaceMonitor.size : null);
 
                     // Response
                     Data responseData = (Data)moniter.get("hudson.node_monitors.ResponseTimeMonitor");
@@ -133,7 +133,8 @@ public class APMComputerPublisher extends PeriodicWork {
                 nodeStats_dict.put("num_job_completed",numJobCompleted);
                 nodeStats_dict.put("num_job_started",numJobStarted);
 
-                client.postSnappyflowMetric(nodeStats_dict, "metric");
+                logger.info("Data : "+nodeStats_dict);
+                // client.postSnappyflowMetric(nodeStats_dict, "metric");
             }
             
             /*
