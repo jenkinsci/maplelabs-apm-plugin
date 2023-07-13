@@ -127,6 +127,63 @@ public class APMUtil {
 	    	}
 	    }
 	    
+	    /**
+	     * Checks if a jobName is excluded, included, or neither.
+	     *
+	     * @param jobName - A String containing the name of some job.
+	     * @return a boolean to signify if the jobName is or is not excluded or included.
+	     */
+	    public static boolean isJobTracked(final String jobName) {
+	        return !isJobExcluded(jobName) && isJobIncluded(jobName);
+	    }
+	    
+	    /**
+	     * Checks if a jobName is excluded.
+	     *
+	     * @param jobName - A String containing the name of some job.
+	     * @return a boolean to signify if the jobName is or is not excluded.
+	     */
+	    private static boolean isJobExcluded(final String jobName) {
+	        final APMGlobalConfiguration apmGlobalConfig = getAPMGlobalDescriptor();
+	        if (apmGlobalConfig == null){
+	            return false;
+	        }
+	        final String excludedProp = apmGlobalConfig.getExcluded();
+	        List<String> excluded = cstrToList(excludedProp);
+	        for (String excludedJob : excluded){
+	            Pattern excludedJobPattern = Pattern.compile(excludedJob);
+	            Matcher jobNameMatcher = excludedJobPattern.matcher(jobName);
+	            if (jobNameMatcher.matches()) {
+	                return true;
+	            }
+	        }
+	        return false;
+
+	    }
+
+	    /**
+	     * Checks if a jobName is included.
+	     *
+	     * @param jobName - A String containing the name of some job.
+	     * @return a boolean to signify if the jobName is or is not included.
+	     */
+	    private static boolean isJobIncluded(final String jobName) {
+	        final APMGlobalConfiguration apmGlobalConfig = getAPMGlobalDescriptor();
+	        if (apmGlobalConfig == null){
+	            return true;
+	        }
+	        final String includedProp = apmGlobalConfig.getIncluded();
+	        final List<String> included = cstrToList(includedProp);
+	        for (String includedJob : included){
+	            Pattern includedJobPattern = Pattern.compile(includedJob);
+	            Matcher jobNameMatcher = includedJobPattern.matcher(jobName);
+	            if (jobNameMatcher.matches()) {
+	                return true;
+	            }
+	        }
+	        return included.isEmpty();
+	    }
+	    
 	    public static long currentTimeMillis(){
 	        // This method exist so we can mock System.currentTimeMillis in unit tests
 	        return System.currentTimeMillis();

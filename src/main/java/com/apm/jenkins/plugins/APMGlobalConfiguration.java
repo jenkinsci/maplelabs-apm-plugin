@@ -48,6 +48,8 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private String targetAppName = null;
 	private String targetInstanceName = null;
 	private String hostname = null;
+	private String blacklist = null;
+	private String whitelist = null;
 	private String globalTags = null;
 	
 	private String metricsReceiverUrl = null;
@@ -163,6 +165,48 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
     public void setGlobalTags(String globalTags) {
         this.globalTags = globalTags;
     }
+    
+    /**
+     * Getter function for the excluded global configuration, containing
+     * a comma-separated list of jobs to exclude from monitoring.
+     *
+     * @return a String array containing the excluded global configuration.
+     */
+    public String getExcluded() {
+        return blacklist;
+    }
+
+    /**
+     * Setter function for the excluded jobs global configuration,
+     * accepting a comma-separated string of jobs.
+     *
+     * @param jobs - a comma-separated list of jobs to exclude from monitoring.
+     */
+    @DataBoundSetter
+    public void setExcluded(final String jobs) {
+        this.blacklist = jobs;
+    }
+    
+    /**
+     * Getter function for the included global configuration, containing
+     * a comma-separated list of jobs to include for monitoring.
+     *
+     * @return a String array containing the included global configuration.
+     */
+    public String getIncluded() {
+        return whitelist;
+    }
+
+    /**
+     * Setter function for the includedd global configuration,
+     * accepting a comma-separated string of jobs.
+     *
+     * @param jobs - a comma-separated list of jobs to include for monitoring.
+     */
+    public void setIncluded(final String jobs) {
+        this.whitelist = jobs;
+    }
+    
         
     @RequirePOST
     public FormValidation doTestConnection(

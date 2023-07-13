@@ -8,16 +8,12 @@ import hudson.model.PeriodicWork;
 import hudson.model.Project;
 import jenkins.model.Jenkins;
 
-import com.apm.jenkins.plugins.APMGlobalConfiguration;
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.TagsUtil;
 import com.apm.jenkins.plugins.DataModel.PluginData;
 import com.apm.jenkins.plugins.interfaces.APMClient;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -46,9 +42,6 @@ public class APMJenkinsPublisher extends PeriodicWork {
             APMClient client = ClientBase.getClient();
             String hostname = APMUtil.getHostname(null);
             
-            // Add JenkinsUrl Tag
-            // Map<String, Set<String>> tags = TagsUtil.addTagToTags(APMUtil.getTagsFromGlobalTags(), "jenkins_url", APMUtil.getJenkinsUrl());
-
             long projectCount = 0;
             Jenkins instance = Jenkins.getInstanceOrNull();
             if (instance == null) {

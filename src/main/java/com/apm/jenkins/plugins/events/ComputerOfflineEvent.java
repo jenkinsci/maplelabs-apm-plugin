@@ -4,9 +4,6 @@ import hudson.model.Computer;
 import hudson.slaves.OfflineCause;
 import com.apm.jenkins.plugins.APMUtil;
 
-import java.util.HashMap;
-
-
 public class ComputerOfflineEvent extends AbstractAPMSimpleEvent {
 
     public ComputerOfflineEvent(Computer computer, OfflineCause cause, boolean isTemporarily) {
@@ -22,9 +19,6 @@ public class ComputerOfflineEvent extends AbstractAPMSimpleEvent {
         setText(text);
 
         setPriority(Priority.NORMAL);
-        setAlertType(AlertType.WARNING);
-        
-        //Snappyflow Specific
-        // setSnappyflowTags(tags);
+        setAlertType(AlertType.WARNING);    
     }
 }
