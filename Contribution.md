@@ -17,7 +17,7 @@ mvn versions:update-parent
 
 Step 3: To test development changes locally  
 mvn clean hpi:run -Djetty.port=8090  
-# 3. To extend the plugin.
+# 3. To run the plugin.
   1. [Clone the Repo](https://github.com/maplelabs/apm-jenkins-plugin) 
 
   2. Navigate to the plugin folder and run `mvn clean install`
