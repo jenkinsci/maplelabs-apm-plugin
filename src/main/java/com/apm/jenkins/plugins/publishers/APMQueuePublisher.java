@@ -1,24 +1,28 @@
 package com.apm.jenkins.plugins.publishers;
 
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.SortedMap;
 import java.util.logging.Logger;
-
-import org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution;
+import java.util.concurrent.TimeUnit;
 
 import hudson.Extension;
-import hudson.model.FreeStyleProject;
-import hudson.model.PeriodicWork;
-import hudson.model.Queue;
+import hudson.model.Job;
 import hudson.model.Run;
-import hudson.model.Queue.Task;
+import hudson.model.Queue;
+import hudson.model.Result;
+import jenkins.model.Jenkins;
+import hudson.model.PeriodicWork;
+
+import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Client.ClientBase;
+import com.apm.jenkins.plugins.interfaces.APMClient;
 
 @Extension
 public class APMQueuePublisher extends PeriodicWork{
 	
-    private static final Logger logger = Logger.getLogger(APMQueuePublisher.class.getName());
-
-    private static final long RECURRENCE_PERIOD = TimeUnit.MINUTES.toMillis(1);
     private final Queue queue = Queue.getInstance();
+    private static final long RECURRENCE_PERIOD = TimeUnit.MINUTES.toMillis(30);
+    private static final Logger logger = Logger.getLogger(APMQueuePublisher.class.getName());
 
 	@Override
 	public long getRecurrencePeriod() {
@@ -28,75 +32,47 @@ public class APMQueuePublisher extends PeriodicWork{
 	@Override
 	protected void doRun() throws Exception {
         try {
-            logger.fine("doRun called: Computing queue metrics");
-
-            //TODO Get APM Client Instance
-
-            long size = 0;
-            long buildable = 0;
-            long pending = 0;
-            long stuck = 0;
-            long blocked = 0;
+            logger.fine("doRun called: Computing queue and job metrics");
+            int stuck = 0;
+            int pending = 0;
+            int blocked = 0;
+            int buildable = 0;
+            APMClient client = ClientBase.getClient();
             final Queue.Item[] items = queue.getItems();
-            for (Queue.Item item : items) {
-                String job_name;
-                Task task = item.task;
-                if (task instanceof FreeStyleProject) {
-                    job_name = task.getFullDisplayName();
-                } else if (task instanceof ExecutorStepExecution.PlaceholderTask) {
-                    Run<?, ?> run = ((ExecutorStepExecution.PlaceholderTask) task).runForDisplay();
-                    if (run != null) {
-                        job_name = run.getParent().getFullName();
-                    } else {
-                        job_name = "unknown";
+            HashMap<String, Object> jobStats_dict = APMUtil.getSnappyflowTags("jobStats");
+            for (Queue.Item item : items) {                                       
+                if(item.isStuck())  stuck++;                
+                if(item.isBlocked())  blocked++;
+                if (item.isBuildable()) buildable++;
+                if(queue.isPending(item.task)) pending++;
+           }
+
+           jobStats_dict.put("queueStuck", stuck);
+           jobStats_dict.put("queuePending", pending);
+           jobStats_dict.put("queueBlocked", blocked);
+           jobStats_dict.put("queueSize", items.length);
+           jobStats_dict.put("queueBuildable", buildable);
+
+            // Old Jobs
+            int numJobAborted = 0;
+            int numJobCompleted = 0;
+            int numJobStarted = 0;
+            for (Job job : Jenkins.get().getAllItems(Job.class)) {
+                SortedMap<Integer,Run> builds = job.getBuildsAsMap();
+                for (Run run : builds.values()) {
+                    Result result = run.getResult();
+                    numJobStarted++;
+                    if (result == Result.SUCCESS) {
+                        numJobCompleted++;
+                    } else if (result == Result.ABORTED) {
+                        numJobAborted++;
                     }
-                } else {
-                    job_name = "unknown";
                 }
-                                        
-                boolean isStuck = false;
-                boolean isBuildable = false;
-                boolean isBlocked = false;
-                boolean isPending = false;
-                
-                size++;
-                if(item.isStuck()){
-                    isStuck = true;
-                    stuck++;
-                }
-                if (item.isBuildable()){
-                    isBuildable = true;
-                    buildable++;
-                }
-                if(item.isBlocked()){
-                    isBlocked = true;
-                    blocked++;
-                }
-                if(queue.isPending(task)){
-                    isPending = true;
-                    pending++;
-                }
-                
-                //TODO: can use below tag names
-                logger.info("--------------------------");
-                logger.info("job_name=" + job_name);
-                logger.info("jenkins.queue.job.in_queue=" + 1);
-                logger.info("jenkins.queue.job.buildable=" + isBuildable);
-                logger.info("jenkins.queue.job.pending=" + isPending);
-                logger.info("jenkins.queue.job.stuck=" + isStuck);
-                logger.info("jenkins.queue.job.blocked=" + isBlocked);
-                logger.info("--------------------------");
             }
-
-            //TODO: can use below tag names
-            logger.info("--------------------------");
-            logger.info("jenkins.queue.size=" + size);
-            logger.info("jenkins.queue.buildable=" + buildable);
-            logger.info("jenkins.queue.pending=" + pending);
-            logger.info("jenkins.queue.stuck=" + stuck);
-            logger.info("jenkins.queue.blocked=" + blocked);
-            logger.info("--------------------------");
-
+            jobStats_dict.put("num_job_aborted",numJobAborted);
+            jobStats_dict.put("num_job_started",numJobStarted);
+            jobStats_dict.put("num_job_completed",numJobCompleted);
+            client.postSnappyflowMetric(jobStats_dict, "metric");
         } catch (Exception e) {
         	logger.severe("Failed to compute and send queue metrics, due to:" + e);
         }

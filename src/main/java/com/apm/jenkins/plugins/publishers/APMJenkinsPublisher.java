@@ -1,25 +1,21 @@
 package com.apm.jenkins.plugins.publishers;
 
-import com.apm.jenkins.plugins.Client.*;
+import java.util.List;
+import java.util.HashMap;
+import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
+
 import hudson.Extension;
 import hudson.PluginManager;
 import hudson.PluginWrapper;
-import hudson.model.PeriodicWork;
 import hudson.model.Project;
 import jenkins.model.Jenkins;
+import hudson.model.PeriodicWork;
 
-import com.apm.jenkins.plugins.APMGlobalConfiguration;
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.TagsUtil;
+import com.apm.jenkins.plugins.Client.*;
 import com.apm.jenkins.plugins.DataModel.PluginData;
 import com.apm.jenkins.plugins.interfaces.APMClient;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * This class registers a {@link PeriodicWork} with Jenkins to run periodically in order to enable
@@ -62,16 +58,16 @@ public class APMJenkinsPublisher extends PeriodicWork {
             // Adding the collected metrics to dictionary
             HashMap<String, Object> systemStats_dict = APMUtil.getSnappyflowTags("systemStats");
                         
-            systemStats_dict.put("HostName", hostname);
-            systemStats_dict.put("projectCount", projectCount);
-			systemStats_dict.put("plugincount", pluginData.getCount());
-			systemStats_dict.put("Active Plugins", pluginData.getActive());
-			systemStats_dict.put("Failed Plugins", pluginData.getFailed());
-			systemStats_dict.put("inactive Plugins", pluginData.getInactive());
-			systemStats_dict.put("Updatable Plugins", pluginData.getUpdatable());
-				
-			// logger.info("System stats dict: " + systemStats_dict);
-			client.postSnappyflowMetric(systemStats_dict, "metric");
+            systemStats_dict.put("hostName", hostname);
+            systemStats_dict.put("num_projects", projectCount);
+			systemStats_dict.put("num_plugins", pluginData.getCount());
+			systemStats_dict.put("num_active_plugins", pluginData.getActive());
+			systemStats_dict.put("num_failed_plugins", pluginData.getFailed());
+			systemStats_dict.put("num_inactive_plugins", pluginData.getInactive());
+			systemStats_dict.put("num_plugin_with_update", pluginData.getUpdatable());
+    
+			logger.info("System stats dict: " + systemStats_dict);
+			// client.postSnappyflowMetric(systemStats_dict, "metric");
             
             
         } catch (Exception e) {
@@ -90,8 +86,7 @@ public class APMJenkinsPublisher extends PeriodicWork {
 
         PluginManager pluginManager = instance.getPluginManager();
         List<PluginWrapper> plugins = pluginManager.getPlugins();
-        pluginData.withCount(plugins.size())
-                .withFailed(pluginManager.getFailedPlugins().size());
+        pluginData.withCount(plugins.size()).withFailed(pluginManager.getFailedPlugins().size());
         for (PluginWrapper w : plugins) {
             if (w.hasUpdate()) {
                 pluginData.incrementUpdatable();
