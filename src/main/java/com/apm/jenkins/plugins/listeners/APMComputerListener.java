@@ -13,7 +13,6 @@ import com.apm.jenkins.plugins.events.*;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -29,15 +28,9 @@ public class APMComputerListener extends ComputerListener {
 
     private static final Logger logger = Logger.getLogger(APMComputerListener.class.getName());
 
-    /*
-    @Override
+    /* @Override
     public void onOnline(Computer computer, TaskListener listener) throws IOException, InterruptedException {
-        try {
-        	
-            final boolean emitSystemEvents = APMUtil.getAPMGlobalDescriptor().isEmitSystemEvents();
-            if (!emitSystemEvents) {
-                return;
-            }
+        try {	
             logger.fine("Start APMComputerListener#onOnline");
 
             // Get APM Client Instance
@@ -45,33 +38,19 @@ public class APMComputerListener extends ComputerListener {
             if(client == null){
                 return;
             }
-
-            // Get the list of tags to apply
-            Map<String, Set<String>> tags = TagsUtil.merge(
-                    APMUtil.getTagsFromGlobalTags(),
-                    APMUtil.getComputerTags(computer));
-
             // Send event
-            APMEvent event = new ComputerOnlineEvent(computer, listener, tags, false);
+            APMEvent event = new ComputerOnlineEvent(computer, cause, false);
             client.event(event);
-
-            // Submit counter
-            String hostname = APMUtil.getHostname(null);
-            client.incrementCounter("jenkins.computer.online", hostname, tags);
-
+            
             logger.fine("End APMComputerListener#onOnline");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process computer online event");
         }
     } */
-
+    
     @Override
     public void onOffline(@Nonnull Computer computer, @CheckForNull OfflineCause cause) {
-        try {
-            /* final boolean emitSystemEvents = APMUtil.getAPMGlobalDescriptor().isEmitSystemEvents();
-            if (!emitSystemEvents) {
-                return;
-            } */
+        try {            
             logger.info("Start APMComputerListener#onOffline");
 
             // Get APM Client Instance
@@ -83,10 +62,6 @@ public class APMComputerListener extends ComputerListener {
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, false);
             client.event(event);
-
-            // Submit counter
-            // String hostname = APMUtil.getHostname(null);
-            // client.incrementCounter("jenkins.computer.offline", hostname, tags);
 
             logger.info("End APMComputerListener#onOffline");
         } catch (Exception e) {
@@ -112,11 +87,7 @@ public class APMComputerListener extends ComputerListener {
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, true);
             client.event(event);
-
-            // Submit counter
-            // String hostname = APMUtil.getHostname(null);
-            // client.incrementCounter("jenkins.computer.temporarily_offline", hostname, tags);
-
+            
             logger.fine("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process computer temporarily offline event");

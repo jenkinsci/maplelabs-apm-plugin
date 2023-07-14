@@ -244,44 +244,7 @@ public class APMHttpClient implements APMClient {
             APMUtil.severe(logger, e, "Failed to send event");
             return false;
         }
-    }
-
-    /*
-    @Override
-    public boolean incrementCounter(String name, String hostname, Map<String, Set<String>> tags) {
-        if(this.isDefaultIntakeConnectionBroken()){
-            logger.severe("Your client is not initialized properly");
-            return false;
-        }
-        ConcurrentMetricCounters.getInstance().increment(name, hostname, tags);
-        logger.info("ConcurrentMetrics:  " + tags.toString());
-        logger.info("ConcurrentMetrics Name: " + name);
-        return true;
-    }
-    
-    @Override
-    public void flushCounters() {
-        ConcurrentMap<CounterMetric, Integer> counters = ConcurrentMetricCounters.getInstance().getAndReset();
-
-        logger.fine("Run flushCounters method");
-        // Submit all metrics as gauge
-        for(final Iterator<Map.Entry<CounterMetric, Integer>> iter = counters.entrySet().iterator(); iter.hasNext();){
-            Map.Entry<CounterMetric, Integer> entry = iter.next();
-            CounterMetric counterMetric = entry.getKey();
-            int count = entry.getValue();
-            logger.info("Flushing: " + counterMetric.getMetricName() + " - " + count);
-            // Since we submit a rate we need to divide the submitted value by the interval (10)
-            // this.postMetric(counterMetric.getMetricName(), count, counterMetric.getHostname(),
-            //        counterMetric.getTags(), "rate");
-
-        }
-    }   
-
-    @Override
-    public boolean gauge(String name, long value, String hostname, Map<String, Set<String>> tags) {
-        // return postMetric(name, value, hostname, tags, "gauge");
-    	return true;
-    } */
+    }    
    
     @Override
 	public boolean postSnappyflowMetric(HashMap<String, Object> metrics, String type) {
