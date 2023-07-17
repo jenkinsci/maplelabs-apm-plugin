@@ -1,4 +1,5 @@
-target
+/target/
+/work/
 
 # mvn hpi:run
 work
