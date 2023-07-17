@@ -1,10 +1,11 @@
 package com.apm.jenkins.plugins.listeners;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -17,15 +18,17 @@ import com.apm.jenkins.plugins.interfaces.APMEvent;
 
 import hudson.Extension;
 import hudson.model.Queue;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
 @Extension
 public class APMBuildListener extends RunListener<Run> {
-	
+    private final static APMClient client = ClientBase.getClient();
 	private static final Logger logger = Logger.getLogger(APMBuildListener.class.getName());
-	
+	private final static HashMap<String, Object>  buildDict = APMUtil.getSnappyflowTags("buildStats");
+
 	@Override
     public void onInitialize(Run run) {
 		logger.info("Inside onInitialize method");
@@ -89,9 +92,33 @@ public class APMBuildListener extends RunListener<Run> {
         }
 	}
 	
+    /**
+     * This function will send job status to client
+     */
 	@Override
     public void onCompleted(Run run, @Nonnull TaskListener listener) {
 		logger.info("Inside onCompleted method");
+        buildDict.put("number",run.getNumber());
+        buildDict.put("name",run.getDisplayName());
+        buildDict.put("duration",run.getDuration());
+        buildDict.put("parents",run.getParent().getName());
+        if(run.getResult() == Result.ABORTED){
+            buildDict.put("result_code",4);
+            buildDict.put("result","ABORTED");
+        }if(run.getResult() == Result.UNSTABLE){
+            buildDict.put("result_code",3);
+            buildDict.put("result","UNSTABLE");
+        }if(run.getResult() == Result.NOT_BUILT){
+            buildDict.put("result_code",2);
+            buildDict.put("result","NOT_BUILT");
+        }else if(run.getResult() == Result.FAILURE){
+            buildDict.put("result_code",1);
+            buildDict.put("result","FAILURE");
+        }if(run.getResult() == Result.SUCCESS){
+            buildDict.put("result_code",0);
+            buildDict.put("result","SUCCESS");
+        }
+        client.postSnappyflowMetric(buildDict, "metric");
 	}
 	
 	@Override

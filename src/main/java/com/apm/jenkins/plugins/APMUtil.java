@@ -365,34 +365,34 @@ public class APMUtil {
 	        return tags;
 	    }
 	    
-	    // public static Map<String, Set<String>> getComputerTags(Computer computer) {
-		// 	Set<LabelAtom> labels = null;
-		// 	Map<String, Set<String>> result = new HashMap<>();
-		// 	labels = computer.getNode().getAssignedLabels();
-		// 	if(labels != null) {
-		// 			String nodeHostname = null;
-		// 			try {
-		// 				nodeHostname = computer.getHostName();
-		// 			} catch (IOException | InterruptedException e) {
-		// 				logger.fine("Could not retrieve hostname");
-		// 			}
-		// 			String nodeName = getNodeName(computer);
-		// 			Set<String> nodeNameValues = new HashSet<>();
-		// 			nodeNameValues.add(nodeName);
-		// 			result.put("node_name", nodeNameValues);
-		// 			if(nodeHostname != null){
-		// 				Set<String> nodeHostnameValues = new HashSet<>();
-		// 				nodeHostnameValues.add(nodeHostname);
-		// 				result.put("node_hostname", nodeHostnameValues);
-		// 			}
-		// 				Set<String> nodeLabelsValues = new HashSet<>();
-		// 				for (LabelAtom label: labels){
-		// 					nodeLabelsValues.add(label.getName());
-		// 				}
-		// 				result.put("node_label", nodeLabelsValues);
-		// 		} 			
-		// 	return result;
-	    // }
+	    public static Map<String, Set<String>> getComputerTags(Computer computer) {
+			Set<LabelAtom> labels = null;
+			Map<String, Set<String>> result = new HashMap<>();
+			labels = computer.getNode().getAssignedLabels();
+			if(labels != null) {
+					String nodeHostname = null;
+					try {
+						nodeHostname = computer.getHostName();
+					} catch (IOException | InterruptedException e) {
+						logger.fine("Could not retrieve hostname");
+					}
+					String nodeName = getNodeName(computer);
+					Set<String> nodeNameValues = new HashSet<>();
+					nodeNameValues.add(nodeName);
+					result.put("node_name", nodeNameValues);
+					if(nodeHostname != null){
+						Set<String> nodeHostnameValues = new HashSet<>();
+						nodeHostnameValues.add(nodeHostname);
+						result.put("node_hostname", nodeHostnameValues);
+					}
+						Set<String> nodeLabelsValues = new HashSet<>();
+						for (LabelAtom label: labels){
+							nodeLabelsValues.add(label.getName());
+						}
+						result.put("node_label", nodeLabelsValues);
+				}
+			return result ;
+	    }
 	    
 	    public static HashMap<String, Object> getSnappyflowTags(String docType) {
 	        	    	

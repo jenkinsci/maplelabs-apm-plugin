@@ -10,15 +10,15 @@ public class TagsUtil {
 
     private static transient final Logger LOGGER = Logger.getLogger(TagsUtil.class.getName());
 
-    public static Map<String, Set<String>> merge(Map<String, Set<String>> dest, Map<String, Set<String>> orig) {
+    public static HashMap<String, Set<String>> merge(Map<String, Set<String>> dest, Map<String, Set<String>> orig) {
         if (dest == null) {
             dest = new HashMap<>();
         }
         if (orig == null) {
             orig = new HashMap<>();
         }
-        for (final Iterator<Map.Entry<String, Set<String>>> iter = orig.entrySet().iterator(); iter.hasNext();){
-            Map.Entry<String, Set<String>> entry = iter.next();
+        for (final Iterator<HashMap.Entry<String, Set<String>>> iter = orig.entrySet().iterator(); iter.hasNext();){
+            HashMap.Entry<String, Set<String>> entry = iter.next();
             final String oName = entry.getKey();
             Set<String> dValues = dest.containsKey(oName) ? dest.get(oName) : new HashSet<String>();
             if (dValues == null) {
@@ -30,7 +30,7 @@ public class TagsUtil {
             }
             dest.put(oName, dValues);
         }
-        return dest;
+        return (HashMap<String, Set<String>>) dest;
     }
 
     public static JSONArray convertTagsToJSONArray(Map<String, Set<String>> tags){

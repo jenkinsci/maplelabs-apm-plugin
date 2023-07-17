@@ -1,15 +1,17 @@
 package com.apm.jenkins.plugins.events;
 
+import java.util.Set;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import hudson.model.Computer;
 import hudson.slaves.OfflineCause;
+
 import com.apm.jenkins.plugins.APMUtil;
-
-import java.util.HashMap;
-
 
 public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
 
-    public ComputerOnlineEvent(Computer computer, OfflineCause cause, HashMap<String, Object> tags, boolean isTemporarily) {
+    public ComputerOnlineEvent(Computer computer, OfflineCause cause, HashMap<String, Set<String>> tags, boolean isTemporarily) {
         
         String nodeName = APMUtil.getNodeName(computer);
         
@@ -25,6 +27,10 @@ public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
         setAlertType(AlertType.SUCCESS);
         
         //Snappyflow Specific
-        setSnappyflowTags(tags);
+        HashMap<String, Object> snappyTag = new HashMap();
+        for ( Entry<String, Set<String>> element : tags.entrySet()) {
+           snappyTag.put(element.getKey(),  element.getValue()) ;
+        }
+        setSnappyflowTags(snappyTag);
     }
 }

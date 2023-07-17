@@ -1,19 +1,26 @@
 package com.apm.jenkins.plugins.listeners;
 
+
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
+import java.io.IOException;
+import javax.annotation.Nonnull;
+import java.util.logging.Logger;
+import javax.annotation.CheckForNull;
+
 import hudson.Extension;
 import hudson.model.Computer;
 import hudson.model.TaskListener;
 import hudson.slaves.ComputerListener;
 import hudson.slaves.OfflineCause;
-import com.apm.jenkins.plugins.interfaces.APMClient;
-import com.apm.jenkins.plugins.interfaces.APMEvent;
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.ClientBase;
+import com.apm.jenkins.plugins.TagsUtil;
 import com.apm.jenkins.plugins.events.*;
+import com.apm.jenkins.plugins.Client.ClientBase;
+import com.apm.jenkins.plugins.interfaces.APMEvent;
+import com.apm.jenkins.plugins.interfaces.APMClient;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import java.util.logging.Logger;
 
 /**
  * This class registers an {@link ComputerListener} to trigger events and calculate metrics:
@@ -91,6 +98,56 @@ public class APMComputerListener extends ComputerListener {
             logger.fine("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process computer temporarily offline event");
+        }
+    }
+
+    
+    @Override
+    public void onTemporarilyOnline(Computer computer) {
+         try {
+            logger.fine("Start APMComputerListener#onTemporarilyOnline");
+
+            APMClient client = ClientBase.getClient();
+            if(client == null){
+                return;
+            }
+
+            // Get the list of tags to apply
+            final HashMap<String, Set<String>> tags = TagsUtil.merge(
+                    APMUtil.getTagsFromGlobalTags(),
+                    APMUtil.getComputerTags(computer));
+
+            // Send event
+             APMEvent event = new ComputerOnlineEvent(computer, null, tags, true);
+            client.event(event);
+
+            logger.fine("End APMComputerListener#onTemporarilyOnline");
+        } catch (Exception e) {
+            APMUtil.severe(logger, e, "Failed to process computer temporarily online event");
+        }
+    }
+
+    @Override
+    public void onLaunchFailure(Computer computer, TaskListener taskListener) throws IOException, InterruptedException {
+        try {
+            logger.fine("Start APMComputerListener#onLaunchFailure");
+
+             APMClient client = ClientBase.getClient();
+            if(client == null){
+                return;
+            }
+            // Get the list of tags to apply
+            Map<String, Set<String>> tags = TagsUtil.merge(
+                    APMUtil.getTagsFromGlobalTags(),
+                    APMUtil.getComputerTags(computer));
+
+            // // Send event
+            APMEvent event = new ComputerLaunchFailedEvent(computer, taskListener, tags);
+            client.event(event);
+
+            logger.fine("End APMComputerListener#onLaunchFailure");
+        } catch (Exception e) {
+            APMUtil.severe(logger, e, "Failed to process launch failure");
         }
     }
 }
