@@ -52,52 +52,45 @@ public class APMComputerPublisher extends PeriodicWork {
             }         
             
             nodeStats_dict.put("num_nodes", computers.length);
+            ArrayList<Object> nodeArray = new ArrayList<>(); 
             for (Computer computer : computers) {
-                // OP 
-                // {
-                //     docType : 'nodeStat',
-                //     computer: [
-                //         {
-                //             free: 1,
-                //             numberExeec: 2,..
-                //         }
-                //     ]
-                // }
                 if (computer.isOnline()) nodeOnline++;                        
-                if (computer.isOffline()) nodeOffline++;  
-                nodeStats_dict.put("free", computer.countIdle());
-                nodeStats_dict.put("inUse",  computer.countBusy());
-                nodeStats_dict.put("nodeName",  computer.getDisplayName());
-                nodeStats_dict.put("connectTime", computer.getConnectTime());
-                nodeStats_dict.put("executorCount", computer.countExecutors());
-                
+                if (computer.isOffline()) nodeOffline++; 
+                HashMap<String, Object> computerMap = new HashMap<String, Object>();
+                computerMap.put("free", computer.countIdle());
+                computerMap.put("inUse",  computer.countBusy());
+                computerMap.put("nodeName",  computer.getDisplayName());
+                computerMap.put("connectTime", computer.getConnectTime());
+                computerMap.put("executorCount", computer.countExecutors());
                 Map<String,Object> moniter  = computer.getMonitorData();
                 if(moniter != null) {
                     // RAM, SWAP 
                     MemoryUsage2 memory = (MemoryUsage2)moniter.get("hudson.node_monitors.SwapSpaceMonitor");
-                    nodeStats_dict.put("swap_total",memory != null ? memory.getTotalSwapSpace() : null);
-                    nodeStats_dict.put("swap_available",memory != null ? memory.getAvailableSwapSpace() : null);
-                    nodeStats_dict.put("memory_total",memory != null ? memory.getTotalPhysicalMemory() : null);
-                    nodeStats_dict.put("memory_available",memory != null ? memory.getAvailablePhysicalMemory() : null);
+                    computerMap.put("swap_total",memory != null ? memory.getTotalSwapSpace() : null);
+                    computerMap.put("swap_available",memory != null ? memory.getAvailableSwapSpace() : null);
+                    computerMap.put("memory_total",memory != null ? memory.getTotalPhysicalMemory() : null);
+                    computerMap.put("memory_available",memory != null ? memory.getAvailablePhysicalMemory() : null);
 
                     // Disk
                     DiskSpace diskSpaceMonitor = (DiskSpace) moniter.get("hudson.node_monitors.DiskSpaceMonitor");
-                    nodeStats_dict.put("disk_path", diskSpaceMonitor  != null? diskSpaceMonitor.getPath() : null);
-                    nodeStats_dict.put("disk_available",diskSpaceMonitor  != null? diskSpaceMonitor.size : null);
+                    computerMap.put("disk_path", diskSpaceMonitor  != null? diskSpaceMonitor.getPath() : null);
+                    computerMap.put("disk_available",diskSpaceMonitor  != null? diskSpaceMonitor.size : null);
 
                     // Temp
                     diskSpaceMonitor = (DiskSpace)moniter.get("hudson.node_monitors.TemporarySpaceMonitor");
-                    nodeStats_dict.put("temp_path", diskSpaceMonitor != null? diskSpaceMonitor.getPath() : null);
-                    nodeStats_dict.put("temp_available",diskSpaceMonitor != null ? diskSpaceMonitor.size : null);
+                    computerMap.put("temp_path", diskSpaceMonitor != null? diskSpaceMonitor.getPath() : null);
+                    computerMap.put("temp_available",diskSpaceMonitor != null ? diskSpaceMonitor.size : null);
 
                     // Response
                     Data responseData = (Data)moniter.get("hudson.node_monitors.ResponseTimeMonitor");
-                    nodeStats_dict.put("response_time",responseData != null ? responseData.getAverage() : null);
+                    computerMap.put("response_time",responseData != null ? responseData.getAverage() : null);
 
                     //Architect
-                    nodeStats_dict.put("arch",moniter.get("hudson.node_monitors.ArchitectureMonitor"));
+                    computerMap.put("arch",moniter.get("hudson.node_monitors.ArchitectureMonitor"));
                 }
+                nodeArray.add(computerMap);
             }
+            nodeStats_dict.put("computers", nodeArray);
             nodeStats_dict.put("num_node_online", nodeOnline);
             nodeStats_dict.put("num_nodes_offline", nodeOffline);
 
