@@ -17,9 +17,9 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 import com.apm.jenkins.plugins.interfaces.APMEvent;
 
 import hudson.Extension;
+import hudson.model.Run;
 import hudson.model.Queue;
 import hudson.model.Result;
-import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
@@ -28,11 +28,6 @@ public class APMBuildListener extends RunListener<Run> {
     private final static APMClient client = ClientBase.getClient();
 	private static final Logger logger = Logger.getLogger(APMBuildListener.class.getName());
 	private final static HashMap<String, Object>  buildDict = APMUtil.getSnappyflowTags("buildStats");
-
-	@Override
-    public void onInitialize(Run run) {
-		logger.info("Inside onInitialize method");
-	}
 	
 	@Override
     public void onStarted(Run run, TaskListener listener) {
@@ -120,16 +115,6 @@ public class APMBuildListener extends RunListener<Run> {
         }
         client.postSnappyflowMetric(buildDict, "metric");
 	}
-	
-	@Override
-    public void onFinalized(Run run) {
-		logger.info("Inside onFinalized method");
-	}
-	
-    @Override
-    public void onDeleted(Run run) {
-    	logger.info("Inside onDeleted method");
-    }
     
     public Queue getQueue() {
         return Queue.getInstance();

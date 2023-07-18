@@ -1,6 +1,5 @@
 package com.apm.jenkins.plugins.listeners;
 
-
 import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
@@ -12,8 +11,8 @@ import javax.annotation.CheckForNull;
 import hudson.Extension;
 import hudson.model.Computer;
 import hudson.model.TaskListener;
-import hudson.slaves.ComputerListener;
 import hudson.slaves.OfflineCause;
+import hudson.slaves.ComputerListener;
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.TagsUtil;
 import com.apm.jenkins.plugins.events.*;
@@ -34,26 +33,6 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 public class APMComputerListener extends ComputerListener {
 
     private static final Logger logger = Logger.getLogger(APMComputerListener.class.getName());
-
-    /* @Override
-    public void onOnline(Computer computer, TaskListener listener) throws IOException, InterruptedException {
-        try {	
-            logger.fine("Start APMComputerListener#onOnline");
-
-            // Get APM Client Instance
-            APMClient client = ClientBase.getClient();
-            if(client == null){
-                return;
-            }
-            // Send event
-            APMEvent event = new ComputerOnlineEvent(computer, cause, false);
-            client.event(event);
-            
-            logger.fine("End APMComputerListener#onOnline");
-        } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process computer online event");
-        }
-    } */
     
     @Override
     public void onOffline(@Nonnull Computer computer, @CheckForNull OfflineCause cause) {
@@ -79,12 +58,7 @@ public class APMComputerListener extends ComputerListener {
     @Override
     public void onTemporarilyOffline(Computer computer, OfflineCause cause) {
         try {
-            /* final boolean emitSystemEvents = APMUtil.getDatadogGlobalDescriptor().isEmitSystemEvents();
-            if (!emitSystemEvents) {
-                return;
-            } */
             logger.fine("Start APMComputerListener#onTemporarilyOffline");
-
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
             if(client == null){
@@ -151,4 +125,3 @@ public class APMComputerListener extends ComputerListener {
         }
     }
 }
-

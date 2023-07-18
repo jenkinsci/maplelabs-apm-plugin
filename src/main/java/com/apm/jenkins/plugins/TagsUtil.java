@@ -51,10 +51,7 @@ public class TagsUtil {
     }
     
     public static JSONObject convertHashMapToJSONObject(HashMap<String, Object> tags){
-    	JSONObject result = new JSONObject();
-    	
-        //JSONArray result = new JSONArray();
-        
+    	JSONObject result = new JSONObject();        
         for (final Iterator<HashMap.Entry<String, Object>> iter = tags.entrySet().iterator(); iter.hasNext();){
         	JSONObject jsonObject = new JSONObject();
             HashMap.Entry<String, Object> entry = iter.next();
@@ -65,7 +62,6 @@ public class TagsUtil {
             result.putAll(jsonObject);            
         }           	
             
-        // result.add(mergedObject);
         System.out.println("Metrics added to Json:" + result.toString());
         return result;        
     }

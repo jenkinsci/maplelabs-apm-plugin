@@ -3,19 +3,17 @@ import java.util.HashMap;
 
 import com.apm.jenkins.plugins.interfaces.APMEvent;
 
-
 public abstract class AbstractAPMEvent implements APMEvent {
 	
-	private String title;
+    private Long date;
     private String text;
     private String host;
+	private String title;
+    private String nodeName;
     private String jenkinsUrl;
     private APMEvent.Priority priority;
     private APMEvent.AlertType alertType;
     private HashMap<String, Object> sfTags;
-    private String nodeName;
-    private Long date;
-    // private Map<String, Set<String>> tags;
 
 	@Override
 	public String getTitle() {		

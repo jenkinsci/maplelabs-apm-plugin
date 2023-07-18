@@ -3,7 +3,6 @@ package com.apm.jenkins.plugins.events;
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.DataModel.*;
 
-
 public abstract class AbstractAPMBuildEvent extends AbstractAPMEvent {
 
     protected BuildData buildData;
@@ -15,7 +14,6 @@ public abstract class AbstractAPMBuildEvent extends AbstractAPMEvent {
         this.buildData = buildData;
         setHost(buildData.getHostname("unknown"));
         setJenkinsUrl(buildData.getJenkinsUrl("unknown"));
-        // setAggregationKey(buildData.getJobName("unknown"));
         setDate(buildData.getEndTime(APMUtil.currentTimeMillis()) / 1000);
         setSnappyflowTags(APMUtil.getSnappyflowTags("BuildEvent"));
     }

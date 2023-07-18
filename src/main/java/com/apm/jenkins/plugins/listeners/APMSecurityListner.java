@@ -5,7 +5,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 import hudson.Extension;
 import jenkins.security.SecurityListener;
-
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.apm.jenkins.plugins.APMUtil;

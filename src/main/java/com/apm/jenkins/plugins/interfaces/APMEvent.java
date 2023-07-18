@@ -46,8 +46,5 @@ public interface APMEvent {
 	public String getNodeName();
 
 	public Long getDate();
-
-	// public Map<String, Set<String>> getTags();
-
 }
 

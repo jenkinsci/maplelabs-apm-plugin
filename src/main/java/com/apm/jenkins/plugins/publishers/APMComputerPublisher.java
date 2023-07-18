@@ -101,45 +101,7 @@ public class APMComputerPublisher extends PeriodicWork {
             nodeStats_dict.put("num_node_online", nodeOnline);
             nodeStats_dict.put("num_nodes_offline", nodeOffline);
 
-            client.postSnappyflowMetric(nodeStats_dict, "metric");
-            
-            /*
-            PluginManager pluginManager = jenkins.getPluginManager();
-            failed = pluginManager.getFailedPlugins().size();
-            
-            List<PluginWrapper> plugins = pluginManager.getPlugins();
-            plugincount = plugins.size();
-            
-            
-            for (PluginWrapper pwr : plugins) {
-                if (pwr.hasUpdate()) {
-                    updatable++;
-                }
-                if (pwr.isActive()) {
-                	active++;
-                } else {
-                	inactive++;
-                }
-            }
-            
-            APMGlobalConfiguration SfGC = new APMGlobalConfiguration();
-            if(StringUtils.isNotBlank(SfGC.getTargetApiKey())) {
-				// Adding the collected metrics to dictionary
-				HashMap<String, Object> systemStats_dict = APMGlobalConfiguration.addHeaders("systemStats");
-				systemStats_dict.put(SfGC.appendQuotes("projectCount"), projectCount);
-				systemStats_dict.put(SfGC.appendQuotes("plugincount"), plugincount);
-				systemStats_dict.put(SfGC.appendQuotes("Active Plugins"), active);
-				systemStats_dict.put(SfGC.appendQuotes("Failed Plugins"), failed);
-				systemStats_dict.put(SfGC.appendQuotes("inactive Plugins"), inactive);
-				systemStats_dict.put(SfGC.appendQuotes("Updatable Plugins"), updatable);
-				systemStats_dict.put(SfGC.appendQuotes("nodeCount"), nodeCount);
-				systemStats_dict.put(SfGC.appendQuotes("nodeOffline"), nodeOffline);
-				systemStats_dict.put(SfGC.appendQuotes("nodeOnline"), nodeOnline);
-
-				logger.info("System stats dict: " + systemStats_dict);
-				SfGC.doPostData(systemStats_dict);
-            } */
-                                  
+            client.postSnappyflowMetric(nodeStats_dict, "metric");                       
         } catch (Exception e) {
         	e.printStackTrace();
         }

@@ -1,28 +1,30 @@
 package com.apm.jenkins.plugins.Client;
 
+import java.util.Base64;
+import java.util.HashMap;
+import javax.crypto.Cipher;
+import java.io.IOException;
+import javax.crypto.SecretKey;
+import java.util.logging.Logger;
+import javax.net.ssl.SSLContext;
+import java.nio.charset.Charset;
+import javax.servlet.ServletException;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 
 import net.sf.json.JSONObject;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.ssl.SSLContexts;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.client.HttpClient;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletException;
-import javax.net.ssl.SSLContext;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.io.IOException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.TagsUtil;
@@ -30,11 +32,6 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 import com.apm.jenkins.plugins.interfaces.APMEvent;
 
 import org.kohsuke.stapler.interceptor.RequirePOST;
-import org.apache.http.Header;
-
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.logging.Logger;
 
 
 /**
@@ -54,21 +51,20 @@ public class APMHttpClient implements APMClient {
     private static final String EVENT = "v1/events";
     private static final String METRIC = "v1/series";
         
-    // @SuppressFBWarnings(value="MS_SHOULD_BE_FINAL")
     public final static boolean enableValidations = true;
     
+	private byte[] sessionKey = null;
     private static final String ALGORITHM = "AES";
 	private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-	private byte[] sessionKey = null;
 	private  HashMap<String,String> target = new HashMap<String,String>();
 	    
     private boolean defaultIntakeConnectionBroken = false;
         
-    private String profileKey = null;
-    private String projectName = null;
     private String appName = null;
     private String instName = null;
+    private String profileKey = null;
     private String destination = null;
+    private String projectName = null;
     
     
     private enum SnappyflowTargetType {

@@ -63,15 +63,11 @@ public class APMJenkinsPublisher extends PeriodicWork {
 			systemStats_dict.put("num_inactive_plugins", pluginData.getInactive());
 			systemStats_dict.put("num_plugin_with_update", pluginData.getUpdatable());
     
-			logger.info("System stats dict: " + systemStats_dict);
-			// client.postSnappyflowMetric(systemStats_dict, "metric");
-            
-            
+			client.postSnappyflowMetric(systemStats_dict, "metric");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to compute and send Jenkins metrics");
         }
     }
-    
     
     private PluginData collectPluginData(Jenkins instance) {
         PluginData.Builder pluginData = PluginData.newBuilder();

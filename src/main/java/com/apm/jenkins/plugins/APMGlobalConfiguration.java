@@ -23,50 +23,48 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private static final String DISPLAY_NAME = "APM Plugin";
 	
 	private static final String DEFAULT_REPORT_WITH_VALUE = APMClient.ClientType.HTTP.name();
-    private static final String DEFAULT_TARGET_API_URL_VALUE = "https://api.snappyflow.com/api/";
-    private static final String DEFAULT_TARGET_DESTINATION_VALUE = "Snappyflow";
-    private static final String DEFAULT_TARGET_LOG_INTAKE_URL_VALUE = null;
-    private static final String DEFAULT_TARGET_WEBHOOK_INTAKE_URL_VALUE = null;
-    private static final String DEFAULT_TARGET_HOST_VALUE = "localhost";
     private static final Integer DEFAULT_TARGET_PORT_VALUE = 8125;
-    private static final Integer DEFAULT_TRACE_COLLECTION_PORT_VALUE = 8126;
     private static final String DEFAULT_CI_INSTANCE_NAME = "jenkins";
-    private static final Integer DEFAULT_TARGET_LOG_COLLECTION_PORT_VALUE = null;
-    private static final boolean DEFAULT_EMIT_SECURITY_EVENTS_VALUE = true;
+    private static final String DEFAULT_TARGET_HOST_VALUE = "localhost";
     private static final boolean DEFAULT_EMIT_SYSTEM_EVENTS_VALUE = true;
-    
-    private static final String REPORT_WITH_PROPERTY = "APM_JENKINS_PLUGIN_REPORT_WITH";
+    private static final boolean DEFAULT_EMIT_SECURITY_EVENTS_VALUE = true;
+    private static final String DEFAULT_TARGET_LOG_INTAKE_URL_VALUE = null;
+    private static final Integer DEFAULT_TRACE_COLLECTION_PORT_VALUE = 8126;
+    private static final String DEFAULT_TARGET_WEBHOOK_INTAKE_URL_VALUE = null;
+    private static final String DEFAULT_TARGET_DESTINATION_VALUE = "Snappyflow";
+    private static final Integer DEFAULT_TARGET_LOG_COLLECTION_PORT_VALUE = null;
     private static final String HOSTNAME_PROPERTY = "APM_JENKINS_PLUGIN_HOSTNAME";
+    private static final String REPORT_WITH_PROPERTY = "APM_JENKINS_PLUGIN_REPORT_WITH";
     private static final String GLOBAL_TAGS_PROPERTY = "APM_JENKINS_PLUGIN_GLOBAL_TAGS";
-    private static final String EMIT_SECURITY_EVENTS_PROPERTY = "APM_JENKINS_PLUGIN_EMIT_SECURITY_EVENTS";
+    private static final String DEFAULT_TARGET_API_URL_VALUE = "https://api.snappyflow.com/api/";
     private static final String EMIT_SYSTEM_EVENTS_PROPERTY = "APM_JENKINS_PLUGIN_EMIT_SYSTEM_EVENTS";
+    private static final String EMIT_SECURITY_EVENTS_PROPERTY = "APM_JENKINS_PLUGIN_EMIT_SECURITY_EVENTS";
       
 	private static final Logger logger = Logger.getLogger(APMGlobalConfiguration.class.getName());	
 		
-	private String targetApiKey = null;
-	private String targetProjectName = null;
-	private String targetAppName = null;
-	private String targetInstanceName = null;
 	private String hostname = null;
 	private String blacklist = null;
 	private String whitelist = null;
 	private String globalTags = null;
+	private String targetApiKey = null;
+	private String targetAppName = null;
+	private String targetProjectName = null;
+	private String targetInstanceName = null;
 	
+	private String usedApiKey = null;
 	private String metricsReceiverUrl = null;
 	private String reportWith = DEFAULT_REPORT_WITH_VALUE;
-	private String targetApiURL = DEFAULT_TARGET_API_URL_VALUE;
-	private String targetLogIntakeURL = DEFAULT_TARGET_LOG_INTAKE_URL_VALUE;
-	private String targetWebhookIntakeURL = DEFAULT_TARGET_WEBHOOK_INTAKE_URL_VALUE;
-	// private String targetCredentialsApiKey = null;
-	private String usedApiKey = null;
 	private String targetHost = DEFAULT_TARGET_HOST_VALUE;
     private Integer targetPort = DEFAULT_TARGET_PORT_VALUE;
-    private Integer targetLogCollectionPort = DEFAULT_TARGET_LOG_COLLECTION_PORT_VALUE;
-    private Integer targetTraceCollectionPort = DEFAULT_TRACE_COLLECTION_PORT_VALUE;
     private String traceServiceName = DEFAULT_CI_INSTANCE_NAME;
-    private boolean emitSecurityEvents = DEFAULT_EMIT_SECURITY_EVENTS_VALUE;
+	private String targetApiURL = DEFAULT_TARGET_API_URL_VALUE;
     private boolean emitSystemEvents = DEFAULT_EMIT_SYSTEM_EVENTS_VALUE;
     private String targetDestination = DEFAULT_TARGET_DESTINATION_VALUE;
+    private boolean emitSecurityEvents = DEFAULT_EMIT_SECURITY_EVENTS_VALUE;
+	private String targetLogIntakeURL = DEFAULT_TARGET_LOG_INTAKE_URL_VALUE;
+    private Integer targetTraceCollectionPort = DEFAULT_TRACE_COLLECTION_PORT_VALUE;
+	private String targetWebhookIntakeURL = DEFAULT_TARGET_WEBHOOK_INTAKE_URL_VALUE;
+    private Integer targetLogCollectionPort = DEFAULT_TARGET_LOG_COLLECTION_PORT_VALUE;
     	
 	@DataBoundConstructor
 	public APMGlobalConfiguration() {

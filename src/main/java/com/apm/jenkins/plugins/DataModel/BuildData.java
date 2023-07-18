@@ -1,56 +1,35 @@
 package com.apm.jenkins.plugins.DataModel;
 
-import hudson.EnvVars;
-import hudson.model.BooleanParameterValue;
-import hudson.model.Cause;
-import hudson.model.CauseAction;
-import hudson.model.ParameterValue;
-import hudson.model.ParametersAction;
-import hudson.model.Result;
-import hudson.model.Run;
-import hudson.model.StringParameterValue;
-import hudson.model.TaskListener;
-import hudson.model.TextParameterValue;
-import hudson.model.User;
-import hudson.tasks.Mailer;
-import com.cloudbees.plugins.credentials.CredentialsParameterValue;
-import hudson.triggers.SCMTrigger;
-import hudson.triggers.TimerTrigger;
-import hudson.util.LogTaskListener;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.gitclient.GitClient;
-
-import com.apm.jenkins.plugins.*;
-/* import com.apm.jenkins.plugins.utils.*;
-import com.apm.jenkins.plugins.utils.git.*;
-
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_AUTHOR_DATE;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_AUTHOR_EMAIL;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_AUTHOR_NAME;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_COMMITTER_DATE;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_COMMITTER_EMAIL;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_COMMITTER_NAME;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.APM_GIT_COMMIT_MESSAGE;
-import static com.apm.jenkins.plugins.utils.git.GitConstants.GIT_BRANCH;
-
-import static com.apm.jenkins.plugins.utils.git.GitUtils.isCommitInfoAlreadyCreated;
-import static com.apm.jenkins.plugins.utils.git.GitUtils.isRepositoryInfoAlreadyCreated;
-import static com.apm.jenkins.plugins.utils.git.GitUtils.isUserSuppliedGit;
-import static com.apm.jenkins.plugins.utils.git.GitUtils.isValidCommit;
-import static com.apm.jenkins.plugins.utils.git.GitUtils.isValidRepositoryURL; */
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.HashMap;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Level;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
-
+import hudson.EnvVars;
+import hudson.model.Run;
+import hudson.model.User;
+import hudson.model.Cause;
+import hudson.model.Result;
+import hudson.tasks.Mailer;
+import net.sf.json.JSONObject;
+import hudson.model.CauseAction;
+import hudson.model.TaskListener;
+import com.apm.jenkins.plugins.*;
+import hudson.triggers.SCMTrigger;
+import hudson.model.ParameterValue;
+import hudson.util.LogTaskListener;
+import hudson.triggers.TimerTrigger;
+import hudson.model.ParametersAction;
+import hudson.model.TextParameterValue;
+import hudson.model.StringParameterValue;
+import hudson.model.BooleanParameterValue;
+import org.apache.commons.lang.StringUtils;
+import com.cloudbees.plugins.credentials.CredentialsParameterValue;
 
 public class BuildData implements Serializable {
 
@@ -124,17 +103,8 @@ public class BuildData implements Serializable {
             envVars = run.getEnvironment(new LogTaskListener(LOGGER, Level.INFO));
         }
 
-        //setTags(APMUtil.getBuildTags(run, envVars));
-
         // Populate instance using environment variables.
         populateEnvVariables(envVars);
-
-        // Populate instance using Git info if possible.
-        // Set all Git commit related variables.
-        /* if(isGit(envVars)){
-            populateGitVariables(run, listener, envVars);
-        } */
-
         // Populate instance using run instance
         // Set StartTime, EndTime and Duration
         long startTimeInMs = run.getStartTimeInMillis();
@@ -202,13 +172,6 @@ public class BuildData implements Serializable {
         
         // Build parameters
         populateBuildParameters(run);
-
-        // Set Tracing IDs
-        // final TraceSpan buildSpan = BuildSpanManager.get().get(getBuildTag(""));
-        // if(buildSpan !=null) {
-           // setTraceId(Long.toUnsignedString(buildSpan.context().getTraceId()));
-            //setSpanId(Long.toUnsignedString(buildSpan.context().getSpanId()));
-        //}
     }
 
     private void populateBuildParameters(Run<?,?> run) {
@@ -252,23 +215,6 @@ public class BuildData implements Serializable {
         setExecutorNumber(envVars.get("EXECUTOR_NUMBER"));
         setJavaHome(envVars.get("JAVA_HOME"));
         setWorkspace(envVars.get("WORKSPACE"));
-        /* if (isGit(envVars)) {
-            setBranch(GitUtils.resolveGitBranch(envVars, null));
-            setGitUrl(GitUtils.resolveGitRepositoryUrl(envVars, null));
-            setGitCommit(GitUtils.resolveGitCommit(envVars, null));
-            setGitTag(GitUtils.resolveGitTag(envVars, null));
-
-            // Git data supplied by the user has prevalence. We set them first.
-            // Only the data that has not been set will be updated later.
-            // If any value is not provided, we maintained the original value if any.
-            setGitMessage(envVars.get(DD_GIT_COMMIT_MESSAGE, this.gitMessage));
-            setGitAuthorName(envVars.get(DD_GIT_COMMIT_AUTHOR_NAME, this.gitAuthorName));
-            setGitAuthorEmail(envVars.get(DD_GIT_COMMIT_AUTHOR_EMAIL, this.gitAuthorEmail));
-            setGitAuthorDate(envVars.get(DD_GIT_COMMIT_AUTHOR_DATE, this.gitAuthorDate));
-            setGitCommitterName(envVars.get(DD_GIT_COMMIT_COMMITTER_NAME, this.gitCommitterName));
-            setGitCommitterEmail(envVars.get(DD_GIT_COMMIT_COMMITTER_EMAIL, this.gitCommitterEmail));
-            setGitCommitterDate(envVars.get(DD_GIT_COMMIT_COMMITTER_DATE, this.gitCommitterDate));
-        }*/    	
 
     	if (envVars.get("CVS_BRANCH") != null) {
             setBranch(envVars.get("CVS_BRANCH"));
@@ -282,114 +228,6 @@ public class BuildData implements Serializable {
         setPromotedUserId(envVars.get("PROMOTED_USER_ID"));
         setPromotedJobFullName(envVars.get("PROMOTED_JOB_FULL_NAME"));
     }
-
-
-    /**
-     * Populate git commit related information in the BuildData instance.
-     * @param run
-     * @param listener
-     * @param envVars
-     */
-   /* private void populateGitVariables(Run<?,?> run, TaskListener listener, EnvVars envVars) {
-        // First we obtain the actions to check if the Git information was already calculated.
-        // If so, we want to use this information to avoid creating a new Git client instance
-        // to calculate the same information.
-
-        boolean commitInfoAlreadyCreated = isCommitInfoAlreadyCreated(run, this.gitCommit);
-        boolean repositoryInfoAlreadyCreated = isRepositoryInfoAlreadyCreated(run, this.gitUrl);
-
-        GitRepositoryAction gitRepositoryAction = run.getAction(GitRepositoryAction.class);
-        if(repositoryInfoAlreadyCreated){
-            this.gitDefaultBranch = gitRepositoryAction.getDefaultBranch();
-        }
-
-        final GitCommitAction gitCommitAction = run.getAction(GitCommitAction.class);
-        if(commitInfoAlreadyCreated){
-            populateCommitInfo(gitCommitAction);
-        }
-
-        // If all Git info was already calculated, we finish the method here.
-        if(repositoryInfoAlreadyCreated && commitInfoAlreadyCreated) {
-            return;
-        }
-
-        // At this point, there is some Git information that we need to calculate.
-        // We use the same Git client instance to calculate all git information
-        // because creating a Git client is a very expensive operation.
-        // Create a new Git client is a very expensive operation.
-        // Avoid creating Git clients as much as possible.
-        if(!isValidCommit(gitCommit) && !isValidRepositoryURL(this.gitUrl)) {
-            return;
-        }
-
-        final GitClient gitClient = GitUtils.newGitClient(run, listener, envVars, this.nodeName, this.workspace);
-        if(isValidCommit(this.gitCommit)){
-            populateCommitInfo(GitUtils.buildGitCommitAction(run, gitClient, this.gitCommit));
-        }
-
-        if(isValidRepositoryURL(this.gitUrl)){
-            gitRepositoryAction = GitUtils.buildGitRepositoryAction(run, gitClient, envVars, this.gitUrl);
-            if(gitRepositoryAction != null) {
-                this.gitDefaultBranch = gitRepositoryAction.getDefaultBranch();
-            }
-        }
-    } */
-
-    /**
-     * Populate the information related to the commit (message, author and committer) based on the GitCommitAction
-     * only if the user has not set the value manually.
-     * @param gitCommitAction
-     */
-    /* private void populateCommitInfo(GitCommitAction gitCommitAction) {
-        if(gitCommitAction != null) {
-            // If any value is not empty, it means that
-            // the user supplied the value manually
-            // via environment variables.
-
-            if(getGitMessage("").isEmpty()){
-                setGitMessage(gitCommitAction.getMessage());
-            }
-
-            if(getGitAuthorName("").isEmpty()){
-                setGitAuthorName(gitCommitAction.getAuthorName());
-            }
-
-            if(getGitAuthorEmail("").isEmpty()) {
-                setGitAuthorEmail(gitCommitAction.getAuthorEmail());
-            }
-
-            if(getGitAuthorDate("").isEmpty()){
-                setGitAuthorDate(gitCommitAction.getAuthorDate());
-            }
-
-            if(getGitCommitterName("").isEmpty()){
-                setGitCommitterName(gitCommitAction.getCommitterName());
-            }
-
-            if(getGitCommitterEmail("").isEmpty()){
-                setGitCommitterEmail(gitCommitAction.getCommitterEmail());
-            }
-
-            if(getGitCommitterDate("").isEmpty()){
-                setGitCommitterDate(gitCommitAction.getCommitterDate());
-            }
-        }
-    } */
-
-    /**
-     * Return if the Run is based on Git repository checking
-     * the GIT_BRANCH environment variable or the user supplied
-     * environment variables.
-     * @param envVars
-     * @return true if GIT_BRANCH is set or the user supplied GIT information via env vars.
-     */
-   /* private boolean isGit(EnvVars envVars) {
-        if(envVars == null){
-            return false;
-        }
-
-        return isUserSuppliedGit(envVars) || envVars.get(GIT_BRANCH) != null;
-    } */
 
     /**
      * Assembles a map of tags containing:
