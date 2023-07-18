@@ -1,36 +1,33 @@
 package com.apm.jenkins.plugins;
 
-import hudson.ExtensionList;
-import hudson.EnvVars;
-import hudson.ProxyConfiguration;
-import hudson.model.labels.LabelAtom;
-import hudson.model.Computer;
-import jenkins.model.Jenkins;
-
-import java.util.logging.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Arrays;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.net.URL;
-import java.net.Proxy;
-import java.net.HttpURLConnection;
+import java.io.StringWriter;
 import java.net.Inet4Address;
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.net.MalformedURLException;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.logging.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import hudson.EnvVars;
+import hudson.model.Node;
+import hudson.ExtensionList;
+import hudson.model.Computer;
+import jenkins.model.Jenkins;
+import hudson.model.labels.LabelAtom;
+
 
 public class APMUtil {
 	
@@ -368,29 +365,30 @@ public class APMUtil {
 	    public static Map<String, Set<String>> getComputerTags(Computer computer) {
 			Set<LabelAtom> labels = null;
 			Map<String, Set<String>> result = new HashMap<>();
-			labels = computer.getNode().getAssignedLabels();
-			if(labels != null) {
-					String nodeHostname = null;
-					try {
-						nodeHostname = computer.getHostName();
-					} catch (IOException | InterruptedException e) {
-						logger.fine("Could not retrieve hostname");
-					}
-					String nodeName = getNodeName(computer);
-					Set<String> nodeNameValues = new HashSet<>();
-					nodeNameValues.add(nodeName);
-					result.put("node_name", nodeNameValues);
-					if(nodeHostname != null){
-						Set<String> nodeHostnameValues = new HashSet<>();
-						nodeHostnameValues.add(nodeHostname);
-						result.put("node_hostname", nodeHostnameValues);
-					}
-						Set<String> nodeLabelsValues = new HashSet<>();
-						for (LabelAtom label: labels){
-							nodeLabelsValues.add(label.getName());
+			Node node = computer.getNode();
+			labels = node != null ? node.getAssignedLabels() : null ;
+				if(labels != null) {
+						String nodeHostname = null;
+						try {
+							nodeHostname = computer.getHostName();
+						} catch (IOException | InterruptedException e) {
+							logger.fine("Could not retrieve hostname");
 						}
-						result.put("node_label", nodeLabelsValues);
-				}
+						String nodeName = getNodeName(computer);
+						Set<String> nodeNameValues = new HashSet<>();
+						nodeNameValues.add(nodeName);
+						result.put("node_name", nodeNameValues);
+						if(nodeHostname != null){
+							Set<String> nodeHostnameValues = new HashSet<>();
+							nodeHostnameValues.add(nodeHostname);
+							result.put("node_hostname", nodeHostnameValues);
+						}
+							Set<String> nodeLabelsValues = new HashSet<>();
+							for (LabelAtom label: labels){
+								nodeLabelsValues.add(label.getName());
+							}
+							result.put("node_label", nodeLabelsValues);
+					}
 			return result ;
 	    }
 	    
