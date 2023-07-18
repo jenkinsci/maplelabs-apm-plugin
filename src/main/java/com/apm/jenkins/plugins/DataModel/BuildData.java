@@ -201,14 +201,7 @@ public class BuildData implements Serializable {
         setJenkinsUrl(jenkinsUrl);
         
         // Build parameters
-        populateBuildParameters(run);
-
-        // Set Tracing IDs
-        // final TraceSpan buildSpan = BuildSpanManager.get().get(getBuildTag(""));
-        // if(buildSpan !=null) {
-           // setTraceId(Long.toUnsignedString(buildSpan.context().getTraceId()));
-            //setSpanId(Long.toUnsignedString(buildSpan.context().getSpanId()));
-        //}
+        populateBuildParameters(run);        
     }
 
     private void populateBuildParameters(Run<?,?> run) {
