@@ -50,6 +50,7 @@ public class BuildData implements Serializable {
     private String executorNumber;
     private String javaHome;
     private String workspace;
+    private String parentName;
     // Branch contains either env variable - SVN_REVISION or CVS_BRANCH or GIT_BRANCH
     private String branch;
     private String gitUrl;
@@ -153,6 +154,7 @@ public class BuildData implements Serializable {
         } catch(RuntimeException e){
             //noop
         }
+        parentName = run.getParent().getName();
         setBaseJobName(normalizeJobName(baseJobName));
         String jobNameWithConfiguration = null;
         try {
@@ -804,6 +806,10 @@ public class BuildData implements Serializable {
             return null;
         }
         return jobName.replaceAll("»", "/").replaceAll(" ", "");
+    }
+
+    public String getParentName() {
+        return parentName;
     }
 
 }

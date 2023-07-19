@@ -12,14 +12,14 @@ import javax.annotation.Nonnull;
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.ClientBase;
 import com.apm.jenkins.plugins.DataModel.BuildData;
-import com.apm.jenkins.plugins.events.BuildStartedEvent;
-import com.apm.jenkins.plugins.interfaces.APMClient;
 import com.apm.jenkins.plugins.interfaces.APMEvent;
+import com.apm.jenkins.plugins.interfaces.APMClient;
+import com.apm.jenkins.plugins.events.BuildStartedEvent;
+import com.apm.jenkins.plugins.events.BuildCompletedEvent;
 
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.Queue;
-import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
@@ -90,32 +90,59 @@ public class APMBuildListener extends RunListener<Run> {
     /**
      * This function will send job status to client
      */
-	@Override
+    @Override
     public void onCompleted(Run run, @Nonnull TaskListener listener) {
-		logger.info("Inside onCompleted method");
-        buildDict.put("number",run.getNumber());
-        buildDict.put("name",run.getDisplayName());
-        buildDict.put("duration",run.getDuration());
-        buildDict.put("parents",run.getParent().getName());
-        if(run.getResult() == Result.ABORTED){
-            buildDict.put("result_code",4);
-            buildDict.put("result","ABORTED");
-        }if(run.getResult() == Result.UNSTABLE){
-            buildDict.put("result_code",3);
-            buildDict.put("result","UNSTABLE");
-        }if(run.getResult() == Result.NOT_BUILT){
-            buildDict.put("result_code",2);
-            buildDict.put("result","NOT_BUILT");
-        }else if(run.getResult() == Result.FAILURE){
-            buildDict.put("result_code",1);
-            buildDict.put("result","FAILURE");
-        }if(run.getResult() == Result.SUCCESS){
-            buildDict.put("result_code",0);
-            buildDict.put("result","SUCCESS");
+        logger.info("Inside onCompleted method");
+        try {
+            // Process only if job in NOT in excluded and is in included
+            if (!APMUtil.isJobTracked(run.getParent().getFullName())) {
+                return;
+            }
+            logger.fine("Start APMBuildListener#onCompleted");
+
+            // Get Datadog Client Instance
+            APMClient client = ClientBase.getClient();
+            if (client == null) {
+                return;
+            }
+
+            // Collect Build Data
+            BuildData buildData;
+            try {
+                buildData = new BuildData(run, listener);
+            } catch (IOException | InterruptedException e) {
+                APMUtil.severe(logger, e, "Failed to parse completed build data");
+                return;
+            }
+
+            // Send an event
+            APMEvent event = new BuildCompletedEvent(buildData);
+            client.event(event);
+
+            // Send a metric
+            logger.fine(String.format("[%s]: Duration: %s", buildData.getJobName(null),
+                    toTimeString(buildData.getDuration(0L))));
+
+           
+            client.postSnappyflowMetric(buildDict, "metric");
+            logger.info("End APMBuildListener#onCompleted");
+        } catch (Exception e) {
+            APMUtil.severe(logger, e, "Failed to process build completion");
         }
-        client.postSnappyflowMetric(buildDict, "metric");
-	}
+    }
     
+    /**
+     * This function will return time in mins and sec string format
+     * @param millis
+     * @return
+     */
+    private static String toTimeString(long millis) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        long totalSeconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+        long seconds = totalSeconds - TimeUnit.MINUTES.toSeconds(minutes);
+        return String.format("%d min, %d sec", minutes, seconds);
+    }
+
     public Queue getQueue() {
         return Queue.getInstance();
     }
