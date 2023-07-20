@@ -2,7 +2,6 @@ package com.apm.jenkins.plugins.listeners;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.concurrent.TimeUnit;
@@ -25,9 +24,7 @@ import hudson.model.listeners.RunListener;
 
 @Extension
 public class APMBuildListener extends RunListener<Run> {
-    private final static APMClient client = ClientBase.getClient();
 	private static final Logger logger = Logger.getLogger(APMBuildListener.class.getName());
-	private final static HashMap<String, Object>  buildDict = APMUtil.getSnappyflowTags("buildStats");
 	
 	@Override
     public void onStarted(Run run, TaskListener listener) {
@@ -123,8 +120,6 @@ public class APMBuildListener extends RunListener<Run> {
             logger.fine(String.format("[%s]: Duration: %s", buildData.getJobName(null),
                     toTimeString(buildData.getDuration(0L))));
 
-           
-            client.postSnappyflowMetric(buildDict, "metric");
             logger.info("End APMBuildListener#onCompleted");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process build completion");
