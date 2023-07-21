@@ -6,8 +6,8 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>4.52</version>
-		<relativePath />
+		<version>4.65</version>
+		<relativePath> ../pom.xml</relativePath>
 	</parent>
 	<groupId>io.jenkins.plugins</groupId>
 	<artifactId>apm</artifactId>
