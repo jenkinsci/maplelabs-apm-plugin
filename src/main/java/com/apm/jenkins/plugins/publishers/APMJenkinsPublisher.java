@@ -24,9 +24,8 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 @Extension
 public class APMJenkinsPublisher extends PeriodicWork {
 
-    private static final Logger logger = Logger.getLogger(APMJenkinsPublisher.class.getName());
-
     private static final long RECURRENCE_PERIOD = TimeUnit.MINUTES.toMillis(1);
+    private static final Logger logger = Logger.getLogger(APMJenkinsPublisher.class.getName());
 
     @Override
     public long getRecurrencePeriod() {

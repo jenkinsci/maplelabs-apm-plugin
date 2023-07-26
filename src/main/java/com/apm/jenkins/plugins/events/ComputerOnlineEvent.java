@@ -18,7 +18,6 @@ public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
         String title = "Jenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online";
         setTitle(title);
 
-        // TODO: Add more info about the case in the event in message.
         String text = "%%% \nJenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online." +
                 "\n" + super.getLocationDetails() + " \n%%%";
         setText(text);
@@ -27,7 +26,7 @@ public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
         setAlertType(AlertType.SUCCESS);
         
         //Snappyflow Specific
-        HashMap<String, Object> snappyTag = new HashMap();
+        HashMap<String, Object> snappyTag = new HashMap<String, Object>();
         for ( Entry<String, Set<String>> element : tags.entrySet()) {
            snappyTag.put(element.getKey(),  element.getValue()) ;
         }

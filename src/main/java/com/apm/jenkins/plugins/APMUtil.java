@@ -12,12 +12,10 @@ import java.net.UnknownHostException;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.*;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,63 +122,6 @@ public class APMUtil {
 	    	}
 	    }
 	    
-	    /**
-	     * Checks if a jobName is excluded, included, or neither.
-	     *
-	     * @param jobName - A String containing the name of some job.
-	     * @return a boolean to signify if the jobName is or is not excluded or included.
-	     */
-	    public static boolean isJobTracked(final String jobName) {
-	        return !isJobExcluded(jobName) && isJobIncluded(jobName);
-	    }
-	    
-	    /**
-	     * Checks if a jobName is excluded.
-	     *
-	     * @param jobName - A String containing the name of some job.
-	     * @return a boolean to signify if the jobName is or is not excluded.
-	     */
-	    private static boolean isJobExcluded(final String jobName) {
-	        final APMGlobalConfiguration apmGlobalConfig = getAPMGlobalDescriptor();
-	        if (apmGlobalConfig == null){
-	            return false;
-	        }
-	        final String excludedProp = apmGlobalConfig.getExcluded();
-	        List<String> excluded = cstrToList(excludedProp);
-	        for (String excludedJob : excluded){
-	            Pattern excludedJobPattern = Pattern.compile(excludedJob);
-	            Matcher jobNameMatcher = excludedJobPattern.matcher(jobName);
-	            if (jobNameMatcher.matches()) {
-	                return true;
-	            }
-	        }
-	        return false;
-
-	    }
-
-	    /**
-	     * Checks if a jobName is included.
-	     *
-	     * @param jobName - A String containing the name of some job.
-	     * @return a boolean to signify if the jobName is or is not included.
-	     */
-	    private static boolean isJobIncluded(final String jobName) {
-	        final APMGlobalConfiguration apmGlobalConfig = getAPMGlobalDescriptor();
-	        if (apmGlobalConfig == null){
-	            return true;
-	        }
-	        final String includedProp = apmGlobalConfig.getIncluded();
-	        final List<String> included = cstrToList(includedProp);
-	        for (String includedJob : included){
-	            Pattern includedJobPattern = Pattern.compile(includedJob);
-	            Matcher jobNameMatcher = includedJobPattern.matcher(jobName);
-	            if (jobNameMatcher.matches()) {
-	                return true;
-	            }
-	        }
-	        return included.isEmpty();
-	    }
-	    
 	    public static long currentTimeMillis(){
 	        // This method exist so we can mock System.currentTimeMillis in unit tests
 	        return System.currentTimeMillis();
@@ -265,102 +206,11 @@ public class APMUtil {
 	    	// Never found the hostname
 	    	if (hostname == null || "".equals(hostname)) {
 	    		logger.warning("Unable to reliably determine host name. You can define one in "
-	    				+ "the 'Manage Plugins' section under the 'Datadog Plugin' section.");
+	    				+ "the 'Manage Plugins' section under the 'APM Plugin' section.");
 	    	}
 	    	return null;
 	    }
 	    
-	    /**
-	     * Converts a string List into a List Object
-	     *
-	     * @param str - A String containing a comma separated list of items.
-	     * @return a String List with all items
-	     */
-	    public static List<String> linesToList(final String str) {
-	        return convertRegexStringToList(str, "\\r?\\n");
-	    }
-	    
-	    /**
-	     * Converts a string List into a List Object
-	     *
-	     * @param str - A String containing a comma separated list of items.
-	     * @param regex - Regex to use to split the string list
-	     * @return a String List with all items
-	     */
-	    private static List<String> convertRegexStringToList(final String str, String regex) {
-	        List<String> result = new ArrayList<>();
-	        if (str != null && str.length() != 0) {
-	            for (String item : str.trim().split(regex)) {
-	                if (!item.isEmpty()) {
-	                    result.add(item.trim());
-	                }
-	            }
-	        }
-	        return result;
-	    }
-	    
-	    /**
-	     * Converts a Comma Separated List into a List Object
-	     *
-	     * @param str - A String containing a comma separated list of items.
-	     * @return a String List with all items transform with trim and lower case
-	     */
-	    public static List<String> cstrToList(final String str) {
-	        return convertRegexStringToList(str, ",");
-	    }
-	    
-	    /**
-	     * Getter function for the globalTags global configuration, containing
-	     * a comma-separated list of tags that should be applied everywhere.
-	     *
-	     * @return a map containing the globalTags global configuration.
-	     */
-	    public static Map<String, Set<String>> getTagsFromGlobalTags() {
-	        Map<String, Set<String>> tags = new HashMap<>();
-
-	        final APMGlobalConfiguration APMGlobalConfig = getAPMGlobalDescriptor();
-	        if (APMGlobalConfig == null){
-	            return tags;
-	        }
-
-	        final String globalTags = APMGlobalConfig.getGlobalTags();
-	        List<String> globalTagsLines = APMUtil.linesToList(globalTags);       
-	        
-	        for (String globalTagsLine : globalTagsLines) {
-	            List<String> tagList = cstrToList(globalTagsLine);
-	            if (tagList.isEmpty()) {
-	                continue;
-	            }
-
-	            for (int i = 0; i < tagList.size(); i++) {
-	                String[] tagItem = tagList.get(i).replaceAll(" ", "").split(":", 2);
-	                if(tagItem.length == 2) {
-	                    String tagName = tagItem[0];
-	                    String tagValue = tagItem[1];
-	                    Set<String> tagValues = tags.containsKey(tagName) ? tags.get(tagName) : new HashSet<String>();
-	                    // Apply environment variables if specified. ie (custom_tag:$ENV_VAR)
-	                    if (tagValue.startsWith("$") && EnvVars.masterEnvVars.containsKey(tagValue.substring(1))){
-	                        tagValue = EnvVars.masterEnvVars.get(tagValue.substring(1));
-	                    }
-	                    else {
-	                        logger.fine(String.format(
-	                            "Specified an environment variable that doesn't exist, not applying tag: %s",
-	                            Arrays.toString(tagItem)));
-	                    }
-	                    tagValues.add(tagValue.toLowerCase());
-	                    tags.put(tagName, tagValues);
-	                } else if(tagItem.length == 1) {
-	                    String tagName = tagItem[0];
-	                    Set<String> tagValues = tags.containsKey(tagName) ? tags.get(tagName) : new HashSet<String>();
-	                    tagValues.add(""); // no values
-	                    tags.put(tagName, tagValues);
-	                } else {
-	                    logger.fine(String.format("Ignoring the tag %s. It is empty.", tagItem));
-	                }
-	            }
-	        }
-	        return tags;
-	    }
 	    
 	    public static Map<String, Set<String>> getComputerTags(Computer computer) {
 			Set<LabelAtom> labels = null;
@@ -428,7 +278,5 @@ public class APMUtil {
 	            return computer.getName();
 	        }
 	    }
-	    
-	    
-	    
+    
 }

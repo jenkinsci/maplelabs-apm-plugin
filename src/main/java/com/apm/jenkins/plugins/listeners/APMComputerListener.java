@@ -1,6 +1,5 @@
 package com.apm.jenkins.plugins.listeners;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 import hudson.slaves.ComputerListener;
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.TagsUtil;
 import com.apm.jenkins.plugins.events.*;
 import com.apm.jenkins.plugins.Client.ClientBase;
 import com.apm.jenkins.plugins.interfaces.APMEvent;
@@ -85,14 +83,8 @@ public class APMComputerListener extends ComputerListener {
             if(client == null){
                 return;
             }
-
-            // Get the list of tags to apply
-            final HashMap<String, Set<String>> tags = TagsUtil.merge(
-                    APMUtil.getTagsFromGlobalTags(),
-                    APMUtil.getComputerTags(computer));
-
             // Send event
-             APMEvent event = new ComputerOnlineEvent(computer, null, tags, true);
+             APMEvent event = new ComputerOnlineEvent(computer, null, (HashMap<String, Set<String>>) APMUtil.getComputerTags(computer), true);
             client.event(event);
 
             logger.fine("End APMComputerListener#onTemporarilyOnline");
@@ -110,13 +102,8 @@ public class APMComputerListener extends ComputerListener {
             if(client == null){
                 return;
             }
-            // Get the list of tags to apply
-            Map<String, Set<String>> tags = TagsUtil.merge(
-                    APMUtil.getTagsFromGlobalTags(),
-                    APMUtil.getComputerTags(computer));
-
             // // Send event
-            APMEvent event = new ComputerLaunchFailedEvent(computer, taskListener, tags);
+            APMEvent event = new ComputerLaunchFailedEvent(computer, taskListener, APMUtil.getComputerTags(computer));
             client.event(event);
 
             logger.fine("End APMComputerListener#onLaunchFailure");

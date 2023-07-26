@@ -13,7 +13,6 @@ public class ComputerOfflineEvent extends AbstractAPMSimpleEvent {
         String title = "Jenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "offline";
         setTitle(title);
 
-        // TODO: Add more info about the case in the event in message.
         String text = "Jenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "offline." +
                 "\n" + super.getLocationDetails() + "\n";
         setText(text);

@@ -31,10 +31,6 @@ public class APMBuildListener extends RunListener<Run> {
 		logger.info("Inside onStarted method");
 		
 		try {
-            // Process only if job is NOT in excluded and is in included
-            if (!APMUtil.isJobTracked(run.getParent().getFullName())) {
-                return;
-            }
             logger.fine("Start APMBuildListener#onStarted");
 
             // Get APM Client Instance
@@ -91,13 +87,9 @@ public class APMBuildListener extends RunListener<Run> {
     public void onCompleted(Run run, @Nonnull TaskListener listener) {
         logger.info("Inside onCompleted method");
         try {
-            // Process only if job in NOT in excluded and is in included
-            if (!APMUtil.isJobTracked(run.getParent().getFullName())) {
-                return;
-            }
             logger.fine("Start APMBuildListener#onCompleted");
 
-            // Get Datadog Client Instance
+            // Get APM Client Instance
             APMClient client = ClientBase.getClient();
             if (client == null) {
                 return;

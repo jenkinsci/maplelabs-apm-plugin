@@ -10,10 +10,14 @@ import javax.net.ssl.SSLContext;
 import java.nio.charset.Charset;
 import javax.servlet.ServletException;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.KeyStoreException;
 import javax.crypto.spec.IvParameterSpec;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 import net.sf.json.JSONObject;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -26,13 +30,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
+
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.TagsUtil;
-import com.apm.jenkins.plugins.interfaces.APMClient;
 import com.apm.jenkins.plugins.interfaces.APMEvent;
-
-import org.kohsuke.stapler.interceptor.RequirePOST;
-
+import com.apm.jenkins.plugins.interfaces.APMClient;
 
 /**
  * This class is used to collect all methods that has to do with transmitting
@@ -332,7 +334,6 @@ public class APMHttpClient implements APMClient {
     			
     			
     			if (targetApiUrl != null) {
-    				
     				logger.fine("Setting up HttpPost...");
         			HttpPost post = new HttpPost(targetApiUrl.toString()); 	        			
     				
@@ -365,7 +366,7 @@ public class APMHttpClient implements APMClient {
 
     				return status;
     			}
-    		}catch(Exception e) {
+    		}catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
     			e.printStackTrace();
     			return false;
     		}

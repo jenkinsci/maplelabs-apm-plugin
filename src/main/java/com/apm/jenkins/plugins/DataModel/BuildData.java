@@ -16,11 +16,9 @@ import hudson.model.User;
 import hudson.model.Cause;
 import hudson.model.Result;
 import hudson.tasks.Mailer;
-import net.sf.json.JSONObject;
 import hudson.model.CauseAction;
 import hudson.model.TaskListener;
 import com.apm.jenkins.plugins.*;
-import hudson.triggers.SCMTrigger;
 import hudson.model.ParameterValue;
 import hudson.util.LogTaskListener;
 import hudson.triggers.TimerTrigger;
@@ -34,64 +32,35 @@ import com.cloudbees.plugins.credentials.CredentialsParameterValue;
 public class BuildData implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private static transient final Logger LOGGER = Logger.getLogger(BuildData.class.getName());
 
-    private String buildNumber;
     private String buildId;
-    private String buildUrl;
-    private Map<String, String> buildParameters = new HashMap<>();
-    private String charsetName;
-    private String nodeName;
     private String jobName;
-    private String baseJobName;
+    private String buildUrl;
+    private String nodeName;
     private String buildTag;
-    private String jenkinsUrl;
-    private String executorNumber;
     private String javaHome;
     private String workspace;
     private String parentName;
-    // Branch contains either env variable - SVN_REVISION or CVS_BRANCH or GIT_BRANCH
-    private String branch;
-    private String gitUrl;
-    private String gitCommit;
-    private String gitMessage;
-    private String gitAuthorName;
-    private String gitAuthorEmail;
-    private String gitAuthorDate;
-    private String gitCommitterName;
-    private String gitCommitterEmail;
-    private String gitCommitterDate;
-    private String gitDefaultBranch;
-    private String gitTag;
-
-    // Environment variable from the promoted build plugin
-    // - See https://plugins.jenkins.io/promoted-builds
-    // - See https://wiki.jenkins.io/display/JENKINS/Promoted+Builds+Plugin
-    private String promotedUrl;
-    private String promotedJobName;
-    private String promotedNumber;
-    private String promotedId;
-    private String promotedTimestamp;
-    private String promotedUserName;
-    private String promotedUserId;
-    private String promotedJobFullName;
+    private String jenkinsUrl;
+    private String buildNumber;
+    private String charsetName;
+    private String baseJobName;
+    private String executorNumber;
+    private Map<String, String> buildParameters = new HashMap<>();
 
     private String result;
-    private boolean isCompleted;
-    private String hostname;
     private String userId;
+    private String hostname;
     private String userEmail;
+    private boolean isCompleted;
     private Map<String, Set<String>> tags;
 
-    private Long startTime;
     private Long endTime;
     private Long duration;
+    private Long startTime;
     private Long millisInQueue;
     private Long propagatedMillisInQueue;
-
-    private String traceId;
-    private String spanId;
 
     public BuildData(Run run, TaskListener listener) throws IOException, InterruptedException {
         if (run == null) {
@@ -217,18 +186,6 @@ public class BuildData implements Serializable {
         setExecutorNumber(envVars.get("EXECUTOR_NUMBER"));
         setJavaHome(envVars.get("JAVA_HOME"));
         setWorkspace(envVars.get("WORKSPACE"));
-
-    	if (envVars.get("CVS_BRANCH") != null) {
-            setBranch(envVars.get("CVS_BRANCH"));
-        }
-        setPromotedUrl(envVars.get("PROMOTED_URL"));
-        setPromotedJobName(envVars.get("PROMOTED_JOB_NAME"));
-        setPromotedNumber(envVars.get("PROMOTED_NUMBER"));
-        setPromotedId(envVars.get("PROMOTED_ID"));
-        setPromotedTimestamp(envVars.get("PROMOTED_TIMESTAMP"));
-        setPromotedUserName(envVars.get("PROMOTED_USER_NAME"));
-        setPromotedUserId(envVars.get("PROMOTED_USER_ID"));
-        setPromotedJobFullName(envVars.get("PROMOTED_JOB_FULL_NAME"));
     }
 
     /**
@@ -241,11 +198,6 @@ public class BuildData implements Serializable {
      */
     public Map<String, Set<String>> getTags() {
         Map<String, Set<String>> allTags = new HashMap<>();
-        try {
-            allTags = APMUtil.getTagsFromGlobalTags();
-        } catch(RuntimeException e){
-            //noop
-        }
         allTags = TagsUtil.merge(allTags, tags);
         allTags = TagsUtil.addTagToTags(allTags, "job", getJobName("unknown"));
 
@@ -261,26 +213,8 @@ public class BuildData implements Serializable {
         if (jenkinsUrl != null) {
             allTags = TagsUtil.addTagToTags(allTags, "jenkins_url", getJenkinsUrl("unknown"));
         }
-        if (branch != null) {
-            allTags = TagsUtil.addTagToTags(allTags, "branch", getBranch("unknown"));
-        }
 
         return allTags;
-    }
-
-    public Map<String, String> getTagsForTraces() {
-        Map<String, Set<String>> allTags = new HashMap<>();
-        try {
-            allTags = APMUtil.getTagsFromGlobalTags();
-        } catch(RuntimeException e){
-            //noop
-        }
-        allTags = TagsUtil.merge(allTags, tags);
-        return TagsUtil.convertTagsToMapSingleValues(allTags);
-    }
-
-    public void setTags(Map<String, Set<String>> tags) {
-        this.tags = tags;
     }
 
     private <A> A defaultIfNull(A value, A defaultValue) {
@@ -365,14 +299,6 @@ public class BuildData implements Serializable {
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
-    }
-
-    public String getBranch(String value) {
-        return defaultIfNull(branch, value);
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
     }
 
     public String getBuildNumber(String value) {
@@ -471,158 +397,6 @@ public class BuildData implements Serializable {
         this.workspace = workspace;
     }
 
-    public String getGitUrl(String value) {
-        return defaultIfNull(gitUrl, value);
-    }
-
-    public void setGitUrl(String gitUrl) {
-        this.gitUrl = gitUrl;
-    }
-
-    public String getGitCommit(String value) {
-        return defaultIfNull(gitCommit, value);
-    }
-
-    public void setGitCommit(String gitCommit) {
-        this.gitCommit = gitCommit;
-    }
-
-    public String getGitMessage(String value) {
-        return defaultIfNull(gitMessage, value);
-    }
-
-    public void setGitMessage(String gitMessage) {
-        this.gitMessage = gitMessage;
-    }
-
-    public String getGitAuthorName(final String value) {
-        return defaultIfNull(gitAuthorName, value);
-    }
-
-    public void setGitAuthorName(String gitAuthorName) {
-        this.gitAuthorName = gitAuthorName;
-    }
-
-    public String getGitAuthorEmail(final String value) {
-        return defaultIfNull(gitAuthorEmail, value);
-    }
-
-    public void setGitAuthorEmail(String gitAuthorEmail) {
-        this.gitAuthorEmail = gitAuthorEmail;
-    }
-
-    public String getGitCommitterName(final String value) {
-        return defaultIfNull(gitCommitterName, value);
-    }
-
-    public void setGitCommitterName(String gitCommitterName) {
-        this.gitCommitterName = gitCommitterName;
-    }
-
-    public String getGitCommitterEmail(final String value) {
-        return defaultIfNull(gitCommitterEmail, value);
-    }
-
-    public void setGitCommitterEmail(String gitCommitterEmail) {
-        this.gitCommitterEmail = gitCommitterEmail;
-    }
-
-    public String getGitAuthorDate(final String value) {
-        return defaultIfNull(gitAuthorDate, value);
-    }
-
-    public void setGitAuthorDate(String gitAuthorDate) {
-        this.gitAuthorDate = gitAuthorDate;
-    }
-
-    public String getGitCommitterDate(final String value) {
-        return defaultIfNull(gitCommitterDate, value);
-    }
-
-    public void setGitCommitterDate(String gitCommitterDate) {
-        this.gitCommitterDate = gitCommitterDate;
-    }
-
-    public String getGitDefaultBranch(String value) {
-        return defaultIfNull(gitDefaultBranch, value);
-    }
-
-    public void setGitDefaultBranch(String gitDefaultBranch) {
-        this.gitDefaultBranch = gitDefaultBranch;
-    }
-
-    public String getGitTag(String value) {
-        return defaultIfNull(gitTag, value);
-    }
-
-    public void setGitTag(String gitTag) {
-        this.gitTag = gitTag;
-    }
-
-    public String getPromotedUrl(String value) {
-        return defaultIfNull(promotedUrl, value);
-    }
-
-    public void setPromotedUrl(String promotedUrl) {
-        this.promotedUrl = promotedUrl;
-    }
-
-    public String getPromotedJobName(String value) {
-        return defaultIfNull(promotedJobName, value);
-    }
-
-    public void setPromotedJobName(String promotedJobName) {
-        this.promotedJobName = promotedJobName;
-    }
-
-    public String getPromotedNumber(String value) {
-        return defaultIfNull(promotedNumber, value);
-    }
-
-    public void setPromotedNumber(String promotedNumber) {
-        this.promotedNumber = promotedNumber;
-    }
-
-    public String getPromotedId(String value) {
-        return defaultIfNull(promotedId, value);
-    }
-
-    public void setPromotedId(String promotedId) {
-        this.promotedId = promotedId;
-    }
-
-    public String getPromotedTimestamp(String value) {
-        return defaultIfNull(promotedTimestamp, value);
-    }
-
-    public void setPromotedTimestamp(String promotedTimestamp) {
-        this.promotedTimestamp = promotedTimestamp;
-    }
-
-    public String getPromotedUserName(String value) {
-        return defaultIfNull(promotedUserName, value);
-    }
-
-    public void setPromotedUserName(String promotedUserName) {
-        this.promotedUserName = promotedUserName;
-    }
-
-    public String getPromotedUserId(String value) {
-        return defaultIfNull(promotedUserId, value);
-    }
-
-    public void setPromotedUserId(String promotedUserId) {
-        this.promotedUserId = promotedUserId;
-    }
-
-    public String getPromotedJobFullName(String value) {
-        return defaultIfNull(promotedJobFullName, value);
-    }
-
-    public void setPromotedJobFullName(String promotedJobFullName) {
-        this.promotedJobFullName = promotedJobFullName;
-    }
-
     public String getUserId() {
         return userId;
     }
@@ -632,9 +406,6 @@ public class BuildData implements Serializable {
     }
 
     private String getUserId(Run run) {
-        if (promotedUserId != null){
-            return promotedUserId;
-        }
         String userName;
         List<CauseAction> actions = null;
         try {
@@ -664,8 +435,6 @@ public class BuildData implements Serializable {
     private String getUserId(Cause cause){
         if (cause instanceof TimerTrigger.TimerTriggerCause) {
             return "timer";
-        } else if (cause instanceof SCMTrigger.SCMTriggerCause) {
-            return "scm";
         } else if (cause instanceof Cause.UserIdCause) {
             String userName = ((Cause.UserIdCause) cause).getUserId();
             if (userName != null) {
@@ -711,94 +480,6 @@ public class BuildData implements Serializable {
 
     public void setUserEmail(final String userEmail) {
         this.userEmail = userEmail;
-    }
-
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
-    }
-
-    public void setSpanId(String spanId) {
-        this.spanId = spanId;
-    }
-
-    public JSONObject addLogAttributes(){
-
-        JSONObject payload = new JSONObject();
-
-        try {
-
-            JSONObject build = new JSONObject();
-            build.put("number", this.buildNumber);
-            build.put("id", this.buildId);
-            build.put("url", this.buildUrl);
-            payload.put("build", build);
-
-            JSONObject http = new JSONObject();
-            http.put("url", this.jenkinsUrl);
-            payload.put("http", http);
-
-            JSONObject jenkins = new JSONObject();
-            jenkins.put("node_name", this.nodeName);
-            jenkins.put("job_name", this.jobName);
-            jenkins.put("build_tag", this.buildTag);
-            jenkins.put("executor_number", this.executorNumber);
-            jenkins.put("java_home", this.javaHome);
-            jenkins.put("workspace", this.workspace);
-
-            JSONObject promoted = new JSONObject();
-            jenkins.put("promoted", promoted);
-            if(promotedUrl != null){
-                jenkins.put("url", this.promotedUrl);
-            }
-            if(promotedJobName != null){
-                jenkins.put("job_name", this.promotedJobName);
-            }
-            if(promotedNumber != null){
-                jenkins.put("number", this.promotedNumber);
-            }
-            if(promotedId != null){
-                jenkins.put("id", this.promotedId);
-            }
-            if(promotedTimestamp != null){
-                jenkins.put("timestamp", this.promotedTimestamp);
-            }
-            if(promotedUserName != null){
-                jenkins.put("user_name", this.promotedUserName);
-            }
-            if(promotedUserId != null){
-                jenkins.put("user_id", this.promotedUserId);
-            }
-            if(promotedJobFullName != null){
-                jenkins.put("job_full_name", this.promotedJobFullName);
-            }
-            jenkins.put("result", this.result);
-
-            payload.put("jenkins", jenkins);
-
-            JSONObject scm = new JSONObject();
-            scm.put("branch", this.branch);
-            scm.put("git_url", this.gitUrl);
-            scm.put("git_commit", this.gitCommit);
-            payload.put("scm", scm);
-
-            JSONObject user = new JSONObject();
-            user.put("id", this.userId);
-            payload.put("usr", user);
-
-            payload.put("hostname", this.hostname);
-
-            if(traceId != null){
-                payload.put("dd.trace_id", this.traceId);
-            }
-
-            if(spanId != null) {
-                payload.put("dd.span_id", this.spanId);
-            }
-            return payload;
-        } catch (Exception e){
-            APMUtil.severe(LOGGER, e, "Failed to construct log attributes");
-            return new JSONObject();
-        }
     }
 
     private static String normalizeJobName(String jobName) {
