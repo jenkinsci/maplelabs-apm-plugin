@@ -3,24 +3,19 @@ package com.apm.jenkins.plugins;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import net.sf.json.JSONObject;
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
-
 import hudson.Extension;
-import hudson.security.ACL;
 import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
-import jenkins.model.Jenkins;
 
 @Extension
 public class APMGlobalConfiguration extends GlobalConfiguration {
@@ -44,7 +39,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		loadEnvVariables(); // Load environment variables after as they should take precedence.
 	}
 	
-	private void loadEnvVariables(){		
+	private void loadEnvVariables(){
 		String hostnameEnvVar = System.getenv(HOSTNAME_PROPERTY);
 		if(StringUtils.isNotBlank(hostnameEnvVar)){
 			this.hostname = hostnameEnvVar;
@@ -134,21 +129,25 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetInstanceName = targetInstanceName;
 	}
 
-     /**
-     * Gets the StringCredentials object for the given credential ID
-     *
-     * @param credentialId - The Id of the credential to get
-     * @return a StringCredentials object
-     */
-    public StringCredentials getCredentialFromId(String credentialId) {
-logger.info("getCredentialFromId");
-        return CredentialsMatchers.firstOrNull(
-                CredentialsProvider.lookupCredentials(
-                    StringCredentials.class,
-                    Jenkins.get(),
-                    ACL.SYSTEM,
-                    URIRequirementBuilder.fromUri(null).build()),
-                CredentialsMatchers.allOf(CredentialsMatchers.withId(credentialId))
-        );
-    }
+	/**
+	 * This function will invoke when user click apply/save in config page
+	 * This function will store the snappyflow config details
+	 */
+	@Override
+	public boolean configure(final StaplerRequest req, final JSONObject formData){
+		try {
+			if(!super.configure(req, formData)){
+				return false;
+			}
+		} catch (FormException e) {
+			e.printStackTrace();
+		}
+		setTargetApiKey((String)formData.get("targetApiKey"));
+		setTargetAppName((String)formData.get("targetAppName"));
+		setTargetProjectName((String)formData.get("targetProjectName"));
+		setTargetInstanceName((String)formData.get("targetInstanceName"));
+		// Persist global configuration information
+		save();
+		return true;
+	}
 }
