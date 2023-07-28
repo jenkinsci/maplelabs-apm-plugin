@@ -3,7 +3,6 @@ package com.apm.jenkins.plugins.publishers;
 import java.util.List;
 import java.util.HashMap;
 import java.util.logging.Logger;
-import java.util.concurrent.TimeUnit;
 
 import hudson.Extension;
 import hudson.PluginManager;
@@ -24,12 +23,11 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 @Extension
 public class APMJenkinsPublisher extends PeriodicWork {
 
-    private static final long RECURRENCE_PERIOD = TimeUnit.MINUTES.toMillis(1);
     private static final Logger logger = Logger.getLogger(APMJenkinsPublisher.class.getName());
 
     @Override
     public long getRecurrencePeriod() {
-        return RECURRENCE_PERIOD;
+        return  APMUtil.publisherTime;
     }
 
     @Override

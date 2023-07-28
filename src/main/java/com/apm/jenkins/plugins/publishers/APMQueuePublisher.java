@@ -3,7 +3,6 @@ package com.apm.jenkins.plugins.publishers;
 import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.logging.Logger;
-import java.util.concurrent.TimeUnit;
 
 import hudson.Extension;
 import hudson.model.Job;
@@ -21,12 +20,11 @@ import com.apm.jenkins.plugins.interfaces.APMClient;
 public class APMQueuePublisher extends PeriodicWork{
 	
     private final Queue queue = Queue.getInstance();
-    private static final long RECURRENCE_PERIOD = TimeUnit.MINUTES.toMillis(30);
     private static final Logger logger = Logger.getLogger(APMQueuePublisher.class.getName());
 
 	@Override
 	public long getRecurrencePeriod() {
-		return RECURRENCE_PERIOD;
+		return  APMUtil.publisherTime;
 	}
 
 	@Override

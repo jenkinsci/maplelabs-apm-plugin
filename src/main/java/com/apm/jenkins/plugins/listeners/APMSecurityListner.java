@@ -9,16 +9,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.ClientBase;
+import com.apm.jenkins.plugins.interfaces.APMEvent;
 import com.apm.jenkins.plugins.interfaces.APMClient;
+import com.apm.jenkins.plugins.events.UserAuthenticationEvent;
 
 /**
  * This class will trigger api event when security activity happened
- * Security activities: user created, Logined, failed to login, loggedOut, loggedOut
+ * Security activities: user created, Logined, failed to login, loggedOut
  */
 @Extension
 public class APMSecurityListner extends SecurityListener{
-    private final static APMClient client = ClientBase.getClient();
-    private final static HashMap<String, Object>  securityDict = APMUtil.getSnappyflowTags("securityStats");
+    private HashMap<String, Object>  securityDict;
 
     /**
      * This function will hit snappyflow when user is created
@@ -26,10 +27,16 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void userCreated(@NonNull String username) {
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        } 
+        securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
-        securityDict.put("action", "userCreation");
-		client.postSnappyflowMetric(securityDict, "metric");
+        securityDict.put("action", UserAuthenticationEvent.USER_CREATED);
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
     /**
@@ -38,14 +45,20 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void authenticated2(@NonNull UserDetails details) {
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        }
+        securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("isFailed", false);
-        securityDict.put("action", "authentication"); 
         securityDict.put("isEnabled", details.isEnabled());
         securityDict.put("username", details.getUsername());
+        securityDict.put("action", UserAuthenticationEvent.AUTHENTICATION); 
         securityDict.put("isAccountLocked", !details.isAccountNonLocked());
         securityDict.put("isAccountExpired", !details.isAccountNonExpired());
         securityDict.put("isCredentialsExpired", !details.isCredentialsNonExpired());
-        client.postSnappyflowMetric(securityDict, "metric");
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
     /**
@@ -54,10 +67,16 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void failedToAuthenticate(@NonNull String username){
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        }
+        securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("username", username);
         securityDict.put("isFailed", true);
-        securityDict.put("action", "authentication");
-        client.postSnappyflowMetric(securityDict, "metric");
+        securityDict.put("action", UserAuthenticationEvent.AUTHENTICATION);
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
     /**
@@ -66,10 +85,15 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void loggedIn(@NonNull String username){
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        }
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
-        securityDict.put("action", "login");
-        client.postSnappyflowMetric(securityDict, "metric");
+        securityDict.put("action", UserAuthenticationEvent.LOGIN);
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
     /**
@@ -78,10 +102,15 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void failedToLogIn(@NonNull String username){
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        }
         securityDict.put("username", username);
         securityDict.put("isFailed", true);
-        securityDict.put("action", "login");
-        client.postSnappyflowMetric(securityDict, "metric");
+        securityDict.put("action", UserAuthenticationEvent.LOGIN);
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
     /**
@@ -90,10 +119,15 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void loggedOut(@NonNull String username){
+        APMClient client = ClientBase.getClient();
+        if(client == null){
+            return;
+        }
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
-        securityDict.put("action", "logout");
-        client.postSnappyflowMetric(securityDict, "metric");
+        securityDict.put("action", UserAuthenticationEvent.LOGOUT);
+        APMEvent event = new UserAuthenticationEvent(securityDict);
+        client.event(event);
     }
 
 }

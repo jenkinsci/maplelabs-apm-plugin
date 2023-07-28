@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.logging.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
 
 import hudson.EnvVars;
 import hudson.model.Node;
@@ -28,7 +29,7 @@ import hudson.model.labels.LabelAtom;
 
 
 public class APMUtil {
-	
+	public static long publisherTime = TimeUnit.MINUTES.toMillis(5);
 	 /**
      * Getter function to return either the saved hostname global configuration,
      * or the hostname that is set in the Jenkins host itself. Returns null if no
