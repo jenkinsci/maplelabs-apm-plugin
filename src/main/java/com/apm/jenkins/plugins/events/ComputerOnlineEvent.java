@@ -18,8 +18,8 @@ public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
         String title = "Jenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online";
         setTitle(title);
 
-        String text = "%%% \nJenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online." +
-                "\n" + super.getLocationDetails() + " \n%%%";
+        String text = "\nJenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online." +
+                "\n" + super.getLocationDetails() + " \n";
         setText(text);
 
         setPriority(Priority.LOW);

@@ -17,9 +17,9 @@ public class BuildCompletedEvent  extends AbstractAPMBuildEvent{
         String title = "Job " + jobName + " build #" + buildNumber + " " + buildResult.toLowerCase() + " on " + super.getHost();
         setTitle(title);
 
-        String text = "%%% \n[Job " + jobName +" User " + userId + " build #" + buildNumber + " Parent "+buildData.getParentName()+"](" + buildUrl +
+        String text = "\n[Job " + jobName +" User " + userId + " build #" + buildNumber + " Parent "+buildData.getParentName()+"](" + buildUrl +
                 ") finished with status " + buildResult.toLowerCase() + " " + getFormattedDuration() +
-                "\n" + super.getLocationDetails() + " \n%%%";
+                "\n" + super.getLocationDetails() + " \n";
         setText(text);
         if (Result.SUCCESS.toString().equals(buildResult)) {
             setPriority(Priority.LOW);

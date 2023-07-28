@@ -43,8 +43,8 @@ public class UserAuthenticationEvent extends AbstractAPMSimpleEvent{
         String title = "User " + username + " " + action;
         setTitle(title);
 
-        String text = "%%% \nUser " + username + " " + action +
-                "\n" + super.getLocationDetails() + " \n%%%";
+        String text = "\nUser " + username + " " + action +
+                "\n" + super.getLocationDetails() + " \n";
         setText(text);
     }
 }
