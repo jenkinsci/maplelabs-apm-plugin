@@ -2,16 +2,12 @@ package com.apm.jenkins.plugins.Client;
 
 import java.util.Base64;
 import java.util.HashMap;
-import javax.crypto.Cipher;
 import java.io.IOException;
-import javax.crypto.SecretKey;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import java.nio.charset.Charset;
 import javax.servlet.ServletException;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyStoreException;
-import javax.crypto.spec.IvParameterSpec;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -54,17 +50,11 @@ public class APMHttpClient implements APMClient {
     private static final String METRIC = "v1/series";
         
     public final static boolean enableValidations = true;
-    
-	private byte[] sessionKey = null;
-    private static final String ALGORITHM = "AES";
-	private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-	private  HashMap<String,String> target = new HashMap<String,String>();
-	    
+    	    
     private boolean defaultIntakeConnectionBroken = false;
         
     private String appName = null;
     private String instName = null;
-    private String profileKey = null;
     private String destination = null;
     private String projectName = null;
     
@@ -84,11 +74,11 @@ public class APMHttpClient implements APMClient {
         }
     }  
     
-    public static APMClient getInstance(String profileKey, String projectName, String appName, String instName, String destination){
+    public static APMClient getInstance(String profileKey, String projectName, String appName, String instName){
         // If the configuration has not changed, return the current instance without validation
         // since we've already validated and/or errored about the data
 
-        APMHttpClient newInstance = new APMHttpClient(profileKey, projectName, appName, instName, destination);
+        APMHttpClient newInstance = new APMHttpClient(profileKey, projectName, appName, instName);
         if (instance != null && instance.equals(newInstance)) {
             if (APMHttpClient.failedLastValidation) {
                 return null;
@@ -111,8 +101,7 @@ public class APMHttpClient implements APMClient {
         return newInstance;
     }
 
-    private APMHttpClient(String profileKey, String projectName, String appName, String instName, String destination) {
-        this.profileKey = profileKey;
+    private APMHttpClient(String projectName, String appName, String instName, String destination) {
         this.projectName = projectName;
         this.appName = appName;
         this.instName = instName;
@@ -134,56 +123,23 @@ public class APMHttpClient implements APMClient {
     	this.destination = destination;
     }
     
-    public HashMap<String, String> decodeProfileKey() {    	   	
-    	try {    
-    		// Profile Key is not yet set by the user.
-    		// Lets fetch it once again. Else, we wont be able to send the metrics.
-    		profileKey = APMUtil.getAPMGlobalDescriptor().getTargetApiKey();
-
-    		// There are chances that profile key is not set yet.
-    		if(profileKey != null) {
-    			SecretKey secretKey = new SecretKeySpec("SnappyFlow123456".getBytes("UTF-8"), ALGORITHM);
-    			sessionKey = Base64.getDecoder().decode(profileKey);
-    			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-    			cipher.init(Cipher.DECRYPT_MODE, secretKey,new IvParameterSpec(new byte[16]));
-    			byte[] original = cipher.doFinal(sessionKey);
-    			String bg = new String(original,StandardCharsets.UTF_8);
-    			int index = bg.indexOf("{");
-    			String tokenString = "{"+bg.substring(index+1).trim();
-    			tokenString= tokenString.substring(1, tokenString.length()-1); //remove curly
-    			String[] keyValuePairs = tokenString.split(","); //split the string
-    			for(String pair : keyValuePairs) //iterate over the pairs
-    			{
-    				String[] entry = pair.split(": "); //split the pairs to get key and value    			
-    				target.put((entry[0].trim()).replaceAll("\"", ""),(entry[1].trim()).replaceAll("\"", ""));
-    			}
-    			return target;
-    		}    		
-    		else
-    			return null;
-    	} catch (Exception e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();    		
-    	}
-    	return null;
-    }
-    
     private String getBasicAuthenticationHeader(String username, String password) {
     	String valueToEncode = username+":"+password;
     	return "Basic "+Base64.getEncoder().encodeToString(valueToEncode.getBytes(Charset.forName("UTF-8"))).toString();
     }
     
-    public void getKafkaHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl, HashMap<String, String> targetMap) {
+    public void getKafkaHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
        	
-       	targetApiUrl.append(targetMap.get("url")+"/topics/"+targetMap.get("profile_id"));
-    	System.out.println("targetApi URL for Kafka is: " + targetApiUrl.toString());
-    	
-    	contentType.append("application/vnd.kafka.json.v2+json");	    	
-   		targetToken.append(targetMap.get("token"));
-    }
+        // targetApiUrl.append(targetMap.get("url")+"/topics/"+targetMap.get("profile_id"));
+     System.out.println("targetApi URL for Kafka is: " + targetApiUrl.toString());
+     
+     contentType.append("application/vnd.kafka.json.v2+json");	    	
+        // targetToken.append(targetMap.get("token"));
+ }
     
-    public void getESHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl, HashMap<String, String> targetMap) {
-    	String targetUsername = targetMap.get("username");
+    public void getESHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
+    	String targetUsername = APMUtil.getAPMGlobalDescriptor().getTargetUserName();
+    	String targetPassword = APMUtil.getAPMGlobalDescriptor().getTargetPassword();
     	String projName = getProjectName();
     	
     	if(projName == null) {
@@ -192,13 +148,14 @@ public class APMHttpClient implements APMClient {
     		return;    		
     	}    	
     	
-    	targetToken.append(getBasicAuthenticationHeader(targetUsername, targetMap.get("password")));
+    	targetToken.append(getBasicAuthenticationHeader(targetUsername, targetPassword));
     	contentType.append("application/json");
 
-    	String ds_protocol = targetMap.get("protocol");
-    	String ds_host = targetMap.get("host");
-    	String ds_port = targetMap.get("port");    	  	
-    	String ds_index = "metric-"+targetMap.get("profile_id")+"-"+projName+"-$_write";
+    	String ds_protocol = APMUtil.getAPMGlobalDescriptor().getTargetESProtocol();
+    	String ds_host = APMUtil.getAPMGlobalDescriptor().getTargetESHost();
+    	String ds_port = APMUtil.getAPMGlobalDescriptor().getTargetESPort();
+    	String profile_id = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
+    	String ds_index = "metric-"+profile_id+"-"+projName+"-$_write";
     	String ds_type = "_doc";
     	targetApiUrl.append(ds_protocol+"://"+ds_host+":"+ds_port+"/"+ds_index+"/"+ds_type);    		
     	logger.info("targetApi URL for ES is:"+targetApiUrl.toString());
@@ -287,91 +244,73 @@ public class APMHttpClient implements APMClient {
     	StringBuilder targetToken = new StringBuilder ();
     	StringBuilder contentType = new StringBuilder ();
     	StringBuilder targetApiUrl = new StringBuilder ();
-    	    	
-    	// Specific to snappyflow target
-      	HashMap<String, String> targetMap = decodeProfileKey();
-    	if(targetMap != null) {
+
+    	try {
+
+    		SSLContext sslContext = SSLContexts.custom()
+    				.loadTrustMaterial((chain, authType) -> true)
+    				.build();
+
+    		SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+    		HttpClient client = HttpClients.custom()
+    				.setSSLSocketFactory(socketFactory)
+    				.build();	
+    		
+    		String targetType = APMUtil.getAPMGlobalDescriptor().getTargetDestination();
     		logger.info("================================================");
-    		logger.info("decoded profile key:"+targetMap); 
-
-    		try {
-
-    			SSLContext sslContext = SSLContexts.custom()
-    					.loadTrustMaterial((chain, authType) -> true)
-    					.build();
-
-    			SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-
-    			HttpClient client = HttpClients.custom()
-    					.setSSLSocketFactory(socketFactory)
-    					.build();
-    			
-    			SnappyflowTargetType matchedType = null;
-    			String targetType = targetMap.get("type");
-    			System.out.println("Target type is:" + targetType);
-    			
-    			for (SnappyflowTargetType tType : SnappyflowTargetType.values()) {
-    			    if (tType.getType().equalsIgnoreCase(targetType)) {
-    			        matchedType = tType;
-    			        break;
-    			    }
-    			}
-
-    			if (matchedType != null) {
-    			    System.out.println(matchedType);
-    			    if (matchedType == SnappyflowTargetType.KAFKA) {
-    			    	// The value is equal to the Kafka enum value 
-    			    	getKafkaHeaders(contentType, targetToken, targetApiUrl, targetMap);
-    			    } else if (matchedType == SnappyflowTargetType.ELASTICSEARCH) {
-    			    	// The value is equal to the Elasticsearch enum value
-    			    	getESHeaders(contentType, targetToken, targetApiUrl, targetMap);
-    			    }
-    			}
-    			else {
-    			    logger.severe("Target type not found");
-    			    return false;
-    			}
-    			
-    			
-    			if (targetApiUrl != null) {
-    				logger.fine("Setting up HttpPost...");
-        			HttpPost post = new HttpPost(targetApiUrl.toString()); 	        			
-    				
-    				post.setHeader("Content-Type",contentType.toString());
-    				post.setHeader("Authorization",targetToken.toString());
-    				post.setHeader( "Accept","application/vnd.kafka.v2+json");    				
-
-    				StringEntity data = new StringEntity(payload.toString().replaceAll("=", ":"), "UTF-8");
-    				post.setEntity(data);
-
-    				System.out.println("Post Headers:---------------");
-    				Header[] headers = post.getAllHeaders();
-    				for (Header header : headers) {    			
-    					System.out.println(header.getName() + ":" + header.getValue());
-    				}
-
-    				System.out.println("Data is here:---------------");
-    				String bg = new String(data.getContent().readAllBytes(),StandardCharsets.UTF_8);
-    				System.out.println(bg);
-
-    				HttpResponse response = client.execute(post);
-    				int responseCode = response.getStatusLine().getStatusCode();
-
-    				System.out.println("\nSending 'POST' request to URL : " + targetApiUrl);
-    				logger.info("================================================");
-    				System.out.println("Response Code : " + responseCode);
-
-    				String responseBody = EntityUtils.toString((response).getEntity());
-    				System.out.println(responseBody);
-
-    				return status;
-    			}
-    		}catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-    			e.printStackTrace();
+    		logger.info("Target Type configured is:"+targetType);
+    		if(targetType == null ) {
+    			//No destination is configured.
+    			logger.severe("Target Destination is null");
     			return false;
     		}
-    	}
-    	logger.severe("profile key is null");
-    	return false;
-    }
+
+    		if("SnappyflowES".equals(targetType)) {
+    			// The value is equal to the Snappyflow Elasticsearch
+    			getESHeaders(contentType, targetToken, targetApiUrl);
+    		}
+    		if("SnappyflowKafka".equals(targetType)){
+    			// The value is equal to the Snappyflow Kafka 
+    			getKafkaHeaders(contentType, targetToken, targetApiUrl);
+    		}    			
+    			
+    		if (targetApiUrl != null) {
+
+    			logger.fine("Setting up HttpPost...");
+    			HttpPost post = new HttpPost(targetApiUrl.toString()); 	        			
+
+    			post.setHeader("Content-Type",contentType.toString());
+    			post.setHeader("Authorization",targetToken.toString());
+    			post.setHeader( "Accept","application/vnd.kafka.v2+json");    				
+
+    			StringEntity data = new StringEntity(payload.toString().replaceAll("=", ":"), "UTF-8");
+    			post.setEntity(data);
+
+    			System.out.println("Post Headers:---------------");
+    			Header[] headers = post.getAllHeaders();
+    			for (Header header : headers) {    			
+    				System.out.println(header.getName() + ":" + header.getValue());
+    			}
+
+    			System.out.println("Data is here:---------------");
+    			String bg = new String(data.getContent().readAllBytes(),StandardCharsets.UTF_8);
+    			System.out.println(bg);
+
+    			HttpResponse response = client.execute(post);
+    			int responseCode = response.getStatusLine().getStatusCode();
+
+    			System.out.println("\nSending 'POST' request to URL : " + targetApiUrl);
+    			logger.info("================================================");
+    			System.out.println("Response Code : " + responseCode);
+
+    			String responseBody = EntityUtils.toString((response).getEntity());
+    			System.out.println(responseBody);    			
+    		}
+       	}catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			e.printStackTrace();
+			return false;
+		}
+    	return status;
+	}
 }
