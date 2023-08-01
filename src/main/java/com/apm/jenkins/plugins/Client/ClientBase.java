@@ -13,17 +13,12 @@ public class ClientBase {
     }
 
     // This can be overloaded to support destinations other than snappyflow over HTTP in future.
-    public static APMClient getClient(APMClient.ClientType type, String profileKey, String projectName, String appName, String instName) {
+    public static APMClient getClient(String profileKey, String projectName, String appName, String instName) {
     	if(testClient != null){
     		// Only used for tests
     		return testClient;
     	}
-    	switch(type){
-    	case HTTP:
-    		return APMHttpClient.getInstance(profileKey, projectName, appName, instName);
-    	default:
-    		return null;
-    	}
+    	return APMHttpClient.getInstance(profileKey, projectName, appName, instName);
     }
 
     public static APMClient getClient() {
@@ -36,16 +31,12 @@ public class ClientBase {
     	String projectName = null;
     	String appName = null;
     	String instName = null;
-    	APMClient.ClientType cType = APMClient.ClientType.HTTP;;
     	
     	if(descriptor != null){
     		projectName = descriptor.getTargetProjectName();
     		appName = descriptor.getTargetAppName();
     		instName = descriptor.getTargetInstanceName();
-    		if (descriptor.getTargetDestination().equals("Snappyflow")){
-    		    cType = APMClient.ClientType.HTTP;
-    		}
     	}
-    	return ClientBase.getClient(cType, profileKey, projectName, appName, instName);
+    	return ClientBase.getClient(profileKey, projectName, appName, instName);
     }    
 }
