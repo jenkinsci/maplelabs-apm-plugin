@@ -28,15 +28,13 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void userCreated(@NonNull String username) {
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        } 
+        if (client == null) return;
         securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
         securityDict.put("action", UserAuthenticationEvent.USER_CREATED);
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
     /**
@@ -46,9 +44,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void authenticated2(@NonNull UserDetails details) {
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        }
+        if (client == null) return;
         securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("isFailed", false);
         securityDict.put("isEnabled", details.isEnabled());
@@ -58,7 +54,7 @@ public class APMSecurityListner extends SecurityListener{
         securityDict.put("isAccountExpired", !details.isAccountNonExpired());
         securityDict.put("isCredentialsExpired", !details.isCredentialsNonExpired());
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
     /**
@@ -68,15 +64,13 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void failedToAuthenticate(@NonNull String username){
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        }
+        if (client == null) return;
         securityDict =  APMUtil.getSnappyflowTags("securityStats");
         securityDict.put("username", username);
         securityDict.put("isFailed", true);
         securityDict.put("action", UserAuthenticationEvent.AUTHENTICATION);
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
     /**
@@ -86,14 +80,12 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void loggedIn(@NonNull String username){
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        }
+        if (client == null) return;
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
         securityDict.put("action", UserAuthenticationEvent.LOGIN);
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
     /**
@@ -103,14 +95,12 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void failedToLogIn(@NonNull String username){
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        }
+        if (client == null) return;
         securityDict.put("username", username);
         securityDict.put("isFailed", true);
         securityDict.put("action", UserAuthenticationEvent.LOGIN);
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
     /**
@@ -120,14 +110,12 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void loggedOut(@NonNull String username){
         APMClient client = ClientBase.getClient();
-        if(client == null){
-            return;
-        }
+        if (client == null) return;
         securityDict.put("username", username);
         securityDict.put("isFailed", false);
         securityDict.put("action", UserAuthenticationEvent.LOGOUT);
         APMEvent event = new UserAuthenticationEvent(securityDict);
-        client.event(event);
+        client.postEvent(event);
     }
 
 }

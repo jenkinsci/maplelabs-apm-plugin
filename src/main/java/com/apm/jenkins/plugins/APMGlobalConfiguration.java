@@ -1,39 +1,36 @@
 package com.apm.jenkins.plugins;
 
-import java.io.IOException;
+import net.sf.json.JSONObject;
 import java.util.logging.Logger;
 
-import net.sf.json.JSONObject;
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import hudson.Extension;
-import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
 
 @Extension
 public class APMGlobalConfiguration extends GlobalConfiguration {
 
+	private static final String OTHERS = "Others";
 	private static final String ES = "SnappyflowES";
 	private static final String KAFKA = "SnappyflowKafka";
+	private static final String SNAPPYFLOW = "Snappyflow";
 	private static final String DISPLAY_NAME = "Maplelabs APM Plugin";
 	private static final Logger logger = Logger.getLogger(APMGlobalConfiguration.class.getName());	
 	
 	private String hostname = null;
 	private String targetAppName = null;
-	private String targetDestination = ES;
 	private String targetProjectName = null;
 	private String targetInstanceName = null;
-
+	private String targetDestination = SNAPPYFLOW;
+	private String targetSnappyFlowDestination = ES;
+	// common
+	private String targetHost = null;
+	private String targetPort = null;
+	private String targetProtocol = null;
 	// ES
-	private String targetESHost = null;
-	private String targetESPort = null;
-	private String targetESProtocol = null;
 	private String targetESUserName = null;
 	private String targetESPassword = null;
 	private String targetProfileName = null;
@@ -43,10 +40,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private String targetKafkaToken = null;
 	private String targetKafkaTopic = null;
 
-	private String targetKafkaHost = null;
-	private String targetKafkaPort = null;
-	private String targetKafkaProtocol = null;
-
+	// others
 	private String targetUserName = null;
 	private String targetPassword = null;
 
@@ -66,23 +60,6 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
         return DISPLAY_NAME;
     }
         
-    @RequirePOST
-    public FormValidation doTestConnection(
-            @QueryParameter("targetProjectName") final String targetProjectName,
-            @QueryParameter("targetAppName") final String targetAppName,
-            @QueryParameter("targetInstanceName") final String targetInstanceName)
-            throws IOException, ServletException {
-
-    	// TODO Write logic here to send request to APM API server and validate the API Key
-    	// For testing, added null checks
-    	if ( StringUtils.isNotBlank(targetProjectName) &&
-    			StringUtils.isNotBlank(targetAppName) && StringUtils.isNotBlank(targetInstanceName)) {
-    		return FormValidation.ok("API key is valid!");
-    	} else {
-    		return FormValidation.error("API key seems to be invalid. Check API Key/ project name/ app name/ instance name fields.");
-    	}  	
-    }
-
 	/**
      * Getter function for the hostname global configuration.
      *
@@ -91,6 +68,14 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	 public String getHostname() {
         return hostname;
     }
+
+	 public String getTargetSnappyFlowDestination() {
+		return targetSnappyFlowDestination;
+	}
+    
+	public void setTargetSnappyFlowDestination(String destination) {
+		targetSnappyFlowDestination = destination;
+	}
       	
     public String getTargetDestination() {
 		return targetDestination;
@@ -124,28 +109,28 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetInstanceName = targetInstanceName;
 	}
 
-	public void setTargetESHost(String host) {
-		this.targetESHost = host;
+	public void setTargetHost(String host) {
+		this.targetHost = host;
 	}
 
-	public String getTargetESHost(){
-		return targetESHost;
+	public String getTargetHost(){
+		return targetHost;
 	}
 
-	public void setTargetESPort(String port) {
-		this.targetESPort = port;
+	public void setTargetPort(String port) {
+		this.targetPort = port;
 	}
 
-	public String getTargetESPort(){
-		return targetESPort;
+	public String getTargetPort(){
+		return targetPort;
 	}
 
-	public void setTargetESProtocol(String protocol) {
-		this.targetESProtocol = protocol;
+	public void setTargetProtocol(String protocol) {
+		this.targetProtocol = protocol;
 	}
 
-	public String getTargetESProtocol(){
-		return targetESProtocol;
+	public String getTargetProtocol(){
+		return targetProtocol;
 	}
 
 	public void setTargetESUserName(String userName) {
@@ -196,29 +181,6 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		return targetKafkaTopic;
 	}
 
-	public void setTargetKafkaHost(String host) {
-		this.targetKafkaHost = host;
-	}
-
-	public String getTargetKafkaHost(){
-		return targetKafkaHost;
-	}
-
-	public void setTargetKafkaPort(String port) {
-		this.targetKafkaPort = port;
-	}
-
-	public String getTargetKafkaPort(){
-		return targetKafkaPort;
-	}
-
-	public void setTargetKafkaProtocol(String protocol) {
-		this.targetKafkaProtocol = protocol;
-	}
-
-	public String getTargetKafkaProtocol(){
-		return targetKafkaProtocol;
-	}
 
 	public void setTargetPassword(String password) {
 		this.targetPassword = password;
@@ -237,6 +199,50 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	}
 
 	/**
+	 * This function will set config for ES
+	 * @param username
+	 * @param password
+	 */
+	private void setESDetails(String username, String password){
+		setTargetESUserName(username);
+		setTargetESPassword(password);
+	}
+
+	/**
+	 * This function will set kafka details
+	 * @param path
+	 * @param token
+	 * @param topic
+	 */
+	private void setKafkaDetails(String path, String token, String topic){
+		setTargetKafkaPath(path);
+		setTargetKafkaToken(token);
+		setTargetKafkaTopic(topic);
+	}
+
+	/**
+	 * This function will set others config details
+	 * @param username
+	 * @param password
+	 */
+	private void setOthersDetail(String username, String password){
+		setTargetUserName(username);
+		setTargetPassword(password);
+	}
+
+	// This function will set snappy config as null 
+	private void setSnappyConfigNull(boolean isCommonReset) {
+		if(isCommonReset) {
+			setTargetAppName(null);
+			setTargetProfileName(null);
+			setTargetProjectName(null);
+			setTargetInstanceName(null);
+		}
+		setESDetails(null,null);
+		setKafkaDetails(null, null, null);
+	}
+	
+	/**
 	 * This function will invoke when user click apply/save in config page
 	 * This function will store the snappyflow config details
 	 */
@@ -249,84 +255,66 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		} catch (FormException e) {
 			e.printStackTrace();
 		}
-		setTargetAppName(formData.getString("targetAppName"));
-		setTargetProjectName(formData.getString("targetProjectName"));
-		setTargetInstanceName(formData.getString("targetInstanceName"));
+		setTargetPort(formData.getString("targetPort"));
+		setTargetHost(formData.getString("targetHost"));
+		setTargetProtocol(formData.getString("targetProtocol"));
+		
 		if(formData.containsKey("targetDestination")) {
-				setTargetDestination(formData.getString("targetDestination"));
-				switch(getTargetDestination()) {
-					case ES:
-						setTargetESPort(formData.getString("targetESPort"));
-						setTargetESHost(formData.getString("targetESHost"));
-						setTargetESProtocol(formData.getString("targetESProtocol"));
-						setTargetESUserName(formData.getString("targetESUserName"));
-						setTargetESPassword(formData.getString("targetESPassword"));
-						setTargetProfileName(formData.getString("targetProfileName"));
+			setTargetDestination(formData.getString("targetDestination"));
+			switch(getTargetDestination()) {
+				case SNAPPYFLOW:
+					setTargetAppName(formData.getString("targetAppName"));
+					setTargetProfileName(formData.getString("targetProfileName"));
+					setTargetProjectName(formData.getString("targetProjectName"));
+					setTargetInstanceName(formData.getString("targetInstanceName"));
+					if(formData.containsKey("targetSnappyFlowDestination")) {
+						setTargetSnappyFlowDestination(formData.getString("targetSnappyFlowDestination"));
+						switch(getTargetSnappyFlowDestination()) {
+							case ES:
+								String pass = formData.getString("targetESPassword");
+								setESDetails(
+									formData.getString("targetESUserName"),
+									(pass.length() == 0 ? null : pass)
+								);
+		
+								setOthersDetail(null, null);
+								setKafkaDetails(null, null, null);
+							break;
+							case KAFKA:
+								String token = formData.getString("targetKafkaToken");
+								setKafkaDetails(
+									formData.getString("targetKafkaPath"),
+									token.length() == 0 ? null : token,
+									formData.getString("targetKafkaTopic")
+								);
+		
+								setOthersDetail(null, null);
+								setESDetails(null,null);
+							break;
+							default:
+								setSnappyConfigNull(false);
+								setOthersDetail(null, null);
 
-						setTargetKafkaPort(null);
-						setTargetKafkaHost(null);
-						setTargetKafkaPath(null);
-						setTargetKafkaToken(null);
-						setTargetKafkaTopic(null);
-						setTargetKafkaProtocol(null);
+						}
+					} else {
+						setSnappyConfigNull(false);
+						setOthersDetail(null, null);
+					}			
+				break;
+				case OTHERS:
+					String pass = formData.getString("targetPassword");
+					setTargetUserName(formData.getString("targetUserName"));
+					setTargetPassword(pass.length() == 0 ? null : pass);
+					setSnappyConfigNull(true);
 
-						setTargetUserName(null);
-						setTargetPassword(null);
-					 break;
-					case KAFKA:
-						setTargetKafkaPort(formData.getString("targetKafkaPort"));
-						setTargetKafkaHost(formData.getString("targetKafkaHost"));
-						setTargetKafkaPath(formData.getString("targetKafkaPath"));
-						setTargetKafkaToken(formData.getString("targetKafkaToken"));
-						setTargetKafkaTopic(formData.getString("targetKafkaTopic"));
-						setTargetKafkaProtocol(formData.getString("targetKafkaProtocol"));
-
-						setTargetESPort(null);
-						setTargetESHost(null);
-						setTargetESProtocol(null);
-						setTargetESUserName(null);
-						setTargetESPassword(null);
-						setTargetProfileName(null);
-
-						setTargetUserName(null);
-						setTargetPassword(null);
-					 break;
-					case "Other":
-						setTargetUserName(formData.getString("targetUserName"));
-						setTargetPassword(formData.getString("targetPassword"));
-
-						setTargetKafkaPort(null);
-						setTargetKafkaHost(null);
-						setTargetKafkaPath(null);
-						setTargetKafkaToken(null);
-						setTargetKafkaTopic(null);
-						setTargetKafkaProtocol(null);
-
-						setTargetESPort(null);
-						setTargetESHost(null);
-						setTargetESProtocol(null);
-						setTargetESUserName(null);
-						setTargetESPassword(null);
-						setTargetProfileName(null);
-					break;
-					default:
-						setTargetKafkaPort(null);
-						setTargetKafkaHost(null);
-						setTargetKafkaPath(null);
-						setTargetKafkaToken(null);
-						setTargetKafkaTopic(null);
-						setTargetKafkaProtocol(null);
-
-						setTargetESPort(null);
-						setTargetESHost(null);
-						setTargetESProtocol(null);
-						setTargetESUserName(null);
-						setTargetESPassword(null);
-						setTargetProfileName(null);
-
-						setTargetUserName(null);
-						setTargetPassword(null);
-				}
+				break;
+				default:
+					setSnappyConfigNull(true);
+					setOthersDetail(null, null);
+			}
+		} else {
+			setSnappyConfigNull(true);
+			setOthersDetail(null, null);
 		}
 		// Persist global configuration information
 		save();

@@ -1,11 +1,12 @@
 package com.apm.jenkins.plugins;
 
 import java.util.*;
-
+import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 
 public class TagsUtil {
-    
+    private static final Logger logger = Logger.getLogger(TagsUtil.class.getName());
+
     public static HashMap<String, Set<String>> merge(Map<String, Set<String>> dest, Map<String, Set<String>> orig) {
         if (dest == null) {
             dest = new HashMap<>();
@@ -41,7 +42,7 @@ public class TagsUtil {
             result.putAll(jsonObject);            
         }           	
             
-        System.out.println("Metrics added to Json:" + result.toString());
+        logger.info("Metrics added to Json:" + result.toString());
         return result;        
     }
 

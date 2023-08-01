@@ -169,7 +169,7 @@ public class BuildData implements Serializable {
                     this.buildParameters.put(parameter.getName(), String.valueOf(parameter.getValue()));
                 }
             }
-            System.out.println("Filled Build Params: "+ this.buildParameters);            
+            LOGGER.info("Filled Build Params: "+ this.buildParameters);            
         } catch (Throwable ex) {
             APMUtil.severe(LOGGER, ex, "Failed to populate Jenkins build parameters.");
         }

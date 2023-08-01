@@ -39,13 +39,11 @@ public class APMComputerListener extends ComputerListener {
 
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
-            if(client == null){
-                return;
-            }            
+            if (client == null) return;           
                       
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, false);
-            client.event(event);
+            client.postEvent(event);
 
             logger.info("End APMComputerListener#onOffline");
         } catch (Exception e) {
@@ -59,13 +57,11 @@ public class APMComputerListener extends ComputerListener {
             logger.fine("Start APMComputerListener#onTemporarilyOffline");
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
-            if(client == null){
-                return;
-            }
+            if (client == null) return;
                         
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, true);
-            client.event(event);
+            client.postEvent(event);
             
             logger.fine("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
@@ -80,12 +76,10 @@ public class APMComputerListener extends ComputerListener {
             logger.fine("Start APMComputerListener#onTemporarilyOnline");
 
             APMClient client = ClientBase.getClient();
-            if(client == null){
-                return;
-            }
+            if (client == null) return;
             // Send event
              APMEvent event = new ComputerOnlineEvent(computer, null, (HashMap<String, Set<String>>) APMUtil.getComputerTags(computer), true);
-            client.event(event);
+            client.postEvent(event);
 
             logger.fine("End APMComputerListener#onTemporarilyOnline");
         } catch (Exception e) {
@@ -99,12 +93,10 @@ public class APMComputerListener extends ComputerListener {
             logger.fine("Start APMComputerListener#onLaunchFailure");
 
              APMClient client = ClientBase.getClient();
-            if(client == null){
-                return;
-            }
+             if (client == null) return;
             // // Send event
             APMEvent event = new ComputerLaunchFailedEvent(computer, taskListener, APMUtil.getComputerTags(computer));
-            client.event(event);
+            client.postEvent(event);
 
             logger.fine("End APMComputerListener#onLaunchFailure");
         } catch (Exception e) {

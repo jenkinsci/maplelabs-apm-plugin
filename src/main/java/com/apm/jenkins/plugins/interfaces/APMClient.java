@@ -41,8 +41,8 @@ public interface APMClient {
      * @param event - a APMEvent object
      * @return a boolean to signify the success or failure of the HTTP POST request.
      */
-     public boolean event(APMEvent event);
+     public boolean postEvent(APMEvent event);
    
-    public boolean postSnappyflowMetric(HashMap<String, Object> metrics, String type);    
+    public boolean postMetric(HashMap<String, Object> metrics, String type);    
     
 }

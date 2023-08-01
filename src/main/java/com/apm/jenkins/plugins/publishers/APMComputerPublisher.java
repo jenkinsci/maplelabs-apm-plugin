@@ -92,7 +92,7 @@ public class APMComputerPublisher extends PeriodicWork {
             nodeStats_dict.put("num_node_online", nodeOnline);
             nodeStats_dict.put("num_nodes_offline", nodeOffline);
 
-            client.postSnappyflowMetric(nodeStats_dict, "metric");                       
+            client.postMetric(nodeStats_dict, "metric");                       
         } catch (Exception e) {
         	e.printStackTrace();
         }

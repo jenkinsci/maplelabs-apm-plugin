@@ -36,6 +36,7 @@ public class APMQueuePublisher extends PeriodicWork{
             int blocked = 0;
             int buildable = 0;
             APMClient client = ClientBase.getClient();
+            if (client == null) return;
             final Queue.Item[] items = queue.getItems();
             HashMap<String, Object> jobStats_dict = APMUtil.getSnappyflowTags("jobStats");
             for (Queue.Item item : items) {                                       
@@ -70,7 +71,7 @@ public class APMQueuePublisher extends PeriodicWork{
             jobStats_dict.put("num_job_aborted",numJobAborted);
             jobStats_dict.put("num_job_started",numJobStarted);
             jobStats_dict.put("num_job_completed",numJobCompleted);
-            client.postSnappyflowMetric(jobStats_dict, "metric");
+            client.postMetric(jobStats_dict, "metric");
         } catch (Exception e) {
         	logger.severe("Failed to compute and send queue metrics, due to:" + e);
         }

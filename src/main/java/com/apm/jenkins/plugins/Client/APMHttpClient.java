@@ -131,7 +131,7 @@ public class APMHttpClient implements APMClient {
     public void getKafkaHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
        	
         // targetApiUrl.append(targetMap.get("url")+"/topics/"+targetMap.get("profile_id"));
-     System.out.println("targetApi URL for Kafka is: " + targetApiUrl.toString());
+     logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
      
      contentType.append("application/vnd.kafka.json.v2+json");	    	
         // targetToken.append(targetMap.get("token"));
@@ -151,9 +151,9 @@ public class APMHttpClient implements APMClient {
     	targetToken.append(getBasicAuthenticationHeader(targetUsername, targetPassword));
     	contentType.append("application/json");
 
-    	String ds_protocol = APMUtil.getAPMGlobalDescriptor().getTargetESProtocol();
-    	String ds_host = APMUtil.getAPMGlobalDescriptor().getTargetESHost();
-    	String ds_port = APMUtil.getAPMGlobalDescriptor().getTargetESPort();
+    	String ds_host = APMUtil.getAPMGlobalDescriptor().getTargetHost();
+    	String ds_port = APMUtil.getAPMGlobalDescriptor().getTargetPort();
+    	String ds_protocol = APMUtil.getAPMGlobalDescriptor().getTargetProtocol();
     	String profile_id = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
     	String ds_index = "metric-"+profile_id+"-"+projName+"-$_write";
     	String ds_type = "_doc";
@@ -176,7 +176,7 @@ public class APMHttpClient implements APMClient {
         this.defaultIntakeConnectionBroken = defaultIntakeConnectionBroken;
     }
 
-    public boolean event(APMEvent event) {
+    public boolean postEvent(APMEvent event) {
         logger.fine("Sending event");
         if(this.isDefaultIntakeConnectionBroken()){
             logger.severe("Your client is not initialized properly");
@@ -202,7 +202,7 @@ public class APMHttpClient implements APMClient {
     }    
    
     @Override
-	public boolean postSnappyflowMetric(HashMap<String, Object> metrics, String type) {
+	public boolean postMetric(HashMap<String, Object> metrics, String type) {
         if(this.isDefaultIntakeConnectionBroken()){
             logger.severe("Your client is not initialized properly");
             return false;
@@ -244,7 +244,12 @@ public class APMHttpClient implements APMClient {
     	StringBuilder targetToken = new StringBuilder ();
     	StringBuilder contentType = new StringBuilder ();
     	StringBuilder targetApiUrl = new StringBuilder ();
-
+        String targetType = APMUtil.getAPMGlobalDescriptor().getTargetDestination();
+        if(targetType == null ) {
+            //No destination is configured.
+            logger.severe("Target Destination is null");
+            return false;
+    	}
     	try {
 
     		SSLContext sslContext = SSLContexts.custom()
@@ -257,14 +262,9 @@ public class APMHttpClient implements APMClient {
     				.setSSLSocketFactory(socketFactory)
     				.build();	
     		
-    		String targetType = APMUtil.getAPMGlobalDescriptor().getTargetDestination();
-    		logger.info("================================================");
-    		logger.info("Target Type configured is:"+targetType);
-    		if(targetType == null ) {
-    			//No destination is configured.
-    			logger.severe("Target Destination is null");
-    			return false;
-    		}
+                    logger.info("================================================");
+                    logger.info("Target Type configured is:"+targetType);
+
 
     		if("SnappyflowES".equals(targetType)) {
     			// The value is equal to the Snappyflow Elasticsearch
@@ -287,25 +287,25 @@ public class APMHttpClient implements APMClient {
     			StringEntity data = new StringEntity(payload.toString().replaceAll("=", ":"), "UTF-8");
     			post.setEntity(data);
 
-    			System.out.println("Post Headers:---------------");
+    			logger.info("Post Headers:---------------");
     			Header[] headers = post.getAllHeaders();
     			for (Header header : headers) {    			
-    				System.out.println(header.getName() + ":" + header.getValue());
+    				logger.info(header.getName() + ":" + header.getValue());
     			}
 
-    			System.out.println("Data is here:---------------");
+    			logger.info("Data is here:---------------");
     			String bg = new String(data.getContent().readAllBytes(),StandardCharsets.UTF_8);
-    			System.out.println(bg);
+    			logger.info(bg);
 
     			HttpResponse response = client.execute(post);
     			int responseCode = response.getStatusLine().getStatusCode();
 
-    			System.out.println("\nSending 'POST' request to URL : " + targetApiUrl);
+    			logger.info("\nSending 'POST' request to URL : " + targetApiUrl);
     			logger.info("================================================");
-    			System.out.println("Response Code : " + responseCode);
+    			logger.info("Response Code : " + responseCode);
 
     			String responseBody = EntityUtils.toString((response).getEntity());
-    			System.out.println(responseBody);    			
+    			logger.info(responseBody);    			
     		}
        	}catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
 			e.printStackTrace();

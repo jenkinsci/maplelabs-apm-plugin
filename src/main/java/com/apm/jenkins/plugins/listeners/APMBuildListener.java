@@ -35,9 +35,7 @@ public class APMBuildListener extends RunListener<Run> {
 
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
-            if (client == null) {
-                return;
-            }
+            if (client == null) return;
 
             // Collect Build Data
             BuildData buildData;
@@ -50,7 +48,7 @@ public class APMBuildListener extends RunListener<Run> {
 
             // Send an event
             APMEvent event = new BuildStartedEvent(buildData);
-            client.event(event);
+            client.postEvent(event);
 
             // Send a metric
             // item.getInQueueSince() may raise a NPE if a worker node is spinning up to run the job.
@@ -91,9 +89,7 @@ public class APMBuildListener extends RunListener<Run> {
 
             // Get APM Client Instance
             APMClient client = ClientBase.getClient();
-            if (client == null) {
-                return;
-            }
+            if (client == null) return;
 
             // Collect Build Data
             BuildData buildData;
@@ -106,7 +102,7 @@ public class APMBuildListener extends RunListener<Run> {
 
             // Send an event
             APMEvent event = new BuildCompletedEvent(buildData);
-            client.event(event);
+            client.postEvent(event);
 
             // Send a metric
             logger.fine(String.format("[%s]: Duration: %s", buildData.getJobName(null),
