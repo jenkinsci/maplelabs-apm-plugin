@@ -138,8 +138,8 @@ public class APMHttpClient implements APMClient {
  }
     
     public void getESHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
-    	String targetUsername = APMUtil.getAPMGlobalDescriptor().getTargetUserName();
-    	String targetPassword = APMUtil.getAPMGlobalDescriptor().getTargetPassword();
+    	String targetUsername = APMUtil.getAPMGlobalDescriptor().getTargetESUserName();
+    	String targetPassword = APMUtil.getAPMGlobalDescriptor().getTargetESPassword();
     	String projName = getProjectName();
     	
     	if(projName == null) {
@@ -244,7 +244,7 @@ public class APMHttpClient implements APMClient {
     	StringBuilder targetToken = new StringBuilder ();
     	StringBuilder contentType = new StringBuilder ();
     	StringBuilder targetApiUrl = new StringBuilder ();
-        String targetType = APMUtil.getAPMGlobalDescriptor().getTargetDestination();
+        String targetType = APMUtil.getAPMGlobalDescriptor().getTargetSnappyFlowDestination();
         if(targetType == null ) {
             //No destination is configured.
             logger.severe("Target Destination is null");

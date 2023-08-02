@@ -27,15 +27,15 @@ public class ClientBase {
     		return testClient;
     	}
     	APMGlobalConfiguration descriptor = APMUtil.getAPMGlobalDescriptor();
-    	String profileKey = null;
-    	String projectName = null;
     	String appName = null;
     	String instName = null;
+    	String profileKey = null;
+    	String projectName = null;
     	
     	if(descriptor != null){
-    		projectName = descriptor.getTargetProjectName();
     		appName = descriptor.getTargetAppName();
     		instName = descriptor.getTargetInstanceName();
+    		projectName = descriptor.getTargetProjectName();
     	}
     	return ClientBase.getClient(profileKey, projectName, appName, instName);
     }    
