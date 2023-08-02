@@ -74,11 +74,11 @@ public class APMHttpClient implements APMClient {
         }
     }  
     
-    public static APMClient getInstance(String profileKey, String projectName, String appName, String instName){
+    public static APMClient getInstance(String projectName, String appName, String instName){
         // If the configuration has not changed, return the current instance without validation
         // since we've already validated and/or errored about the data
 
-        APMHttpClient newInstance = new APMHttpClient(profileKey, projectName, appName, instName);
+        APMHttpClient newInstance = new APMHttpClient(projectName, appName, instName);
         if (instance != null && instance.equals(newInstance)) {
             if (APMHttpClient.failedLastValidation) {
                 return null;
@@ -101,11 +101,10 @@ public class APMHttpClient implements APMClient {
         return newInstance;
     }
 
-    private APMHttpClient(String projectName, String appName, String instName, String destination) {
+    private APMHttpClient(String projectName, String appName, String instName) {
         this.projectName = projectName;
         this.appName = appName;
         this.instName = instName;
-        this.destination = destination;
     }     
      
     public String getProjectName() {    	

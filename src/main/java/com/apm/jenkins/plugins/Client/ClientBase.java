@@ -13,12 +13,12 @@ public class ClientBase {
     }
 
     // This can be overloaded to support destinations other than snappyflow over HTTP in future.
-    public static APMClient getClient(String profileKey, String projectName, String appName, String instName) {
+    public static APMClient getClient(String projectName, String appName, String instName) {
     	if(testClient != null){
     		// Only used for tests
     		return testClient;
     	}
-    	return APMHttpClient.getInstance(profileKey, projectName, appName, instName);
+    	return APMHttpClient.getInstance(projectName, appName, instName);
     }
 
     public static APMClient getClient() {
@@ -29,7 +29,6 @@ public class ClientBase {
     	APMGlobalConfiguration descriptor = APMUtil.getAPMGlobalDescriptor();
     	String appName = null;
     	String instName = null;
-    	String profileKey = null;
     	String projectName = null;
     	
     	if(descriptor != null){
@@ -37,6 +36,6 @@ public class ClientBase {
     		instName = descriptor.getTargetInstanceName();
     		projectName = descriptor.getTargetProjectName();
     	}
-    	return ClientBase.getClient(profileKey, projectName, appName, instName);
+    	return ClientBase.getClient(projectName, appName, instName);
     }    
 }
