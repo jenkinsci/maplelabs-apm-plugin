@@ -42,7 +42,7 @@ public class TagsUtil {
             result.putAll(jsonObject);            
         }           	
             
-        logger.info("Metrics added to Json:" + result.toString());
+        logger.fine("Metrics added to Json:" + result.toString());
         return result;        
     }
 

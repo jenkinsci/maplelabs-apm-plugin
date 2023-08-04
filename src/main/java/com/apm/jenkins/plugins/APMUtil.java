@@ -263,7 +263,7 @@ public class APMUtil {
 	    		    	    	
 	    	result.put("_plugin", pluginName);
 	    	result.put("time", currTime);
-	    	result.put("document_type", docType);
+	    	result.put("_documentType", docType);
 	    	
 	        return result;
 	    }

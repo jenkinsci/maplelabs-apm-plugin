@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.client.methods.HttpPost;
@@ -129,11 +130,16 @@ public class APMHttpClient implements APMClient {
     
     public void getKafkaHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
        	
-        // targetApiUrl.append(targetMap.get("url")+"/topics/"+targetMap.get("profile_id"));
-     logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
-     
-     contentType.append("application/vnd.kafka.json.v2+json");	    	
-        // targetToken.append(targetMap.get("token"));
+    	String host = APMUtil.getAPMGlobalDescriptor().getTargetHost();
+        String profile = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
+        targetApiUrl.append(host+"/topics/metric-"+profile);
+        
+        String token = APMUtil.getAPMGlobalDescriptor().getTargetKafkaToken();
+        contentType.append("application/vnd.kafka.json.v2+json");	    	
+        targetToken.append(token);
+        
+        logger.fine("targetApi URL for Kafka is: " + targetApiUrl.toString());
+        logger.fine("Authroization for Kafka is: " + targetToken.toString());
  }
     
     public void getESHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
@@ -157,7 +163,8 @@ public class APMHttpClient implements APMClient {
     	String ds_index = "metric-"+profile_id+"-"+projName+"-$_write";
     	String ds_type = "_doc";
     	targetApiUrl.append(ds_protocol+"://"+ds_host+":"+ds_port+"/"+ds_index+"/"+ds_type);    		
-    	logger.info("targetApi URL for ES is:"+targetApiUrl.toString());
+    	logger.fine("targetApi URL for ES is:"+targetApiUrl.toString());
+    	logger.fine("Authroization for ES is: " + targetToken.toString());
     }  
     
     @Override
@@ -191,8 +198,7 @@ public class APMHttpClient implements APMClient {
             payload.put("priority", event.getPriority().name().toLowerCase());
             payload.put("alert_type", event.getAlertType().name().toLowerCase());            
             
-            logger.info(String.format("payload: %s", payload.toString()));
-            
+            logger.info(String.format("payload: %s", payload.toString()));            
             return postSnappyflow(payload, EVENT);
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to send event");
@@ -207,8 +213,7 @@ public class APMHttpClient implements APMClient {
             return false;
         }
   
-        JSONObject payload = TagsUtil.convertHashMapToJSONObject(metrics);
-        
+        JSONObject payload = TagsUtil.convertHashMapToJSONObject(metrics);        
         logger.info(String.format("payload: %s", payload.toString()));
 
         boolean status;
@@ -240,15 +245,19 @@ public class APMHttpClient implements APMClient {
         
         boolean status = true;
         
+        String KafkaData;
+        StringEntity data;
+        Boolean isKafka = false;
     	StringBuilder targetToken = new StringBuilder ();
     	StringBuilder contentType = new StringBuilder ();
     	StringBuilder targetApiUrl = new StringBuilder ();
         String targetType = APMUtil.getAPMGlobalDescriptor().getTargetSnappyFlowDestination();
+        
         if(targetType == null ) {
             //No destination is configured.
             logger.severe("Target Destination is null");
             return false;
-    	}
+    	}    
     	try {
 
     		SSLContext sslContext = SSLContexts.custom()
@@ -261,8 +270,8 @@ public class APMHttpClient implements APMClient {
     				.setSSLSocketFactory(socketFactory)
     				.build();	
     		
-                    logger.info("================================================");
-                    logger.info("Target Type configured is:"+targetType);
+            logger.fine("================================================");
+            logger.fine("Target Type configured is: "+targetType);
 
 
     		if("SnappyflowES".equals(targetType)) {
@@ -272,6 +281,7 @@ public class APMHttpClient implements APMClient {
     		if("SnappyflowKafka".equals(targetType)){
     			// The value is equal to the Snappyflow Kafka 
     			getKafkaHeaders(contentType, targetToken, targetApiUrl);
+    			isKafka = true;
     		}    			
     			
     		if (targetApiUrl != null) {
@@ -281,21 +291,29 @@ public class APMHttpClient implements APMClient {
 
     			post.setHeader("Content-Type",contentType.toString());
     			post.setHeader("Authorization",targetToken.toString());
-    			post.setHeader( "Accept","application/vnd.kafka.v2+json");    				
-
-    			StringEntity data = new StringEntity(payload.toString().replaceAll("=", ":"), "UTF-8");
+    			post.setHeader( "Accept","application/vnd.kafka.v2+json");  			
+    			
+    			if (isKafka) {
+    				// For Kafka, need to prefix data with `{\"records\":[{\"value\":"` 
+    				KafkaData = payload.toString().replaceAll("=", ":");
+    				KafkaData = "{\"records\":[{\"value\":" + KafkaData + "}]}";
+    				data = new StringEntity(KafkaData,ContentType.APPLICATION_JSON);    				
+    			}
+    			else
+    				data = new StringEntity(payload.toString().replaceAll("=", ":"),ContentType.APPLICATION_JSON);
+    			
     			post.setEntity(data);
 
-    			logger.info("Post Headers:---------------");
+    			logger.fine("Post Headers:---------------");
     			Header[] headers = post.getAllHeaders();
     			for (Header header : headers) {    			
-    				logger.info(header.getName() + ":" + header.getValue());
+    				logger.fine(header.getName() + ":" + header.getValue());
     			}
 
-    			logger.info("Data is here:---------------");
-    			String bg = new String(data.getContent().readAllBytes(),StandardCharsets.UTF_8);
-    			logger.info(bg);
-
+    			logger.fine("Posted Data is here:---------------");
+    			String requestBody = new String(data.getContent().readAllBytes(),StandardCharsets.UTF_8);
+    			logger.fine(requestBody);
+    						
     			HttpResponse response = client.execute(post);
     			int responseCode = response.getStatusLine().getStatusCode();
 
@@ -304,7 +322,7 @@ public class APMHttpClient implements APMClient {
     			logger.info("Response Code : " + responseCode);
 
     			String responseBody = EntityUtils.toString((response).getEntity());
-    			logger.info(responseBody);    			
+    			logger.fine(responseBody);    			
     		}
        	}catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
 			e.printStackTrace();
