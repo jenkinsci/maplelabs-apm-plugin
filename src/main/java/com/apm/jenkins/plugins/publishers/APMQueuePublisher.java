@@ -3,19 +3,17 @@ package com.apm.jenkins.plugins.publishers;
 import java.util.logging.Logger;
 
 import hudson.Extension;
-import hudson.model.Queue;
 import jenkins.model.Jenkins;
 import hudson.model.PeriodicWork;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.ClientBase;
-import com.apm.jenkins.plugins.interfaces.APMClient;
-import com.apm.jenkins.plugins.metrics.QueueMetrics;
+import com.apm.jenkins.plugins.publishers.metrics.StatDetails;
+import com.apm.jenkins.plugins.publishers.metrics.QueueMetrics;
 
 @Extension
 public class APMQueuePublisher extends PeriodicWork{
 	
-    private static final QueueMetrics queueMetrics = new QueueMetrics();
+    private static final StatDetails queueMetrics = new QueueMetrics();
     private static final Logger logger = Logger.getLogger(APMQueuePublisher.class.getName());
 
 	@Override
@@ -27,11 +25,7 @@ public class APMQueuePublisher extends PeriodicWork{
 	protected void doRun() throws Exception {
         try {
             logger.fine("doRun called: Computing queue and job metrics");
-
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;
-            queueMetrics.setDetails(Jenkins.get());
-            client.postMetric(queueMetrics.getDetails(), "metric");
+            queueMetrics.sendDetails(Jenkins.get());
         } catch (Exception e) {
         	logger.severe("Failed to compute and send queue metrics, due to:" + e);
         }

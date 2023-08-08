@@ -4,6 +4,11 @@ import net.sf.json.JSONObject;
 import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
+
+import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowEs;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowKafka;
+
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -12,6 +17,8 @@ import jenkins.model.GlobalConfiguration;
 
 @Extension
 public class APMGlobalConfiguration extends GlobalConfiguration {
+
+	private Communication communicationClient;
 
 	private static final String OTHERS = "Others";
 	private static final String ES = "SnappyflowES";
@@ -52,6 +59,23 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		if(StringUtils.isNotBlank(hostnameEnvVar)){
 			this.hostname = hostnameEnvVar;
 		}
+
+		switch(targetDestination){
+			case SNAPPYFLOW:
+			switch(targetSnappyFlowDestination) {
+				case ES:
+				communicationClient =  new SnappyFlowEs();
+				break;
+				case KAFKA:
+				communicationClient =  new SnappyFlowKafka();
+				break;
+				default:
+			}
+			break;
+			case OTHERS:
+			break;
+			default:
+		}
 	}
 	
 	
@@ -63,13 +87,13 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	/**
      * Getter function for the hostname global configuration.
      *
-     * @return a String containing the hostname global configuration. */
-     
+     * @return a String containing the hostname global configuration. 
+	*/ 
 	 public String getHostname() {
         return hostname;
     }
 
-	 public String getTargetSnappyFlowDestination() {
+	public String getTargetSnappyFlowDestination() {
 		return targetSnappyFlowDestination;
 	}
     
@@ -242,6 +266,10 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		setKafkaDetails(null, null, null);
 	}
 	
+	public Communication getCommunicationClient() {
+		return this.communicationClient;
+	}
+
 	/**
 	 * This function will invoke when user click apply/save in config page
 	 * This function will store the snappyflow config details
@@ -255,10 +283,12 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		} catch (FormException e) {
 			e.printStackTrace();
 		}
+		
+		communicationClient = null;
+
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
 		setTargetProtocol(formData.getString("targetProtocol"));
-		
 		if(formData.containsKey("targetDestination")) {
 			setTargetDestination(formData.getString("targetDestination"));
 			switch(getTargetDestination()) {
@@ -276,7 +306,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 									formData.getString("targetESUserName"),
 									(pass.length() == 0 ? null : pass)
 								);
-		
+								communicationClient = new SnappyFlowEs();
 								setOthersDetail(null, null);
 								setKafkaDetails(null, null, null);
 							break;
@@ -287,7 +317,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 									token.length() == 0 ? null : token,
 									formData.getString("targetKafkaTopic")
 								);
-		
+								communicationClient = new SnappyFlowKafka();
 								setOthersDetail(null, null);
 								setESDetails(null,null);
 							break;

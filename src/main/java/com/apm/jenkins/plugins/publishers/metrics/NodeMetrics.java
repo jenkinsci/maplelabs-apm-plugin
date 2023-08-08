@@ -1,9 +1,12 @@
-package com.apm.jenkins.plugins.metrics;
+package com.apm.jenkins.plugins.publishers.metrics;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Client.Communication;
 
 import hudson.node_monitors.ResponseTimeMonitor.Data;
 import hudson.node_monitors.SwapSpaceMonitor.MemoryUsage2;
@@ -20,9 +23,9 @@ public class NodeMetrics implements StatDetails {
 
     // clear all values
     private void clear() {
-        setNumNodes(-1);
-        setNumNodesOnline(-1);
-        setNumNodesOffline(-1);
+        setNumNodes(0);
+        setNumNodesOnline(0);
+        setNumNodesOffline(0);
         compuerList = null;
     }
 
@@ -60,12 +63,11 @@ public class NodeMetrics implements StatDetails {
     }
 
     /**
-     * This function will set node properties 
+     * This function will set node properties and send details to client
      * @param details
      */
     @Override
-    public void setDetails(Object details) {
-        clear();
+    public void sendDetails(Object details) {
         if(details instanceof Computer[]) {
             Computer[] computerList = (Computer[])details;
             int nodeOnline = 0, nodeOffline = 0;
@@ -112,23 +114,19 @@ public class NodeMetrics implements StatDetails {
             }
             setNumNodesOnline(nodeOnline);
             setNumNodesOffline(nodeOffline);
-        } else {
-            logger.info("No data found");
-        }
-    }
+        } else return;
 
-    /**
-     * This function will assembel the computer node details and return as a HashMap
-     * @return 
-     */
-    @Override
-    public HashMap<String, Object> getDetails() {
-        HashMap<String, Object> computerDetails = new HashMap<>();
+        HashMap<String, Object> computerDetails =APMUtil.getSnappyflowTags("nodeStat");
         computerDetails.put("num_nodes", getNumNodes());
         computerDetails.put("computers", getComputerDetails());
         computerDetails.put("num_nodes_online", getNumNodesOnline());
         computerDetails.put("num_nodes_offline", getNumNodesOffline());
-        return computerDetails;
+        
+        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        if(communicationClient != null) {
+            communicationClient.transmit(computerDetails);
+            clear();
+        }
     }
     
 }

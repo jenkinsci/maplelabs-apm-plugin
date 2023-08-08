@@ -1,8 +1,10 @@
-package com.apm.jenkins.plugins.metrics;
+package com.apm.jenkins.plugins.publishers.metrics;
 
 import java.util.HashMap;
 import java.util.SortedMap;
-import java.util.logging.Logger;
+
+import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Client.Communication;
 
 import hudson.model.Job;
 import hudson.model.Run;
@@ -22,14 +24,14 @@ public class QueueMetrics implements StatDetails {
     private int queueSize;
 
     private void clear(){
-        stuck = -1;
-        aborted = -1;
-        pending = -1;
-        blocked = -1;
-        started = -1;
-        buildable = -1;
-        completed = -1;
-        queueSize = -1;
+        stuck = 0;
+        aborted = 0;
+        pending = 0;
+        blocked = 0;
+        started = 0;
+        buildable = 0;
+        completed = 0;
+        queueSize = 0;
     }
 
     private int getQueueSize() {
@@ -44,7 +46,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementStuck() {
-        if(stuck < 0) stuck = 0;
         this.stuck++;
     }
 
@@ -53,7 +54,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementAborted() {
-        if(aborted < 0) aborted = 0;
         this.aborted++;
     }
 
@@ -62,7 +62,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementPending() {
-        if(pending < 0) pending = 0;
         this.pending++;
     }
 
@@ -71,7 +70,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementBlocked() {
-        if(blocked < 0) blocked = 0;
         this.blocked++;
     }
 
@@ -80,7 +78,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementStarted() {
-        if(started < 0) started = 0;
         this.started++;
     }
 
@@ -89,7 +86,6 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementBuildable() {
-        if(buildable < 0) buildable = 0;
         this.buildable++;
     }
 
@@ -98,17 +94,15 @@ public class QueueMetrics implements StatDetails {
     }
 
     private void incrementCompleted() {
-        if(completed < 0) completed = 0;
         this.completed++;
     }
 
     /**
-     * This function will set queue details
+     * This function will set queue details and send details to client
      * @params details
      */
     @Override
-    public void setDetails(Object details) {
-        clear();
+    public void sendDetails(Object details) {
         Jenkins instance = (Jenkins)details;
         if(instance == null) return;
         Queue queue = instance.getQueue();
@@ -135,26 +129,21 @@ public class QueueMetrics implements StatDetails {
                     }
                 }
             }
-            
-    }
+        HashMap<String, Object> jobDetails = APMUtil.getSnappyflowTags("jobStat");
+        jobDetails.put("queueStuck", getStuck());
+        jobDetails.put("queueSize", getQueueSize());
+        jobDetails.put("queuePending", getPending());
+        jobDetails.put("queueBlocked", getBlocked());
+        jobDetails.put("num_job_aborted", getAborted());
+        jobDetails.put("num_job_started", getStarted());
+        jobDetails.put("queueBuildable", getBuildable());
+        jobDetails.put("num_job_completed", getCompleted());
 
-    /**
-     * This function will get queue details
-     * 
-     * @return
-     */
-    @Override
-    public HashMap<String, Object> getDetails() {
-        HashMap<String, Object> jobStats_dict = new HashMap<>();
-        jobStats_dict.put("queueStuck", getStuck());
-        jobStats_dict.put("queuePending", getPending());
-        jobStats_dict.put("queueBlocked", getBlocked());
-        jobStats_dict.put("queueSize", getQueueSize());
-        jobStats_dict.put("queueBuildable", getBuildable());
-        jobStats_dict.put("num_job_aborted", getAborted());
-        jobStats_dict.put("num_job_started", getStarted());
-        jobStats_dict.put("num_job_completed", getCompleted());
-        return jobStats_dict;
+        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        if(communicationClient != null) {
+            communicationClient.transmit(jobDetails);
+            clear();
+        }
     }
     
 }

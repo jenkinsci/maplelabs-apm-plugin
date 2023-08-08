@@ -1,10 +1,10 @@
-package com.apm.jenkins.plugins.metrics;
+package com.apm.jenkins.plugins.publishers.metrics;
 
 import java.util.List;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Client.Communication;
 
 import hudson.PluginManager;
 import hudson.PluginWrapper;
@@ -22,13 +22,13 @@ public class JenkinsMetrics implements StatDetails {
     private int updateablePlugins;
 
     private void clear() {
-        setPlugins(-1);
-        setProjects(-1);
-        activePlugins = -1;
-        setFailedPlugins(-1);
-        inactivePlugins = -1;
-        updateablePlugins = -1;
-        setHostName("");
+        activePlugins = 0;
+        inactivePlugins = 0;
+        setPlugins(0);
+        updateablePlugins = 0;
+        setProjects(0);
+        setHostName(null);
+        setFailedPlugins(0);
     }
     private int getPlugins() {
         return this.plugins;
@@ -59,7 +59,6 @@ public class JenkinsMetrics implements StatDetails {
     }
 
     private void incrementActivePlugins() {
-        if(activePlugins < 0) activePlugins = 0;
         this.activePlugins++;
     }
 
@@ -76,7 +75,6 @@ public class JenkinsMetrics implements StatDetails {
     }
 
     private void incrementInactivePlugins() {
-        if(inactivePlugins < 0) inactivePlugins = 0;
         this.inactivePlugins++;
     }
 
@@ -85,16 +83,15 @@ public class JenkinsMetrics implements StatDetails {
     }
 
     private void incrementUpdateablePlugins() {
-        if(updateablePlugins < 0) updateablePlugins = 0;
         this.updateablePlugins++;
     }
 
     /**
-     * This function will set Jenkins properties
+     * This function will set Jenkins properties and send details to client
      * @param details
      */
     @Override
-    public void setDetails(Object details) {
+    public void sendDetails(Object details) {
         clear();
         Jenkins instance = (Jenkins)details;
         if (instance == null) return;
@@ -113,15 +110,8 @@ public class JenkinsMetrics implements StatDetails {
             }
         }
         setHostName(APMUtil.getHostname(null));
-    }
 
-    /**
-     * This function will assembel jenkins details and return as a HashMap
-     * @return
-     */
-    @Override
-    public HashMap<String, Object> getDetails() {
-        HashMap<String, Object> systemDict = new HashMap<>();
+        HashMap<String, Object> systemDict = APMUtil.getSnappyflowTags("systemStat");
         systemDict.put("hostName", getHostName());
         systemDict.put("num_projects", getProjects());
 		systemDict.put("num_plugins", getPlugins());
@@ -129,7 +119,12 @@ public class JenkinsMetrics implements StatDetails {
 		systemDict.put("num_failed_plugins", getFailedPlugins());
 		systemDict.put("num_inactive_plugins", getInactivePlugins());
 		systemDict.put("num_plugin_with_update", getUpdateablePlugins());
-        return systemDict;
+        
+        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        if(communicationClient != null) {
+            communicationClient.transmit(systemDict);
+            clear();
+        }
     }
     
 }
