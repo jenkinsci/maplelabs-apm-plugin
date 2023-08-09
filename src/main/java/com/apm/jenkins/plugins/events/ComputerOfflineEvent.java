@@ -14,7 +14,7 @@ public class ComputerOfflineEvent extends AbstractAPMSimpleEvent {
         setTitle(title);
 
         String text = "Jenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "offline." +
-                "\n" + super.getLocationDetails() + "\n";
+                "\n";
         setText(text);
 
         setPriority(Priority.NORMAL);

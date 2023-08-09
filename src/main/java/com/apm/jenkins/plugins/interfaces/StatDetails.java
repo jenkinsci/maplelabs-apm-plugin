@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins.publishers.metrics;
+package com.apm.jenkins.plugins.interfaces;
 
 public interface StatDetails {
     void sendDetails(Object details);

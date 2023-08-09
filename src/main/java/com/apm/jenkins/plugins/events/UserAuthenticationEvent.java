@@ -37,14 +37,12 @@ public class UserAuthenticationEvent extends AbstractAPMSimpleEvent{
             setPriority(Priority.LOW);
             setAlertType(AlertType.SUCCESS);
         }
-        tags.put("event_type", SECURITY_EVENT_TYPE);
-        setSnappyflowTags(tags);
 
         String title = "User " + username + " " + action;
         setTitle(title);
 
         String text = "\nUser " + username + " " + action +
-                "\n" + super.getLocationDetails() + " \n";
+                "\n";
         setText(text);
     }
 }

@@ -3,10 +3,10 @@ package com.apm.jenkins.plugins.publishers.metrics;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.interfaces.StatDetails;
 
 import hudson.node_monitors.ResponseTimeMonitor.Data;
 import hudson.node_monitors.SwapSpaceMonitor.MemoryUsage2;
@@ -19,7 +19,6 @@ public class NodeMetrics implements StatDetails {
     private int numNodesOnline;
     private int numNodesOffline;
     ArrayList<HashMap<String,Object>> compuerList;
-    private static final Logger logger = Logger.getLogger(NodeMetrics.class.getName());
 
     // clear all values
     private void clear() {

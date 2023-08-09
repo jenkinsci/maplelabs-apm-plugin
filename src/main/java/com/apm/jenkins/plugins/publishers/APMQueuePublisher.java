@@ -7,7 +7,7 @@ import jenkins.model.Jenkins;
 import hudson.model.PeriodicWork;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.publishers.metrics.StatDetails;
+import com.apm.jenkins.plugins.interfaces.StatDetails;
 import com.apm.jenkins.plugins.publishers.metrics.QueueMetrics;
 
 @Extension

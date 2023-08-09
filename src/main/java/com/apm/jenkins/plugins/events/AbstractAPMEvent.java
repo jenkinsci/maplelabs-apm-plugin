@@ -1,7 +1,6 @@
 package com.apm.jenkins.plugins.events;
-import java.util.HashMap;
 
-import com.apm.jenkins.plugins.interfaces.APMEvent;
+import com.apm.jenkins.plugins.interfaces.Events.APMEvent;
 
 public abstract class AbstractAPMEvent implements APMEvent {
 	
@@ -13,7 +12,6 @@ public abstract class AbstractAPMEvent implements APMEvent {
     private String jenkinsUrl;
     private APMEvent.Priority priority;
     private APMEvent.AlertType alertType;
-    private HashMap<String, Object> sfTags;
 
 	@Override
 	public String getTitle() {		
@@ -42,6 +40,7 @@ public abstract class AbstractAPMEvent implements APMEvent {
         this.nodeName = nodeName;
     }
 
+	// need
 	@Override
 	public String getHost() {
 		return host;
@@ -51,14 +50,14 @@ public abstract class AbstractAPMEvent implements APMEvent {
         this.host = host;
     }
 
-	@Override
-	public String getJenkinsUrl() {
-		return jenkinsUrl;
-	}
-	
-	public void setJenkinsUrl(String jenkinsUrl) {
-		this.jenkinsUrl = jenkinsUrl;
-	}
+	// @Override
+	// public String getJenkinsUrl() {
+	// 	return jenkinsUrl;
+	// }
+	// need
+	// public void setJenkinsUrl(String jenkinsUrl) {
+	// 	this.jenkinsUrl = jenkinsUrl;
+	// }
 
 	@Override
 	public Priority getPriority() {
@@ -68,15 +67,6 @@ public abstract class AbstractAPMEvent implements APMEvent {
 	public void setPriority(APMEvent.Priority priority) {
         this.priority = priority;
     }
-	
-	@Override
-	public HashMap<String, Object> getSnappyflowTags() {
-		return sfTags;
-	}
-	
-	public void setSnappyflowTags(HashMap<String, Object> tags) {
-		this.sfTags = tags;
-	}
 
 	@Override
 	public APMEvent.AlertType getAlertType() {
@@ -95,17 +85,4 @@ public abstract class AbstractAPMEvent implements APMEvent {
 	public void setDate(Long date) {
 		this.date = date;
 	}
-	
-	protected String getLocationDetails(){
-		String hostMsg = "Host: unknown";
-		String instanceMsg = "Jenkins URL: unknown";
-		if(host != null && !host.isEmpty() && !"unknown".equals(host)){
-			hostMsg = "Host: " + host;
-		}
-		if(jenkinsUrl != null && !jenkinsUrl.isEmpty() && !"unknown".equals(jenkinsUrl)){
-			instanceMsg = "Jenkins URL: [instance](" + jenkinsUrl + ")";
-		}
-		return hostMsg + ", " + instanceMsg;
-	}
-
 }

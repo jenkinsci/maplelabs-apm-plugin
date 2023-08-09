@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.interfaces.StatDetails;
 
 import hudson.PluginManager;
 import hudson.PluginWrapper;
@@ -104,7 +105,6 @@ public class JenkinsMetrics implements StatDetails {
              
             for (PluginWrapper w : plugins) {
                 if (w.hasUpdate()) incrementUpdateablePlugins();
-    
                 if (w.isActive()) incrementActivePlugins();
                 else incrementInactivePlugins();
             }

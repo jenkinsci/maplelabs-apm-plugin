@@ -11,7 +11,7 @@ public class BuildStartedEvent extends AbstractAPMBuildEvent {
 	public BuildStartedEvent(BuildData buildData) {
 		super(buildData);
 
-		String buildNumber = buildData.getBuildNumber("unknown");
+		int buildNumber = buildData.getBuildNumber(-1);
 		String userId = buildData.getUserId();
 		String jobName = buildData.getJobName("unknown");
 		String buildUrl = buildData.getBuildUrl("unknown");
@@ -22,10 +22,9 @@ public class BuildStartedEvent extends AbstractAPMBuildEvent {
 		setTitle(title);
 
 		// Build Text
-		// eg: User <userId> started the [job <jobName> with build number #<buildNumber>] (1sec)"
+		// eg: User <userId> started the [job <jobName> with build number #<buildNumber>]"
 		String text = "\nUser " + userId + " started the [job " + jobName + " build #" +
-				buildNumber + "](" + buildUrl + ") " + getFormattedDuration() +
-				"\n" + super.getLocationDetails() + " \n";
+				buildNumber + "](" + buildUrl + ") " + "\n";
 		setText(text);
 
 		setPriority(Priority.LOW);

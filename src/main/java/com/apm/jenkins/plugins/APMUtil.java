@@ -29,7 +29,7 @@ import hudson.model.labels.LabelAtom;
 
 
 public class APMUtil {
-	public static final long publisherTime = TimeUnit.MINUTES.toMillis(1);
+	public static final long publisherTime = TimeUnit.MINUTES.toMillis(30);
 	 /**
      * Getter function to return either the saved hostname global configuration,
      * or the hostname that is set in the Jenkins host itself. Returns null if no
@@ -111,10 +111,10 @@ public class APMUtil {
 	    }
 	    
 	    public static String getJenkinsUrl() {
-	    	Jenkins jenkins = Jenkins.getInstance();
-	    	if(jenkins == null){
+	    	Jenkins jenkins = Jenkins.get();
+	    	if (jenkins == null) {
 	    		return "unknown";
-	    	}else{
+	    	} else {
 	    		try {
 	    			return jenkins.getRootUrl();
 	    		}catch(Exception e){

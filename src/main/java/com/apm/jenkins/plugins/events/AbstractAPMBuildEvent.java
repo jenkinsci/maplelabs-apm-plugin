@@ -13,9 +13,7 @@ public abstract class AbstractAPMBuildEvent extends AbstractAPMEvent {
     public AbstractAPMBuildEvent(BuildData buildData) {
         this.buildData = buildData;
         setHost(buildData.getHostname("unknown"));
-        setJenkinsUrl(buildData.getJenkinsUrl("unknown"));
         setDate(buildData.getEndTime(APMUtil.currentTimeMillis()) / 1000);
-        setSnappyflowTags(APMUtil.getSnappyflowTags("BuildEvent"));
     }
 
     protected String getFormattedDuration() {

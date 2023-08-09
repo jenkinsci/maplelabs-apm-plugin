@@ -18,7 +18,7 @@ public class ComputerLaunchFailedEvent  extends AbstractAPMSimpleEvent {
         setTitle(title);
 
         String text = "Jenkins node " + nodeName + " is" +  " failed to launch" +
-                "\n" + super.getLocationDetails() + "\n";
+                "\n";
         setText(text);
 
         setPriority(Priority.NORMAL);

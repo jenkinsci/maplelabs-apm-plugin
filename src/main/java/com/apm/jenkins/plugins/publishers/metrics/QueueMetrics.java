@@ -5,6 +5,7 @@ import java.util.SortedMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.interfaces.StatDetails;
 
 import hudson.model.Job;
 import hudson.model.Run;

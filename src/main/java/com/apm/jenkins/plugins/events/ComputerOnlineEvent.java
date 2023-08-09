@@ -2,7 +2,6 @@ package com.apm.jenkins.plugins.events;
 
 import java.util.Set;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import hudson.model.Computer;
 import hudson.slaves.OfflineCause;
@@ -19,17 +18,10 @@ public class ComputerOnlineEvent extends AbstractAPMSimpleEvent {
         setTitle(title);
 
         String text = "\nJenkins node " + nodeName + " is" + (isTemporarily? " temporarily ": " ") + "online." +
-                "\n" + super.getLocationDetails() + " \n";
+                "\n";
         setText(text);
 
         setPriority(Priority.LOW);
         setAlertType(AlertType.SUCCESS);
-        
-        //Snappyflow Specific
-        HashMap<String, Object> snappyTag = new HashMap<String, Object>();
-        for ( Entry<String, Set<String>> element : tags.entrySet()) {
-           snappyTag.put(element.getKey(),  element.getValue()) ;
-        }
-        setSnappyflowTags(snappyTag);
     }
 }

@@ -9,10 +9,10 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.ClientBase;
 import com.apm.jenkins.plugins.DataModel.BuildData;
-import com.apm.jenkins.plugins.interfaces.APMEvent;
+import com.apm.jenkins.plugins.Client.APMHttpClient;
 import com.apm.jenkins.plugins.interfaces.APMClient;
+import com.apm.jenkins.plugins.interfaces.Events.APMEvent;
 import com.apm.jenkins.plugins.events.BuildStartedEvent;
 import com.apm.jenkins.plugins.events.BuildCompletedEvent;
 
@@ -34,8 +34,7 @@ public class APMBuildListener extends RunListener<Run> {
             logger.fine("Start APMBuildListener#onStarted");
 
             // Get APM Client Instance
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;
+            APMClient client = new APMHttpClient();
 
             // Collect Build Data
             BuildData buildData;
@@ -54,21 +53,16 @@ public class APMBuildListener extends RunListener<Run> {
             // item.getInQueueSince() may raise a NPE if a worker node is spinning up to run the job.
             // This could be expected behavior with ec2 spot instances/ecs containers, meaning no waiting
             // queue times if the plugin is spinning up an instance/container for one/first job.
-            Queue queue = getQueue();
-            Queue.Item item = queue.getItem(run.getQueueId());
-            Map<String, Set<String>> tags = buildData.getTags();
-            Map<String,String> buildParams = buildData.getBuildParameters();
-            try {
-            	long waitingMs = (APMUtil.currentTimeMillis() - item.getInQueueSince());
-            	logger.info("Job waiting time: "+TimeUnit.MILLISECONDS.toSeconds(waitingMs));
-            	logger.info("Build Tags:"+tags);
-            	
-                logger.info("Build Params:"+buildParams);              
-                
-           } catch (RuntimeException e) {
-                logger.warning("Unable to compute 'waiting' metric. " +
-                        "item.getInQueueSince() unavailable, possibly due to worker instance provisioning");
-            } 
+        //     Queue queue = getQueue();
+        //     Queue.Item item = queue.getItem(run.getQueueId());
+        //     // Map<String,String> buildParams = buildData.getBuildParameters();
+        //     try {
+        //     	long waitingMs = (APMUtil.currentTimeMillis() - item.getInQueueSince());
+        //     	logger.info("Job waiting time: "+TimeUnit.MILLISECONDS.toSeconds(waitingMs));                
+        //    } catch (RuntimeException e) {
+        //         logger.warning("Unable to compute 'waiting' metric. " +
+        //                 "item.getInQueueSince() unavailable, possibly due to worker instance provisioning");
+        //     } 
 
             logger.info("End APMBuildListener#onStarted");
             // Submit counter
@@ -88,8 +82,7 @@ public class APMBuildListener extends RunListener<Run> {
             logger.fine("Start APMBuildListener#onCompleted");
 
             // Get APM Client Instance
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;
+            APMClient client = new APMHttpClient();
 
             // Collect Build Data
             BuildData buildData;
@@ -103,6 +96,7 @@ public class APMBuildListener extends RunListener<Run> {
             // Send an event
             APMEvent event = new BuildCompletedEvent(buildData);
             client.postEvent(event);
+            // logger.info("Event end : "+event);
 
             // Send a metric
             logger.fine(String.format("[%s]: Duration: %s", buildData.getJobName(null),

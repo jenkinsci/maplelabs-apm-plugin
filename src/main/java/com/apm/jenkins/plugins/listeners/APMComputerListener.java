@@ -14,9 +14,7 @@ import hudson.slaves.OfflineCause;
 import hudson.slaves.ComputerListener;
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.events.*;
-import com.apm.jenkins.plugins.Client.ClientBase;
-import com.apm.jenkins.plugins.interfaces.APMEvent;
-import com.apm.jenkins.plugins.interfaces.APMClient;
+import com.apm.jenkins.plugins.interfaces.Events.APMEvent;
 
 
 /**
@@ -38,12 +36,12 @@ public class APMComputerListener extends ComputerListener {
             logger.info("Start APMComputerListener#onOffline");
 
             // Get APM Client Instance
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;           
+            // APMClient client = ClientBase.getClient();
+            // if (client == null) return;           
                       
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, false);
-            client.postEvent(event);
+            // client.postEvent(event);
 
             logger.info("End APMComputerListener#onOffline");
         } catch (Exception e) {
@@ -56,12 +54,12 @@ public class APMComputerListener extends ComputerListener {
         try {
             logger.fine("Start APMComputerListener#onTemporarilyOffline");
             // Get APM Client Instance
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;
+            // APMClient client = ClientBase.getClient();
+            // if (client == null) return;
                         
             // Send event
             APMEvent event = new ComputerOfflineEvent(computer, cause, true);
-            client.postEvent(event);
+            // client.postEvent(event);
             
             logger.fine("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
@@ -75,11 +73,11 @@ public class APMComputerListener extends ComputerListener {
          try {
             logger.fine("Start APMComputerListener#onTemporarilyOnline");
 
-            APMClient client = ClientBase.getClient();
-            if (client == null) return;
+            // APMClient client = ClientBase.getClient();
+            // if (client == null) return;
             // Send event
              APMEvent event = new ComputerOnlineEvent(computer, null, (HashMap<String, Set<String>>) APMUtil.getComputerTags(computer), true);
-            client.postEvent(event);
+            // client.postEvent(event);
 
             logger.fine("End APMComputerListener#onTemporarilyOnline");
         } catch (Exception e) {
@@ -92,11 +90,11 @@ public class APMComputerListener extends ComputerListener {
         try {
             logger.fine("Start APMComputerListener#onLaunchFailure");
 
-             APMClient client = ClientBase.getClient();
-             if (client == null) return;
+            //  APMClient client = ClientBase.getClient();
+            //  if (client == null) return;
             // // Send event
             APMEvent event = new ComputerLaunchFailedEvent(computer, taskListener, APMUtil.getComputerTags(computer));
-            client.postEvent(event);
+            // client.postEvent(event);
 
             logger.fine("End APMComputerListener#onLaunchFailure");
         } catch (Exception e) {
