@@ -1,22 +1,34 @@
-package com.apm.jenkins.plugins.events;
+package com.apm.jenkins.plugins.Events.Collector;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class SecurityEvent extends AbstractEvent implements com.apm.jenkins.plugins.interfaces.Events.SecurityEvent {
+import com.apm.jenkins.plugins.Events.DataModel.AbstractEvent;
+import com.apm.jenkins.plugins.Events.interfaces.SecurityEvent;
 
+public class SecurityEventCollector extends AbstractEvent implements SecurityEvent {
+
+    /**
+     * This function will called when a user is authenticated
+     * @param details
+     * @return true if request processed
+     */
     @Override
     public boolean collectEvent(UserDetails details) {
-        // authenticated2
         String title = "User "+details.getUsername()+" authenticated";
         setText(title);
         setTitle(title);
         setAlert(AlertType.INFO);
         setPriority(Priority.NORMAL);
-        return send();
+        return sendEvent();
     }
 
+    /**
+     * This function will called when a user created/ failed to login/ login/ logout
+     * @param details
+     * @return true if request processed
+     */
     @Override
-    public boolean collectEvent(String name, com.apm.jenkins.plugins.interfaces.Events.SecurityEvent.Type type) {
+    public boolean collectEvent(String name, com.apm.jenkins.plugins.Events.interfaces.SecurityEvent.Type type) {
         // creation, failedToAuthenticate, login, failedToLogIn, logout
         String title = "User "+name+" ";
         switch (type) {
@@ -49,11 +61,10 @@ public class SecurityEvent extends AbstractEvent implements com.apm.jenkins.plug
                 title += "some made a action";
                 setAlert(AlertType.WARNING);
                 setPriority(Priority.LOW);
-                break;
         }
         setText(title);
         setTitle(title);
 
-        return send();
+        return sendEvent();
     }
 }

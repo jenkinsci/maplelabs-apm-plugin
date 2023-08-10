@@ -1,11 +1,11 @@
-package com.apm.jenkins.plugins.publishers.metrics;
+package com.apm.jenkins.plugins.Metrics.DataModel;
 
 import java.util.HashMap;
 import java.util.SortedMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
-import com.apm.jenkins.plugins.interfaces.StatDetails;
+import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.model.Job;
 import hudson.model.Run;
@@ -13,7 +13,7 @@ import hudson.model.Queue;
 import hudson.model.Result;
 import jenkins.model.Jenkins;
 
-public class QueueMetrics implements StatDetails {
+public class QueueMetrics implements PublishMetrics {
 
     private int stuck;
     private int aborted;
@@ -35,66 +35,66 @@ public class QueueMetrics implements StatDetails {
         queueSize = 0;
     }
 
-    private int getQueueSize() {
+    public int getQueueSize() {
         return queueSize;
     }
 
-    private void setQueueSize(int size) {
+    public void setQueueSize(int size) {
         queueSize = size;
     }
-    private int getStuck() {
+    public int getStuck() {
         return this.stuck;
     }
 
-    private void incrementStuck() {
+    public void incrementStuck() {
         this.stuck++;
     }
 
-    private int getAborted() {
+    public int getAborted() {
         return this.aborted;
     }
 
-    private void incrementAborted() {
+    public void incrementAborted() {
         this.aborted++;
     }
 
-    private int getPending() {
+    public int getPending() {
         return this.pending;
     }
 
-    private void incrementPending() {
+    public void incrementPending() {
         this.pending++;
     }
 
-    private int getBlocked() {
+    public int getBlocked() {
         return this.blocked;
     }
 
-    private void incrementBlocked() {
+    public void incrementBlocked() {
         this.blocked++;
     }
 
-    private int getStarted() {
+    public int getStarted() {
         return this.started;
     }
 
-    private void incrementStarted() {
+    public void incrementStarted() {
         this.started++;
     }
 
-    private int getBuildable() {
+    public int getBuildable() {
         return this.buildable;
     }
 
-    private void incrementBuildable() {
+    public void incrementBuildable() {
         this.buildable++;
     }
 
-    private int getCompleted() {
+    public int getCompleted() {
         return this.completed;
     }
 
-    private void incrementCompleted() {
+    public void incrementCompleted() {
         this.completed++;
     }
 
@@ -103,7 +103,7 @@ public class QueueMetrics implements StatDetails {
      * @params details
      */
     @Override
-    public void sendDetails(Object details) {
+    public void sendMetrics(Object details) {
         Jenkins instance = (Jenkins)details;
         if(instance == null) return;
         Queue queue = instance.getQueue();

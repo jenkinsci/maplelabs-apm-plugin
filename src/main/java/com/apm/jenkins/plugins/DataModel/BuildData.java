@@ -61,9 +61,10 @@ public class BuildData  {
         setUserId(getUserId(run));
 
         // Set Result and completed status
-        if (run.getResult() != null)
+
+        Result result = run.getResult();
+        if (result != null)
         {
-            Result result = run.getResult();
         	setResult(result.toString());
            	setCompleted(result.completeBuild);
         }

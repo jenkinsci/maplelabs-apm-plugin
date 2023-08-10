@@ -1,18 +1,18 @@
-package com.apm.jenkins.plugins.publishers.metrics;
+package com.apm.jenkins.plugins.Metrics.DataModel;
 
 import java.util.List;
 import java.util.HashMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
-import com.apm.jenkins.plugins.interfaces.StatDetails;
+import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.PluginManager;
 import hudson.PluginWrapper;
 import hudson.model.Project;
 import jenkins.model.Jenkins;
 
-public class JenkinsMetrics implements StatDetails {
+public class JenkinsMetrics implements PublishMetrics {
 
     private int plugins;
     private int projects;
@@ -31,59 +31,59 @@ public class JenkinsMetrics implements StatDetails {
         setHostName(null);
         setFailedPlugins(0);
     }
-    private int getPlugins() {
+    public int getPlugins() {
         return this.plugins;
     }
 
-    private void setPlugins(int plugins) {
+    public void setPlugins(int plugins) {
         this.plugins = plugins;
     }
 
-    private int getProjects() {
+    public int getProjects() {
         return this.projects;
     }
 
-    private void setProjects(int projects) {
+    public void setProjects(int projects) {
         this.projects = projects;
     }
 
-    private String getHostName() {
+    public String getHostName() {
         return this.hostName;
     }
 
-    private void setHostName(String hostName) {
+    public void setHostName(String hostName) {
         this.hostName = hostName;
     }
 
-    private int getActivePlugins() {
+    public int getActivePlugins() {
         return this.activePlugins;
     }
 
-    private void incrementActivePlugins() {
+    public void incrementActivePlugins() {
         this.activePlugins++;
     }
 
-    private int getFailedPlugins() {
+    public int getFailedPlugins() {
         return this.failedPlugins;
     }
 
-    private void setFailedPlugins(int failedPlugins) {
+    public void setFailedPlugins(int failedPlugins) {
         this.failedPlugins = failedPlugins;
     }
 
-    private int getInactivePlugins() {
+    public int getInactivePlugins() {
         return this.inactivePlugins;
     }
 
-    private void incrementInactivePlugins() {
+    public void incrementInactivePlugins() {
         this.inactivePlugins++;
     }
 
-    private int getUpdateablePlugins() {
+    public int getUpdateablePlugins() {
         return this.updateablePlugins;
     }
 
-    private void incrementUpdateablePlugins() {
+    public void incrementUpdateablePlugins() {
         this.updateablePlugins++;
     }
 
@@ -92,7 +92,7 @@ public class JenkinsMetrics implements StatDetails {
      * @param details
      */
     @Override
-    public void sendDetails(Object details) {
+    public void sendMetrics(Object details) {
         clear();
         Jenkins instance = (Jenkins)details;
         if (instance == null) return;

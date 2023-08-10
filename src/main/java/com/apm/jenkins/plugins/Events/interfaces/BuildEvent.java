@@ -1,9 +1,9 @@
-package com.apm.jenkins.plugins.interfaces.Events;
+package com.apm.jenkins.plugins.Events.interfaces;
 
 import hudson.model.Run;
 import hudson.model.TaskListener;
 
-public interface BuildEvent extends APMEvent {
+public interface BuildEvent extends Event {
     final float MINUTE = 60;
     final float HOUR = 3600;
     public static enum Type{

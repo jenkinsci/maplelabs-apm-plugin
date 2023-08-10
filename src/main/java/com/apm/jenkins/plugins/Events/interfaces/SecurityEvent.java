@@ -1,8 +1,8 @@
-package com.apm.jenkins.plugins.interfaces.Events;
+package com.apm.jenkins.plugins.Events.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-public interface SecurityEvent extends APMEvent {
+public interface SecurityEvent extends Event {
     public static enum Type{
         USER_CREATED,
         AUTHENTICATED,

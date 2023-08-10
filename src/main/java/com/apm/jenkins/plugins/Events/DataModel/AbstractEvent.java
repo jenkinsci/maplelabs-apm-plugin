@@ -1,13 +1,13 @@
-package com.apm.jenkins.plugins.events;
+package com.apm.jenkins.plugins.Events.DataModel;
 
 import java.util.HashMap;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.interfaces.Events.APMEvent;
+import com.apm.jenkins.plugins.Events.interfaces.Event;
 
 import hudson.EnvVars;
 
-public abstract class AbstractEvent implements APMEvent {
+public abstract class AbstractEvent implements Event {
 
     private Long date;
     private String host;
@@ -93,10 +93,10 @@ public abstract class AbstractEvent implements APMEvent {
     }
 
     /**
-     * This function will assembel details and send detail
+     * This function will assembel details and call client
      * @return
      */
-    protected boolean send(){
+    protected boolean sendEvent(){
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("text", getText());
         payload.put("host", getHost());

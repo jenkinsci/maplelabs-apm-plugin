@@ -1,9 +1,6 @@
-package com.apm.jenkins.plugins.interfaces.Events;
+package com.apm.jenkins.plugins.Events.interfaces;
 
-/**
- * Interface for APM events.
- */
-public interface APMEvent {
+public interface Event {
 
 	public static final String NODE_EVENT_TYPE = "node";
 	public static final String BUILD_EVENT_TYPE = "build";
@@ -21,8 +18,6 @@ public interface APMEvent {
 		NORMAL,
 		HIGH;
 	}
-
-	public static enum Type{}
 
 	public Long getDate();
 	public String getText();

@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins.publishers.metrics;
+package com.apm.jenkins.plugins.Metrics.DataModel;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
-import com.apm.jenkins.plugins.interfaces.StatDetails;
+import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.node_monitors.ResponseTimeMonitor.Data;
 import hudson.node_monitors.SwapSpaceMonitor.MemoryUsage2;
@@ -14,7 +14,7 @@ import hudson.node_monitors.DiskSpaceMonitorDescriptor.DiskSpace;
 
 import hudson.model.Computer;
 
-public class NodeMetrics implements StatDetails {
+public class NodeMetrics implements PublishMetrics {
     private int numNodes;
     private int numNodesOnline;
     private int numNodesOffline;
@@ -28,35 +28,35 @@ public class NodeMetrics implements StatDetails {
         compuerList = null;
     }
 
-    private int getNumNodes() {
+    public int getNumNodes() {
         return this.numNodes;
     }
 
-    private void setNumNodes(int numNodes) {
+    public void setNumNodes(int numNodes) {
         this.numNodes = numNodes;
     }
 
-    private int getNumNodesOnline() {
+    public int getNumNodesOnline() {
         return this.numNodesOnline;
     }
 
-    private void setNumNodesOnline(int numNodesOnline) {
+    public void setNumNodesOnline(int numNodesOnline) {
         this.numNodesOnline = numNodesOnline;
     }
 
-    private int getNumNodesOffline() {
+    public int getNumNodesOffline() {
         return this.numNodesOffline;
     }
 
-    private void setNumNodesOffline(int numNodesOffline) {
+    public void setNumNodesOffline(int numNodesOffline) {
         this.numNodesOffline = numNodesOffline;
     }
 
-    private ArrayList<HashMap<String,Object>> getComputerDetails() {
+    public ArrayList<HashMap<String,Object>> getComputerDetails() {
         return this.compuerList;
     }
 
-    private void addComputerDetails(HashMap<String, Object> computerDetails) {
+    public void addComputerDetails(HashMap<String, Object> computerDetails) {
         if(compuerList == null) compuerList = new ArrayList<HashMap<String,Object>>();
         this.compuerList.add(computerDetails);
     }
@@ -66,7 +66,7 @@ public class NodeMetrics implements StatDetails {
      * @param details
      */
     @Override
-    public void sendDetails(Object details) {
+    public void sendMetrics(Object details) {
         if(details instanceof Computer[]) {
             Computer[] computerList = (Computer[])details;
             int nodeOnline = 0, nodeOffline = 0;

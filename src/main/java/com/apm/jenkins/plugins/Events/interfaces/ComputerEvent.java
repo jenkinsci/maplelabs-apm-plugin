@@ -1,17 +1,17 @@
-package com.apm.jenkins.plugins.interfaces.Events;
+package com.apm.jenkins.plugins.Events.interfaces;
 
 import hudson.model.Computer;
 import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 
-public interface ComputerEvent extends APMEvent {
+public interface ComputerEvent extends Event {
     public static enum Type{
         OFFLINE,
         TEMPORARILYOFFLINE,
         TEMPORARILYONLINE,
         LAUNCHFAILURE
     }
-    public boolean collectEvent(Computer computer, Type type);
+    public boolean collectEvent(Computer computer);
+    public boolean collectEvent(Computer computer, TaskListener taskListener);
     public boolean collectEvent(Computer computer, OfflineCause cause, Type type);
-    public boolean collectEvent(Computer computer, TaskListener taskListener, Type type);
 }

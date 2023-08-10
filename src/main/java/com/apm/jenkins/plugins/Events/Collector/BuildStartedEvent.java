@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins.events;
+package com.apm.jenkins.plugins.Events.Collector;
 
 import com.apm.jenkins.plugins.DataModel.BuildData;
 

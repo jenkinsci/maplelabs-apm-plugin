@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins.listeners;
+package com.apm.jenkins.plugins.Events;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -6,7 +6,8 @@ import hudson.Extension;
 import jenkins.security.SecurityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.apm.jenkins.plugins.events.SecurityEvent;
+import com.apm.jenkins.plugins.Events.interfaces.SecurityEvent;
+import com.apm.jenkins.plugins.Events.Collector.SecurityEventCollector;
 /**
  * This class will trigger api event when security activity happened
  * Security activities: user created, Logined, failed to login, loggedOut
@@ -14,14 +15,14 @@ import com.apm.jenkins.plugins.events.SecurityEvent;
 @Extension
 public class APMSecurityListner extends SecurityListener{
     // private HashMap<String, Object>  securityDict;
-    com.apm.jenkins.plugins.interfaces.Events.SecurityEvent eventCollector;
+    SecurityEvent eventCollector;
     /**
      * This function will hit snappyflow when user is created
      * @param username user name
      */
     @Override
     protected void userCreated(@NonNull String username) {
-        eventCollector = new SecurityEvent();
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(username, SecurityEvent.Type.USER_CREATED);
     }
 
@@ -31,6 +32,7 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void authenticated2(@NonNull UserDetails details) {
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(details);
     }
 
@@ -40,6 +42,7 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void failedToAuthenticate(@NonNull String username){
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
     }
 
@@ -49,6 +52,7 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void loggedIn(@NonNull String username){
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(username, SecurityEvent.Type.LOGGEDIN);
     }
 
@@ -58,6 +62,7 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void failedToLogIn(@NonNull String username){
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(username, SecurityEvent.Type.FAILEDTOLOGIN);
     }
 
@@ -67,6 +72,7 @@ public class APMSecurityListner extends SecurityListener{
      */
     @Override
     protected void loggedOut(@NonNull String username){
+        eventCollector = new SecurityEventCollector();
         eventCollector.collectEvent(username, SecurityEvent.Type.LOGGEDOUT);
     }
 

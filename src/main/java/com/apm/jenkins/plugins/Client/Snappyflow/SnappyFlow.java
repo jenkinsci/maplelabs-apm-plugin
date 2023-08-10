@@ -30,7 +30,7 @@ public abstract class SnappyFlow implements Communication {
     private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());
 
 	/**
-	 * This function return http authentication detail
+	 * This function return http authentication detail as a String
 	 * @param username
 	 * @param password
 	 * @return
@@ -66,7 +66,7 @@ public abstract class SnappyFlow implements Communication {
 	}
 
 	/**
-	 * This function will do HTTP POST
+	 * This function will do HTTP POST andreturns response code
 	 * @param post
 	 * @param payload
 	 * @return
