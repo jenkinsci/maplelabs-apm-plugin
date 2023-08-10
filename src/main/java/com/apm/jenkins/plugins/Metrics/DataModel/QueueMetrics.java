@@ -5,6 +5,7 @@ import java.util.SortedMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.model.Job;
@@ -130,7 +131,7 @@ public class QueueMetrics implements PublishMetrics {
                     }
                 }
             }
-        HashMap<String, Object> jobDetails = APMUtil.getSnappyflowTags("jobStat");
+        HashMap<String, Object> jobDetails = SnappyFlow.getSnappyflowTags("jobStat");
         jobDetails.put("queueStuck", getStuck());
         jobDetails.put("queueSize", getQueueSize());
         jobDetails.put("queuePending", getPending());

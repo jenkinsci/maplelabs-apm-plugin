@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.node_monitors.ResponseTimeMonitor.Data;
@@ -115,7 +116,7 @@ public class NodeMetrics implements PublishMetrics {
             setNumNodesOffline(nodeOffline);
         } else return;
 
-        HashMap<String, Object> computerDetails =APMUtil.getSnappyflowTags("nodeStat");
+        HashMap<String, Object> computerDetails =SnappyFlow.getSnappyflowTags("nodeStat");
         computerDetails.put("num_nodes", getNumNodes());
         computerDetails.put("computers", getComputerDetails());
         computerDetails.put("num_nodes_online", getNumNodesOnline());

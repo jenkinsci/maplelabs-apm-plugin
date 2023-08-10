@@ -7,9 +7,9 @@ import hudson.slaves.OfflineCause;
 public interface ComputerEvent extends Event {
     public static enum Type{
         OFFLINE,
-        TEMPORARILYOFFLINE,
+        LAUNCHFAILURE,
         TEMPORARILYONLINE,
-        LAUNCHFAILURE
+        TEMPORARILYOFFLINE,
     }
     public boolean collectEvent(Computer computer);
     public boolean collectEvent(Computer computer, TaskListener taskListener);

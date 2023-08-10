@@ -64,7 +64,7 @@ public class SnappyFlowEs extends SnappyFlow {
 
 		post.setHeader("Content-Type",contentType.toString());
 		post.setHeader("Authorization",targetToken.toString());
-		post.setHeader( "Accept","application/vnd.kafka.v2+json");  
+		post.setHeader( "Accept","application/vnd.kafka.v2+json");
 		data = new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"),ContentType.APPLICATION_JSON);
 		post.setEntity(data);
 

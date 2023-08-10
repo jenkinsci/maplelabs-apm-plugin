@@ -5,8 +5,6 @@ import java.util.HashMap;
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Events.interfaces.Event;
 
-import hudson.EnvVars;
-
 public abstract class AbstractEvent implements Event {
 
     private Long date;
@@ -20,11 +18,6 @@ public abstract class AbstractEvent implements Event {
     public AbstractEvent() {
         setHost(APMUtil.getHostname(null));
         setDate(APMUtil.currentTimeMillis() / 1000);
-    }
-
-    public AbstractEvent(EnvVars env, Long date) {
-        setDate(date);
-        setHost(APMUtil.getHostname(env));
     }
 
     public void setDate(Long date) {

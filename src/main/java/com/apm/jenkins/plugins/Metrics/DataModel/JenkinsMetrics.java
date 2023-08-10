@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 import hudson.PluginManager;
@@ -111,7 +112,7 @@ public class JenkinsMetrics implements PublishMetrics {
         }
         setHostName(APMUtil.getHostname(null));
 
-        HashMap<String, Object> systemDict = APMUtil.getSnappyflowTags("systemStat");
+        HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");
         systemDict.put("hostName", getHostName());
         systemDict.put("num_projects", getProjects());
 		systemDict.put("num_plugins", getPlugins());

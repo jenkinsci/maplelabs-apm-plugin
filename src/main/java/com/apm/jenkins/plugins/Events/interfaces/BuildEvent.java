@@ -1,8 +1,5 @@
 package com.apm.jenkins.plugins.Events.interfaces;
 
-import hudson.model.Run;
-import hudson.model.TaskListener;
-
 public interface BuildEvent extends Event {
     final float MINUTE = 60;
     final float HOUR = 3600;
@@ -10,7 +7,7 @@ public interface BuildEvent extends Event {
         STARTED,
         COMPLETED
     }
-    public boolean collectEvent(Run run, TaskListener listener, Type type);
+    public boolean collectEvent(Type type);
 
     static String getFormattedDuration(Long duration) {
         if (duration != null) {

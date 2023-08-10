@@ -2,21 +2,17 @@ package com.apm.jenkins.plugins.Events.interfaces;
 
 public interface Event {
 
-	public static final String NODE_EVENT_TYPE = "node";
-	public static final String BUILD_EVENT_TYPE = "build";
-	public static final String SECURITY_EVENT_TYPE = "security";
-
 	public static enum AlertType {
+		INFO,
 		ERROR,
 		WARNING,
-		INFO,
 		SUCCESS;		
 	}
 
 	public static enum Priority {
 		LOW,
-		NORMAL,
-		HIGH;
+		HIGH,
+		NORMAL;
 	}
 
 	public Long getDate();

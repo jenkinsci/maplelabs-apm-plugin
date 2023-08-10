@@ -4,12 +4,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface SecurityEvent extends Event {
     public static enum Type{
+        LOGGEDIN,
+        LOGGEDOUT,
         USER_CREATED,
         AUTHENTICATED,
-        FAILEDTOAUTHENTICATE,
-        LOGGEDIN,
         FAILEDTOLOGIN,
-        LOGGEDOUT;
+        FAILEDTOAUTHENTICATE,
     }
     public boolean collectEvent(UserDetails details);
     public boolean collectEvent(String name, Type type);
