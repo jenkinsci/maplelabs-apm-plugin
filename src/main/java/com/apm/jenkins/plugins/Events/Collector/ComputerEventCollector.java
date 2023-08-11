@@ -18,7 +18,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
     public boolean CollectEventData(Computer computer) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
-        String title = "Jenkins node " + nodeName + "back online";
+        String title = "Jenkins node " + nodeName + " back online";
         setText(title);
         setTitle(title);
         setPriority(Priority.LOW);
