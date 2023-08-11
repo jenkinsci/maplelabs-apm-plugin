@@ -15,7 +15,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean CollectEventData(Computer computer) {
+    public boolean collectEventData(Computer computer) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " back online";
@@ -33,7 +33,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean CollectEventData(Computer computer, OfflineCause cause, Type type) {
+    public boolean collectEventData(Computer computer, OfflineCause cause, Type type) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is ";
@@ -67,7 +67,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean CollectEventData(Computer computer, TaskListener taskListener) {
+    public boolean collectEventData(Computer computer, TaskListener taskListener) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is" + " failed to launch";

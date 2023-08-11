@@ -12,7 +12,7 @@ public interface ComputerEvent extends Event {
         TEMPORARILYONLINE,
         TEMPORARILYOFFLINE,
     }
-    public boolean CollectEventData(Computer computer);
-    public boolean CollectEventData(Computer computer, TaskListener taskListener);
-    public boolean CollectEventData(Computer computer, OfflineCause cause, Type type);
+    public boolean collectEventData(Computer computer);
+    public boolean collectEventData(Computer computer, TaskListener taskListener);
+    public boolean collectEventData(Computer computer, OfflineCause cause, Type type);
 }

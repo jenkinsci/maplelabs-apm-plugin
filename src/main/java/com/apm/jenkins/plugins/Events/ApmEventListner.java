@@ -41,7 +41,7 @@ public class ApmEventListner {
             try {
                 logger.fine("Start BuildListener#onStarted");
                 buildCollector = new BuildEventCollector(run, listener);
-                buildCollector.CollectEventData(BuildEvent.Type.STARTED);
+                buildCollector.collectEventData(BuildEvent.Type.STARTED);
 
                 // item.getInQueueSince() may raise a NPE if a worker node is spinning up to run
                 // the job.
@@ -74,7 +74,7 @@ public class ApmEventListner {
             try {
                 logger.fine("Start BuildListener#onCompleted");
                 buildCollector = new BuildEventCollector(run, listener);
-                buildCollector.CollectEventData(BuildEvent.Type.COMPLETED);
+                buildCollector.collectEventData(BuildEvent.Type.COMPLETED);
                 logger.info("End BuildListener#onCompleted");
             } catch (Exception e) {
                 logger.severe("Failed to process build completion");
@@ -105,7 +105,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start ComputerListener#onOffline");
                 eventCollector = new ComputerEventCollector();
-                eventCollector.CollectEventData(computer, cause, ComputerEvent.Type.OFFLINE);
+                eventCollector.collectEventData(computer, cause, ComputerEvent.Type.OFFLINE);
                 logger.info("End ComputerListener#onOffline");
             } catch (Exception e) {
                 logger.severe("Failed to process computer offline event");
@@ -118,7 +118,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start ComputerListener#onTemporarilyOffline");
                 eventCollector = new ComputerEventCollector();
-                eventCollector.CollectEventData(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);
+                eventCollector.collectEventData(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);
                 logger.info("End ComputerListener#onTemporarilyOffline");
             } catch (Exception e) {
                 logger.severe("Failed to process computer temporarily offline event");
@@ -131,7 +131,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start ComputerListener#onTemporarilyOnline");
                 eventCollector = new ComputerEventCollector();
-                eventCollector.CollectEventData(computer);
+                eventCollector.collectEventData(computer);
                 logger.info("End ComputerListener#onTemporarilyOnline");
             } catch (Exception e) {
                 logger.severe("Failed to process computer temporarily online event");
@@ -145,7 +145,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start ComputerListener#onLaunchFailure");
                 eventCollector = new ComputerEventCollector();
-                eventCollector.CollectEventData(computer, taskListener);
+                eventCollector.collectEventData(computer, taskListener);
                 logger.info("End ComputerListener#onLaunchFailure");
             } catch (Exception e) {
                 logger.severe("Failed to process launch failure");
@@ -172,7 +172,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#userCreated");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(username, SecurityEvent.Type.USER_CREATED);
+                eventCollector.collectEventData(username, SecurityEvent.Type.USER_CREATED);
                 logger.info("Start SceurityListener#userCreated");
             } catch (Exception e) {
                 logger.severe("Failed to process User creation");
@@ -190,7 +190,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#authenticated2");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(details);
+                eventCollector.collectEventData(details);
                 logger.info("Start SceurityListener#authenticated2");
             } catch (Exception e) {
                  logger.severe("Failed to process User authenticated");
@@ -208,7 +208,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#failedToAuthenticate");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
+                eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
                 logger.info("Start SceurityListener#failedToAuthenticate");
             } catch (Exception e) {
                  logger.severe("Failed to process User failed to auth");
@@ -226,7 +226,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#loggedIn");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(username, SecurityEvent.Type.LOGGEDIN);
+                eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDIN);
                 logger.info("Start SceurityListener#loggedIn");
             } catch (Exception e) {
                  logger.severe("Failed to process User login");
@@ -244,7 +244,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#failedToLogIn");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(username, SecurityEvent.Type.FAILEDTOLOGIN);
+                eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOLOGIN);
                 logger.info("Start SceurityListener#failedToLogIn");
             } catch (Exception e) {
                  logger.severe("Failed to process User failed login");
@@ -262,7 +262,7 @@ public class ApmEventListner {
             try {
                 logger.info("Start SceurityListener#loggedOut");
                 eventCollector = new SecurityEventCollector();
-                eventCollector.CollectEventData(username, SecurityEvent.Type.LOGGEDOUT);
+                eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDOUT);
                 logger.info("Start SceurityListener#loggedOut");
             } catch (Exception e) {
                  logger.severe("Failed to process User log out");

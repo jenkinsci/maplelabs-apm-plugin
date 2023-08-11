@@ -13,7 +13,7 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      * @return true if request processed
      */
     @Override
-    public boolean CollectEventData(UserDetails details) {
+    public boolean collectEventData(UserDetails details) {
         setEventType(EVENT);
         String title = "User "+details.getUsername()+" authenticated";
         setText(title);
@@ -29,7 +29,7 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      * @return true if request processed
      */
     @Override
-    public boolean CollectEventData(String name, SecurityEvent.Type type) {
+    public boolean collectEventData(String name, SecurityEvent.Type type) {
         setEventType(EVENT);
         // creation, failedToAuthenticate, login, failedToLogIn, logout
         String title = "User "+name+" ";

@@ -28,7 +28,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
      * @param type
      */
     @Override
-    public boolean CollectEventData(Type type) {
+    public boolean collectEventData(Type type) {
         setEventType(EVENT);
         String userId, jobName, buildUrl, buildNumber, buildResult, title, text;
         switch (type) {
