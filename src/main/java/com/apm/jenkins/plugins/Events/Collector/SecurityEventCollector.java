@@ -9,13 +9,14 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
 
     /**
      * This function will called when a user is authenticated
+     * 
      * @param details
      * @return true if request processed
      */
     @Override
     public boolean collectEventData(UserDetails details) {
         setEventType(EVENT);
-        String title = "User "+details.getUsername()+" authenticated";
+        String title = "User " + details.getUsername() + " authenticated";
         setText(title);
         setTitle(title);
         setAlert(AlertType.INFO);
@@ -25,6 +26,7 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
 
     /**
      * This function will called when a user created/ failed to login/ login/ logout
+     * 
      * @param details
      * @return true if request processed
      */
@@ -32,10 +34,10 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
     public boolean collectEventData(String name, SecurityEvent.Type type) {
         setEventType(EVENT);
         // creation, failedToAuthenticate, login, failedToLogIn, logout
-        String title = "User "+name+" ";
+        String title = "User " + name + " ";
         switch (type) {
             case USER_CREATED:
-                title = "New user "+ name +" added";
+                title = "New user " + name + " added";
                 setAlert(AlertType.INFO);
                 setPriority(Priority.NORMAL);
                 break;

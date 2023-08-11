@@ -48,9 +48,11 @@ public abstract class AbstractEvent implements Event {
     public void setAlert(AlertType alert) {
         this.alert = alert;
     }
+
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
+
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
@@ -76,7 +78,7 @@ public abstract class AbstractEvent implements Event {
 
     @Override
     public String getTitle() {
-       return title;
+        return title;
     }
 
     @Override
@@ -101,6 +103,7 @@ public abstract class AbstractEvent implements Event {
 
     /**
      * Get given computers name
+     * 
      * @param computer
      * @return
      */
@@ -117,16 +120,17 @@ public abstract class AbstractEvent implements Event {
 
     /**
      * This function will assembel details and call client
+     * 
      * @return
      */
-    protected boolean sendEvent(){
+    protected boolean sendEvent() {
         HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
         payload.put("text", getText());
         payload.put("host", getHost());
         payload.put("title", getTitle());
-        payload.put("date_happened", getDate());            
+        payload.put("date_happened", getDate());
         payload.put("priority", getPriority().name().toLowerCase());
         payload.put("alert_type", getAlertType().name().toLowerCase());
         return APMUtil.getAPMGlobalDescriptor().getDestinationClient().transmitData(payload);
-    }    
+    }
 }

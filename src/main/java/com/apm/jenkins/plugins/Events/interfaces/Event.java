@@ -6,7 +6,7 @@ public interface Event {
 		INFO,
 		ERROR,
 		WARNING,
-		SUCCESS;		
+		SUCCESS;
 	}
 
 	public static enum Priority {
@@ -16,12 +16,18 @@ public interface Event {
 	}
 
 	public Long getDate();
+
 	public String getText();
+
 	public String getHost();
+
 	public String getTitle();
+
 	public String getNodeName();
+
 	public String getEventType();
+
 	public Priority getPriority();
+
 	public AlertType getAlertType();
 }
-

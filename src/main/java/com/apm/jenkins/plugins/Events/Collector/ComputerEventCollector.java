@@ -11,6 +11,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
 
     /**
      * This function will called when temp offline node is backs online
+     * 
      * @param computer
      * @return true if request processed
      */
@@ -28,6 +29,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
 
     /**
      * This function will called when node is offline/ temp offline
+     * 
      * @param computer
      * @param cause
      * @return true if request processed
@@ -39,14 +41,14 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
         String title = "Jenkins node " + nodeName + " is ";
         switch (type) {
             case TEMPORARILYOFFLINE:
-                title+="temporarily offline";
+                title += "temporarily offline";
                 setText(title);
                 setTitle(title);
                 setPriority(Priority.NORMAL);
                 setAlert(AlertType.WARNING);
                 break;
             case OFFLINE:
-                title+=" offline";
+                title += " offline";
                 setText(title);
                 setTitle(title);
                 setPriority(Priority.NORMAL);
@@ -63,6 +65,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
 
     /**
      * This function will called when node is failed to launch
+     * 
      * @param computer
      * @return true if request processed
      */

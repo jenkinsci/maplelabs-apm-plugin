@@ -25,8 +25,8 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private static final String KAFKA = "SnappyflowKafka";
 	private static final String SNAPPYFLOW = "Snappyflow";
 	private static final String DISPLAY_NAME = "Maplelabs APM Plugin";
-	private static final Logger logger = Logger.getLogger(APMGlobalConfiguration.class.getName());	
-	
+	private static final Logger logger = Logger.getLogger(APMGlobalConfiguration.class.getName());
+
 	private String hostname = null;
 	private String targetAppName = null;
 	private String targetProjectName = null;
@@ -51,60 +51,58 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private String targetUserName = null;
 	private String targetPassword = null;
 
-    	
 	@DataBoundConstructor
 	public APMGlobalConfiguration() {
 		load(); // Load the persisted global configuration
 		String hostnameEnvVar = System.getenv("APM_JENKINS_PLUGIN_HOSTNAME");
-		if(StringUtils.isNotBlank(hostnameEnvVar)){
+		if (StringUtils.isNotBlank(hostnameEnvVar)) {
 			this.hostname = hostnameEnvVar;
 		}
 
-		switch(targetDestination){
+		switch (targetDestination) {
 			case SNAPPYFLOW:
-			switch(targetSnappyFlowDestination) {
-				case ES:
-				destinationClient =  new SnappyFlowEs();
+				switch (targetSnappyFlowDestination) {
+					case ES:
+						destinationClient = new SnappyFlowEs();
+						break;
+					case KAFKA:
+						destinationClient = new SnappyFlowKafka();
+						break;
+					default:
+				}
 				break;
-				case KAFKA:
-				destinationClient =  new SnappyFlowKafka();
-				break;
-				default:
-			}
-			break;
 			case OTHERS:
-			break;
+				break;
 			default:
 		}
 	}
-	
-	
-    @Override
-    public String getDisplayName() {
-        return DISPLAY_NAME;
-    }
-        
+
+	@Override
+	public String getDisplayName() {
+		return DISPLAY_NAME;
+	}
+
 	/**
-     * Getter function for the hostname global configuration.
-     *
-     * @return a String containing the hostname global configuration. 
-	*/ 
-	 public String getHostname() {
-        return hostname;
-    }
+	 * Getter function for the hostname global configuration.
+	 *
+	 * @return a String containing the hostname global configuration.
+	 */
+	public String getHostname() {
+		return hostname;
+	}
 
 	public String getTargetSnappyFlowDestination() {
 		return targetSnappyFlowDestination;
 	}
-    
+
 	public void setTargetSnappyFlowDestination(String destination) {
 		targetSnappyFlowDestination = destination;
 	}
-      	
-    public String getTargetDestination() {
+
+	public String getTargetDestination() {
 		return targetDestination;
 	}
-    
+
 	public void setTargetDestination(String destination) {
 		targetDestination = destination;
 	}
@@ -114,9 +112,9 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	}
 
 	public void setTargetProjectName(String targetProjectName) {
-		this.targetProjectName = targetProjectName;		
+		this.targetProjectName = targetProjectName;
 	}
-	
+
 	public String getTargetAppName() {
 		return targetAppName;
 	}
@@ -124,7 +122,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	public void setTargetAppName(String targetAppName) {
 		this.targetAppName = targetAppName;
 	}
-	
+
 	public String getTargetInstanceName() {
 		return targetInstanceName;
 	}
@@ -137,7 +135,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetHost = host;
 	}
 
-	public String getTargetHost(){
+	public String getTargetHost() {
 		return targetHost;
 	}
 
@@ -145,7 +143,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetPort = port;
 	}
 
-	public String getTargetPort(){
+	public String getTargetPort() {
 		return targetPort;
 	}
 
@@ -153,7 +151,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetProtocol = protocol;
 	}
 
-	public String getTargetProtocol(){
+	public String getTargetProtocol() {
 		return targetProtocol;
 	}
 
@@ -161,7 +159,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetESUserName = userName;
 	}
 
-	public String getTargetESUserName(){
+	public String getTargetESUserName() {
 		return targetESUserName;
 	}
 
@@ -169,7 +167,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetESPassword = password;
 	}
 
-	public String getTargetESPassword(){
+	public String getTargetESPassword() {
 		return targetESPassword;
 	}
 
@@ -177,7 +175,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetProfileName = profileName;
 	}
 
-	public String getTargetProfileName(){
+	public String getTargetProfileName() {
 		return targetProfileName;
 	}
 
@@ -185,7 +183,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetKafkaPath = path;
 	}
 
-	public String getTargetKafkaPath(){
+	public String getTargetKafkaPath() {
 		return targetKafkaPath;
 	}
 
@@ -193,7 +191,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetKafkaToken = token;
 	}
 
-	public String getTargetKafkaToken(){
+	public String getTargetKafkaToken() {
 		return targetKafkaToken;
 	}
 
@@ -201,7 +199,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetKafkaTopic = topic;
 	}
 
-	public String getTargetKafkaTopic(){
+	public String getTargetKafkaTopic() {
 		return targetKafkaTopic;
 	}
 
@@ -209,7 +207,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetPassword = password;
 	}
 
-	public String getTargetPassword(){
+	public String getTargetPassword() {
 		return targetPassword;
 	}
 
@@ -217,27 +215,29 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		this.targetUserName = userName;
 	}
 
-	public String getTargetUserName(){
+	public String getTargetUserName() {
 		return targetUserName;
 	}
 
 	/**
 	 * This function will set config for ES
+	 * 
 	 * @param username
 	 * @param password
 	 */
-	private void setESDetails(String username, String password){
+	private void setESDetails(String username, String password) {
 		setTargetESUserName(username);
 		setTargetESPassword(password);
 	}
 
 	/**
 	 * This function will set kafka details
+	 * 
 	 * @param path
 	 * @param token
 	 * @param topic
 	 */
-	private void setKafkaDetails(String path, String token, String topic){
+	private void setKafkaDetails(String path, String token, String topic) {
 		setTargetKafkaPath(path);
 		setTargetKafkaToken(token);
 		setTargetKafkaTopic(topic);
@@ -245,26 +245,27 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 
 	/**
 	 * This function will set others config details
+	 * 
 	 * @param username
 	 * @param password
 	 */
-	private void setOthersDetail(String username, String password){
+	private void setOthersDetail(String username, String password) {
 		setTargetUserName(username);
 		setTargetPassword(password);
 	}
 
-	// This function will set snappy config as null 
+	// This function will set snappy config as null
 	private void setSnappyConfigNull(boolean isCommonReset) {
-		if(isCommonReset) {
+		if (isCommonReset) {
 			setTargetAppName(null);
 			setTargetProfileName(null);
 			setTargetProjectName(null);
 			setTargetInstanceName(null);
 		}
-		setESDetails(null,null);
+		setESDetails(null, null);
 		setKafkaDetails(null, null, null);
 	}
-	
+
 	public Client getDestinationClient() {
 		return this.destinationClient;
 	}
@@ -274,52 +275,50 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	 * This function will store the snappyflow config details
 	 */
 	@Override
-	public boolean configure(final StaplerRequest req, final JSONObject formData){
+	public boolean configure(final StaplerRequest req, final JSONObject formData) {
 		try {
-			if(!super.configure(req, formData)){
+			if (!super.configure(req, formData)) {
 				return false;
 			}
 		} catch (FormException e) {
 			e.printStackTrace();
 		}
-		
+
 		destinationClient = null;
 
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
 		setTargetProtocol(formData.getString("targetProtocol"));
-		if(formData.containsKey("targetDestination")) {
+		if (formData.containsKey("targetDestination")) {
 			setTargetDestination(formData.getString("targetDestination"));
-			switch(getTargetDestination()) {
+			switch (getTargetDestination()) {
 				case SNAPPYFLOW:
 					setTargetAppName(formData.getString("targetAppName"));
 					setTargetProfileName(formData.getString("targetProfileName"));
 					setTargetProjectName(formData.getString("targetProjectName"));
 					setTargetInstanceName(formData.getString("targetInstanceName"));
-					if(formData.containsKey("targetSnappyFlowDestination")) {
+					if (formData.containsKey("targetSnappyFlowDestination")) {
 						setTargetSnappyFlowDestination(formData.getString("targetSnappyFlowDestination"));
-						switch(getTargetSnappyFlowDestination()) {
+						switch (getTargetSnappyFlowDestination()) {
 							case ES:
 								String pass = formData.getString("targetESPassword");
 								setESDetails(
-									formData.getString("targetESUserName"),
-									(pass.length() == 0 ? null : pass)
-								);
+										formData.getString("targetESUserName"),
+										(pass.length() == 0 ? null : pass));
 								destinationClient = new SnappyFlowEs();
 								setOthersDetail(null, null);
 								setKafkaDetails(null, null, null);
-							break;
+								break;
 							case KAFKA:
 								String token = formData.getString("targetKafkaToken");
 								setKafkaDetails(
-									formData.getString("targetKafkaPath"),
-									token.length() == 0 ? null : token,
-									formData.getString("targetKafkaTopic")
-								);
+										formData.getString("targetKafkaPath"),
+										token.length() == 0 ? null : token,
+										formData.getString("targetKafkaTopic"));
 								destinationClient = new SnappyFlowKafka();
 								setOthersDetail(null, null);
-								setESDetails(null,null);
-							break;
+								setESDetails(null, null);
+								break;
 							default:
 								setSnappyConfigNull(false);
 								setOthersDetail(null, null);
@@ -328,15 +327,15 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 					} else {
 						setSnappyConfigNull(false);
 						setOthersDetail(null, null);
-					}			
-				break;
+					}
+					break;
 				case OTHERS:
 					String pass = formData.getString("targetPassword");
 					setTargetUserName(formData.getString("targetUserName"));
 					setTargetPassword(pass.length() == 0 ? null : pass);
 					setSnappyConfigNull(true);
 
-				break;
+					break;
 				default:
 					setSnappyConfigNull(true);
 					setOthersDetail(null, null);

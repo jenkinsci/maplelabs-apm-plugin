@@ -16,6 +16,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
 
     /**
      * Create Build details
+     * 
      * @param run
      * @param listener
      */
@@ -25,6 +26,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
 
     /**
      * This function will handle Start and completion of a job
+     * 
      * @param type
      */
     @Override
@@ -33,11 +35,11 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
         String userId, jobName, buildUrl, buildNumber, buildResult, title, text;
         switch (type) {
             case STARTED:
-                userId = "";//buildData.getUserId();
+                userId = "";// buildData.getUserId();
                 jobName = getJobName("unknown");
                 buildUrl = getBuildUrl("unknown");
                 buildNumber = getBuildNumber("unknown");
-            
+
                 title = "Job " + jobName + " build #" + buildNumber + " started on " + getHost();
                 setTitle(title);
 
@@ -47,19 +49,22 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
 
                 setPriority(Priority.LOW);
                 setAlert(AlertType.INFO);
-            break;
+                break;
             case COMPLETED:
-                userId = "";//buildData.getUserId();
+                userId = "";// buildData.getUserId();
                 jobName = getJobName("unknown");
                 buildUrl = getBuildUrl("unknown");
                 buildResult = getResult("unknown");
                 buildNumber = getBuildNumber("unknown");
-                
-                title = "Job " + jobName + " build #" + buildNumber + " " + buildResult.toLowerCase() + " on " + super.getHost();
+
+                title = "Job " + jobName + " build #" + buildNumber + " " + buildResult.toLowerCase() + " on "
+                        + super.getHost();
                 setTitle(title);
-        
-                text = "\n[Job " + jobName +" User " + userId + " build #" + buildNumber + " Parent "+getParentName()+"](" + buildUrl +
-                        ") finished with status " + buildResult.toLowerCase() + " " + BuildEvent.getFormattedDuration(getDuration(0l)) +
+
+                text = "\n[Job " + jobName + " User " + userId + " build #" + buildNumber + " Parent " + getParentName()
+                        + "](" + buildUrl +
+                        ") finished with status " + buildResult.toLowerCase() + " "
+                        + BuildEvent.getFormattedDuration(getDuration(0l)) +
                         "\n";
                 setText(text);
                 if (Result.SUCCESS.toString().equals(buildResult)) {
@@ -71,12 +76,12 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
                 } else {
                     setPriority(Priority.NORMAL);
                     setAlert(AlertType.WARNING);
-            }
-            break;
+                }
+                break;
             default:
         }
 
         return sendEvent();
     }
-    
+
 }

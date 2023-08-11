@@ -32,6 +32,7 @@ public abstract class SnappyFlow implements Client {
 
 	/**
 	 * This function will default tags for snappyflow
+	 * 
 	 * @param docType
 	 * @return
 	 */

@@ -27,7 +27,7 @@ public class QueueMetrics implements PublishMetrics {
     private int queueSize;
     private static final Logger logger = Logger.getLogger(QueueMetrics.class.getName());
 
-    private void clear(){
+    private void clear() {
         stuck = 0;
         aborted = 0;
         pending = 0;
@@ -45,6 +45,7 @@ public class QueueMetrics implements PublishMetrics {
     public void setQueueSize(int size) {
         queueSize = size;
     }
+
     public int getStuck() {
         return this.stuck;
     }
@@ -103,39 +104,49 @@ public class QueueMetrics implements PublishMetrics {
 
     /**
      * This function will set queue details and send details to client
+     * 
      * @params details
      */
     @Override
     public void sendMetrics(Object details) {
-        Jenkins instance = (Jenkins)details;
-        if(instance == null) {
+        Jenkins instance = (Jenkins) details;
+        if (instance == null) {
             logger.severe("No Jenkins instance");
             return;
         }
         Queue queue = instance.getQueue();
         final Queue.Item[] items = queue.getItems();
-            for (Queue.Item item : items) {                                       
-                if(item.isStuck())  incrementStuck();;                
-                if(item.isBlocked())  incrementBlocked();;
-                if (item.isBuildable()) incrementBuildable();;
-                if(queue.isPending(item.task)) incrementPending();;
-           }
+        for (Queue.Item item : items) {
+            if (item.isStuck())
+                incrementStuck();
+            ;
+            if (item.isBlocked())
+                incrementBlocked();
+            ;
+            if (item.isBuildable())
+                incrementBuildable();
+            ;
+            if (queue.isPending(item.task))
+                incrementPending();
+            ;
+        }
 
-           setQueueSize(items.length);
+        setQueueSize(items.length);
 
-           // Old Jobs
-            for (Job job : instance.getAllItems(Job.class)) {
-                SortedMap<Integer,Run> builds = job.getBuildsAsMap();
-                for (Run run : builds.values()) {
-                    Result result = run.getResult();
-                    incrementStarted();
-                    if (result == Result.SUCCESS) {
-                        incrementCompleted();
-                    } else if (result == Result.ABORTED) {
-                        incrementAborted();;
-                    }
+        // Old Jobs
+        for (Job job : instance.getAllItems(Job.class)) {
+            SortedMap<Integer, Run> builds = job.getBuildsAsMap();
+            for (Run run : builds.values()) {
+                Result result = run.getResult();
+                incrementStarted();
+                if (result == Result.SUCCESS) {
+                    incrementCompleted();
+                } else if (result == Result.ABORTED) {
+                    incrementAborted();
+                    ;
                 }
             }
+        }
         HashMap<String, Object> jobDetails = SnappyFlow.getSnappyflowTags("jobStat");
         jobDetails.put("queueStuck", getStuck());
         jobDetails.put("queueSize", getQueueSize());
@@ -147,10 +158,10 @@ public class QueueMetrics implements PublishMetrics {
         jobDetails.put("num_job_completed", getCompleted());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
-        if(communicationClient != null) {
+        if (communicationClient != null) {
             communicationClient.transmitData(jobDetails);
             clear();
         }
     }
-    
+
 }

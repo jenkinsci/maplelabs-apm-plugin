@@ -3,11 +3,13 @@ package com.apm.jenkins.plugins.Events.interfaces;
 public interface BuildEvent extends Event {
     final float MINUTE = 60;
     final float HOUR = 3600;
-    public String EVENT="BuildEvent";
-    public static enum Type{
+    public String EVENT = "BuildEvent";
+
+    public static enum Type {
         STARTED,
         COMPLETED
     }
+
     public boolean collectEventData(Type type);
 
     static String getFormattedDuration(Long duration) {

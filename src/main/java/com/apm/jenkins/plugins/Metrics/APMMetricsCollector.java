@@ -35,7 +35,7 @@ public class APMMetricsCollector extends PeriodicWork {
                 queueMetrics.sendMetrics(instance);
                 jenkinsMetrics.sendMetrics(instance);
                 Computer[] computers = instance.getComputers();
-                if (computers != null) 
+                if (computers != null)
                     nodeMetrics.sendMetrics(computers);
 
             } else {
@@ -43,7 +43,7 @@ public class APMMetricsCollector extends PeriodicWork {
             }
         } catch (Exception e) {
             logger.severe("Failed to compute and send Jenkins metrics");
-			e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

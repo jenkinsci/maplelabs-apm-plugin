@@ -24,6 +24,7 @@ public class JenkinsMetrics implements PublishMetrics {
     private int inactivePlugins;
     private int updateablePlugins;
     private static final Logger logger = Logger.getLogger(JenkinsMetrics.class.getName());
+
     private void clear() {
         activePlugins = 0;
         inactivePlugins = 0;
@@ -33,6 +34,7 @@ public class JenkinsMetrics implements PublishMetrics {
         setHostName(null);
         setFailedPlugins(0);
     }
+
     public int getPlugins() {
         return this.plugins;
     }
@@ -91,27 +93,32 @@ public class JenkinsMetrics implements PublishMetrics {
 
     /**
      * This function will set Jenkins properties and send details to client
+     * 
      * @param details
      */
     @Override
     public void sendMetrics(Object details) {
         clear();
-        Jenkins instance = (Jenkins)details;
+        Jenkins instance = (Jenkins) details;
         if (instance == null) {
             logger.severe("No Jenkins instance");
             return;
-        };
+        }
+        ;
         setProjects(instance.getAllItems(Project.class).size());
         PluginManager pluginManager = instance.getPluginManager();
-        if(pluginManager != null) {
+        if (pluginManager != null) {
             List<PluginWrapper> plugins = pluginManager.getPlugins();
             setPlugins(plugins.size());
             setFailedPlugins(pluginManager.getFailedPlugins().size());
-             
+
             for (PluginWrapper w : plugins) {
-                if (w.hasUpdate()) incrementUpdateablePlugins();
-                if (w.isActive()) incrementActivePlugins();
-                else incrementInactivePlugins();
+                if (w.hasUpdate())
+                    incrementUpdateablePlugins();
+                if (w.isActive())
+                    incrementActivePlugins();
+                else
+                    incrementInactivePlugins();
             }
         }
         setHostName(APMUtil.getHostname(null));
@@ -119,17 +126,17 @@ public class JenkinsMetrics implements PublishMetrics {
         HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");
         systemDict.put("hostName", getHostName());
         systemDict.put("num_projects", getProjects());
-		systemDict.put("num_plugins", getPlugins());
-		systemDict.put("num_active_plugins", getActivePlugins());
-		systemDict.put("num_failed_plugins", getFailedPlugins());
-		systemDict.put("num_inactive_plugins", getInactivePlugins());
-		systemDict.put("num_plugin_with_update", getUpdateablePlugins());
-        
+        systemDict.put("num_plugins", getPlugins());
+        systemDict.put("num_active_plugins", getActivePlugins());
+        systemDict.put("num_failed_plugins", getFailedPlugins());
+        systemDict.put("num_inactive_plugins", getInactivePlugins());
+        systemDict.put("num_plugin_with_update", getUpdateablePlugins());
+
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
-        if(communicationClient != null) {
+        if (communicationClient != null) {
             communicationClient.transmitData(systemDict);
             clear();
         }
     }
-    
+
 }
