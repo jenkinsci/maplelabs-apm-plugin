@@ -110,19 +110,6 @@ public class APMUtil {
 		return os.toLowerCase();
 	}
 
-	// public static String getJenkinsUrl() {
-	// 	Jenkins jenkins = Jenkins.getInstanceOrNull();
-	// 	if (jenkins == null) {
-	// 		return "unknown";
-	// 	} else {
-	// 		try {
-	// 			return jenkins.getRootUrl();
-	// 		} catch (Exception e) {
-	// 			return "unknown";
-	// 		}
-	// 	}
-	// }
-
 	public static long currentTimeMillis() {
 		// This method exist so we can mock System.currentTimeMillis in unit tests
 		return System.currentTimeMillis();

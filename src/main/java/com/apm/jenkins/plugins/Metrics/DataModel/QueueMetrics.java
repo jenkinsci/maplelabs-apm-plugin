@@ -2,6 +2,7 @@ package com.apm.jenkins.plugins.Metrics.DataModel;
 
 import java.util.HashMap;
 import java.util.SortedMap;
+import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
@@ -24,6 +25,7 @@ public class QueueMetrics implements PublishMetrics {
     private int buildable;
     private int completed;
     private int queueSize;
+    private static final Logger logger = Logger.getLogger(QueueMetrics.class.getName());
 
     private void clear(){
         stuck = 0;
@@ -106,7 +108,10 @@ public class QueueMetrics implements PublishMetrics {
     @Override
     public void sendMetrics(Object details) {
         Jenkins instance = (Jenkins)details;
-        if(instance == null) return;
+        if(instance == null) {
+            logger.severe("No Jenkins instance");
+            return;
+        }
         Queue queue = instance.getQueue();
         final Queue.Item[] items = queue.getItems();
             for (Queue.Item item : items) {                                       

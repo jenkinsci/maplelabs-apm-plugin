@@ -5,6 +5,7 @@ import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 
 public interface ComputerEvent extends Event {
+    public String EVENT="SystemEvent";
     public static enum Type{
         OFFLINE,
         LAUNCHFAILURE,

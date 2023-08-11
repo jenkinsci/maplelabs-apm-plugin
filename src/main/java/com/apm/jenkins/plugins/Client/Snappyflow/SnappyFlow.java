@@ -30,6 +30,11 @@ public abstract class SnappyFlow implements Communication {
 	private HttpClient client;
 	private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());
 
+	/**
+	 * This function will default tags for snappyflow
+	 * @param docType
+	 * @return
+	 */
 	public static HashMap<String, Object> getSnappyflowTags(String docType) {
 
 		long currTime = System.currentTimeMillis();
@@ -88,7 +93,7 @@ public abstract class SnappyFlow implements Communication {
 						.setSSLSocketFactory(socketFactory)
 						.build();
 			} catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
-				e.printStackTrace();
+				logger.severe("Http creation error");
 			}
 
 		}
@@ -115,7 +120,7 @@ public abstract class SnappyFlow implements Communication {
 			String responseBody = EntityUtils.toString((response).getEntity());
 			logger.info(responseBody);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.severe("Http Post error");
 		}
 		return responseCode;
 	}

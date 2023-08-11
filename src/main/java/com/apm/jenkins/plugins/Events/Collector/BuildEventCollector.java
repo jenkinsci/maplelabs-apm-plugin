@@ -29,6 +29,7 @@ public class BuildEventCollector extends AbstractBuild implements BuildEvent {
      */
     @Override
     public boolean collectEvent(Type type) {
+        setEventType(EVENT);
         String userId, jobName, buildUrl, buildNumber, buildResult, title, text;
         switch (type) {
             case STARTED:

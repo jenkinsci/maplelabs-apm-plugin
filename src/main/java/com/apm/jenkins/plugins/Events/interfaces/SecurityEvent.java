@@ -3,6 +3,7 @@ package com.apm.jenkins.plugins.Events.interfaces;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface SecurityEvent extends Event {
+    public String EVENT="SecurityEvent";
     public static enum Type{
         LOGGEDIN,
         LOGGEDOUT,

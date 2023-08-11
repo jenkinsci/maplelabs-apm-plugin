@@ -20,6 +20,7 @@ public interface Event {
 	public String getHost();
 	public String getTitle();
 	public String getNodeName();
+	public String getEventType();
 	public Priority getPriority();
 	public AlertType getAlertType();
 }

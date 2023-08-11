@@ -32,8 +32,8 @@ public class SnappyFlowKafka extends SnappyFlow {
         contentType.append("application/vnd.kafka.json.v2+json");	    	
         targetToken.append(token);
         
-        logger.fine("targetApi URL for Kafka is: " + targetApiUrl.toString());
-        logger.fine("Authroization for Kafka is: " + targetToken.toString());;
+        logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
+        logger.info("Authroization for Kafka is: " + targetToken.toString());;
     }
 
     /**
@@ -69,7 +69,7 @@ public class SnappyFlowKafka extends SnappyFlow {
 			logger.info(header.getName() + ":" + header.getValue());
 		}
 
-		logger.info("Response Code : " + post(post, data));
+		logger.fine("Response Code : " + post(post, data));
         return true;
     }
     

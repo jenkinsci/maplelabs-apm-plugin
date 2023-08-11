@@ -3,6 +3,7 @@ package com.apm.jenkins.plugins.Metrics.DataModel;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
@@ -19,7 +20,8 @@ public class NodeMetrics implements PublishMetrics {
     private int numNodes;
     private int numNodesOnline;
     private int numNodesOffline;
-    ArrayList<HashMap<String,Object>> compuerList;
+    private ArrayList<HashMap<String,Object>> compuerList;
+    private static final Logger logger = Logger.getLogger(NodeMetrics.class.getName());
 
     // clear all values
     private void clear() {
@@ -114,7 +116,10 @@ public class NodeMetrics implements PublishMetrics {
             }
             setNumNodesOnline(nodeOnline);
             setNumNodesOffline(nodeOffline);
-        } else return;
+        } else {
+            logger.severe("No Computer instance");
+            return;
+        };
 
         HashMap<String, Object> computerDetails =SnappyFlow.getSnappyflowTags("nodeStat");
         computerDetails.put("num_nodes", getNumNodes());

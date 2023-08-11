@@ -17,6 +17,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      */
     @Override
     public boolean collectEvent(Computer computer) {
+        setEventType(EVENT);
         String nodeName = APMUtil.getNodeName(computer);
         String title = "Jenkins node " + nodeName + "back online";
         setText(title);
@@ -34,6 +35,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      */
     @Override
     public boolean collectEvent(Computer computer, OfflineCause cause, Type type) {
+        setEventType(EVENT);
         String nodeName = APMUtil.getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is ";
         switch (type) {
@@ -67,6 +69,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      */
     @Override
     public boolean collectEvent(Computer computer, TaskListener taskListener) {
+        setEventType(EVENT);
         String nodeName = APMUtil.getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is" + " failed to launch";
         setTitle(title);

@@ -3,6 +3,7 @@ package com.apm.jenkins.plugins.Events.DataModel;
 import java.util.HashMap;
 
 import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Events.interfaces.Event;
 
 public abstract class AbstractEvent implements Event {
@@ -11,6 +12,7 @@ public abstract class AbstractEvent implements Event {
     private String host;
     private String text;
     private String title;
+    private String event;
     private AlertType alert;
     private String nodeName;
     private Priority priority;
@@ -50,6 +52,10 @@ public abstract class AbstractEvent implements Event {
         this.priority = priority;
     }
 
+    public void setEventType(String event) {
+        this.event = event;
+    }
+
     @Override
     public Long getDate() {
         return date;
@@ -85,12 +91,17 @@ public abstract class AbstractEvent implements Event {
         return alert;
     }
 
+    @Override
+    public String getEventType() {
+        return event;
+    }
+
     /**
      * This function will assembel details and call client
      * @return
      */
     protected boolean sendEvent(){
-        HashMap<String, Object> payload = new HashMap<>();
+        HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
         payload.put("text", getText());
         payload.put("host", getHost());
         payload.put("title", getTitle());

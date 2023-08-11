@@ -74,7 +74,7 @@ public class SnappyFlowEs extends SnappyFlow {
 			logger.info(header.getName() + ":" + header.getValue());
 		}
 
-		logger.info("Response Code : " + post(post, data));
+		logger.fine("Response Code : " + post(post, data));
         return true;
     }
     

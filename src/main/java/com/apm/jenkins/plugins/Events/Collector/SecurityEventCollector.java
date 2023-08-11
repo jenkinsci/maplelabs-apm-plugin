@@ -14,6 +14,7 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      */
     @Override
     public boolean collectEvent(UserDetails details) {
+        setEventType(EVENT);
         String title = "User "+details.getUsername()+" authenticated";
         setText(title);
         setTitle(title);
@@ -28,7 +29,8 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEvent(String name, com.apm.jenkins.plugins.Events.interfaces.SecurityEvent.Type type) {
+    public boolean collectEvent(String name, SecurityEvent.Type type) {
+        setEventType(EVENT);
         // creation, failedToAuthenticate, login, failedToLogIn, logout
         String title = "User "+name+" ";
         switch (type) {

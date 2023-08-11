@@ -205,7 +205,6 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		return targetKafkaTopic;
 	}
 
-
 	public void setTargetPassword(String password) {
 		this.targetPassword = password;
 	}

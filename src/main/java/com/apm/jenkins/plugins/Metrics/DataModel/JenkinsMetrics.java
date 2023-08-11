@@ -2,6 +2,7 @@ package com.apm.jenkins.plugins.Metrics.DataModel;
 
 import java.util.List;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Client.Communication;
@@ -22,7 +23,7 @@ public class JenkinsMetrics implements PublishMetrics {
     private int failedPlugins;
     private int inactivePlugins;
     private int updateablePlugins;
-
+    private static final Logger logger = Logger.getLogger(JenkinsMetrics.class.getName());
     private void clear() {
         activePlugins = 0;
         inactivePlugins = 0;
@@ -96,7 +97,10 @@ public class JenkinsMetrics implements PublishMetrics {
     public void sendMetrics(Object details) {
         clear();
         Jenkins instance = (Jenkins)details;
-        if (instance == null) return;
+        if (instance == null) {
+            logger.severe("No Jenkins instance");
+            return;
+        };
         setProjects(instance.getAllItems(Project.class).size());
         PluginManager pluginManager = instance.getPluginManager();
         if(pluginManager != null) {

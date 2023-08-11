@@ -42,10 +42,10 @@ public class APMComputerListener extends ComputerListener {
     @Override
     public void onTemporarilyOffline(Computer computer, OfflineCause cause) {
         try {
-            logger.fine("Start APMComputerListener#onTemporarilyOffline");                        
+            logger.info("Start APMComputerListener#onTemporarilyOffline");                        
             eventCollector = new ComputerEventCollector();
             eventCollector.collectEvent(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);           
-            logger.fine("End APMComputerListener#onTemporarilyOffline");
+            logger.info("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process computer temporarily offline event");
         }
@@ -55,10 +55,10 @@ public class APMComputerListener extends ComputerListener {
     @Override
     public void onTemporarilyOnline(Computer computer) {
          try {
-            logger.fine("Start APMComputerListener#onTemporarilyOnline");
+            logger.info("Start APMComputerListener#onTemporarilyOnline");
             eventCollector = new ComputerEventCollector();
             eventCollector.collectEvent(computer);
-            logger.fine("End APMComputerListener#onTemporarilyOnline");
+            logger.info("End APMComputerListener#onTemporarilyOnline");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process computer temporarily online event");
         }
@@ -67,10 +67,10 @@ public class APMComputerListener extends ComputerListener {
     @Override
     public void onLaunchFailure(Computer computer, TaskListener taskListener) throws IOException, InterruptedException {
         try {
-            logger.fine("Start APMComputerListener#onLaunchFailure");
+            logger.info("Start APMComputerListener#onLaunchFailure");
             eventCollector = new ComputerEventCollector();
             eventCollector.collectEvent(computer, taskListener);
-            logger.fine("End APMComputerListener#onLaunchFailure");
+            logger.info("End APMComputerListener#onLaunchFailure");
         } catch (Exception e) {
             APMUtil.severe(logger, e, "Failed to process launch failure");
         }
