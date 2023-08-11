@@ -1,6 +1,5 @@
 package com.apm.jenkins.plugins.Events.Collector;
 
-import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Events.DataModel.AbstractEvent;
 import com.apm.jenkins.plugins.Events.interfaces.ComputerEvent;
 
@@ -16,9 +15,9 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEvent(Computer computer) {
+    public boolean CollectEventData(Computer computer) {
         setEventType(EVENT);
-        String nodeName = APMUtil.getNodeName(computer);
+        String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + "back online";
         setText(title);
         setTitle(title);
@@ -34,9 +33,9 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEvent(Computer computer, OfflineCause cause, Type type) {
+    public boolean CollectEventData(Computer computer, OfflineCause cause, Type type) {
         setEventType(EVENT);
-        String nodeName = APMUtil.getNodeName(computer);
+        String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is ";
         switch (type) {
             case TEMPORARILYOFFLINE:
@@ -68,9 +67,9 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEvent(Computer computer, TaskListener taskListener) {
+    public boolean CollectEventData(Computer computer, TaskListener taskListener) {
         setEventType(EVENT);
-        String nodeName = APMUtil.getNodeName(computer);
+        String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is" + " failed to launch";
         setTitle(title);
         setTitle(title);

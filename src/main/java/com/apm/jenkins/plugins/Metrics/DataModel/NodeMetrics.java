@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Client;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
@@ -127,9 +127,9 @@ public class NodeMetrics implements PublishMetrics {
         computerDetails.put("num_nodes_online", getNumNodesOnline());
         computerDetails.put("num_nodes_offline", getNumNodesOffline());
         
-        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if(communicationClient != null) {
-            communicationClient.transmit(computerDetails);
+            communicationClient.transmitData(computerDetails);
             clear();
         }
     }

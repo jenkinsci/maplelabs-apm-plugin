@@ -9,9 +9,9 @@ import hudson.model.TaskListener;
 import hudson.plugins.git.util.BuildData;
 
 import com.apm.jenkins.plugins.Events.interfaces.BuildEvent;
-import com.apm.jenkins.plugins.Events.DataModel.AbstractBuild;
+import com.apm.jenkins.plugins.Events.DataModel.AbstractBuildEvent;
 
-public class BuildEventCollector extends AbstractBuild implements BuildEvent {
+public class BuildEventCollector extends AbstractBuildEvent implements BuildEvent {
     private static final Logger logger = Logger.getLogger(BuildData.class.getName());
 
     /**
@@ -28,7 +28,7 @@ public class BuildEventCollector extends AbstractBuild implements BuildEvent {
      * @param type
      */
     @Override
-    public boolean collectEvent(Type type) {
+    public boolean CollectEventData(Type type) {
         setEventType(EVENT);
         String userId, jobName, buildUrl, buildNumber, buildResult, title, text;
         switch (type) {

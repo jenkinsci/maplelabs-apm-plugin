@@ -2,9 +2,12 @@ package com.apm.jenkins.plugins.Events.DataModel;
 
 import java.util.HashMap;
 
+import hudson.model.Computer;
+import jenkins.model.Jenkins;
+
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Events.interfaces.Event;
+import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 
 public abstract class AbstractEvent implements Event {
 
@@ -97,6 +100,22 @@ public abstract class AbstractEvent implements Event {
     }
 
     /**
+     * Get given computers name
+     * @param computer
+     * @return
+     */
+    protected static String getNodeName(Computer computer) {
+        if (computer == null) {
+            return null;
+        }
+        if (computer instanceof Jenkins.MasterComputer) {
+            return "master";
+        } else {
+            return computer.getName();
+        }
+    }
+
+    /**
      * This function will assembel details and call client
      * @return
      */
@@ -108,6 +127,6 @@ public abstract class AbstractEvent implements Event {
         payload.put("date_happened", getDate());            
         payload.put("priority", getPriority().name().toLowerCase());
         payload.put("alert_type", getAlertType().name().toLowerCase());
-        return APMUtil.getAPMGlobalDescriptor().getCommunicationClient().transmit(payload);
+        return APMUtil.getAPMGlobalDescriptor().getDestinationClient().transmitData(payload);
     }    
 }

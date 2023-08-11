@@ -23,9 +23,9 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Client;
 
-public abstract class SnappyFlow implements Communication {
+public abstract class SnappyFlow implements Client {
 
 	private HttpClient client;
 	private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());

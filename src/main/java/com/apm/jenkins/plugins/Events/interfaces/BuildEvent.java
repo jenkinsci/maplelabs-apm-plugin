@@ -8,7 +8,7 @@ public interface BuildEvent extends Event {
         STARTED,
         COMPLETED
     }
-    public boolean collectEvent(Type type);
+    public boolean CollectEventData(Type type);
 
     static String getFormattedDuration(Long duration) {
         if (duration != null) {

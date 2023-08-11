@@ -42,7 +42,7 @@ public class SnappyFlowKafka extends SnappyFlow {
 	 */
     @Override
     @RequirePOST
-    public boolean transmit(HashMap<String, Object> payload) {
+    public boolean transmitData(HashMap<String, Object> payload) {
         String KafkaData;
         StringEntity data;
 		StringBuilder targetToken = new StringBuilder ();

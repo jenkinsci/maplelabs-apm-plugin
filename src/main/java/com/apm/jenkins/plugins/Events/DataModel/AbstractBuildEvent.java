@@ -1,6 +1,7 @@
 package com.apm.jenkins.plugins.Events.DataModel;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,15 +10,17 @@ import com.apm.jenkins.plugins.APMUtil;
 import hudson.EnvVars;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.model.Cause;
 import hudson.model.Result;
+import hudson.model.CauseAction;
 import hudson.model.TaskListener;
 import hudson.util.LogTaskListener;
 
-public abstract class AbstractBuild extends AbstractEvent {
+public abstract class AbstractBuildEvent extends AbstractEvent {
     private Long endTime;
     private Long duration;
     private String result;
-    // private String userId;
+    private String userId;
     private Long startTime;
     private String jobName;
     private String buildUrl;
@@ -25,9 +28,9 @@ public abstract class AbstractBuild extends AbstractEvent {
     private String parentName;
     private String buildNumber;
 
-    private static final Logger logger = Logger.getLogger(AbstractBuild.class.getName());
+    private static final Logger logger = Logger.getLogger(AbstractBuildEvent.class.getName());
 
-    protected AbstractBuild(Run run, TaskListener listener) throws IOException, InterruptedException {
+    protected AbstractBuildEvent(Run run, TaskListener listener) throws IOException, InterruptedException {
         if (run == null)
             return;
 
@@ -46,7 +49,7 @@ public abstract class AbstractBuild extends AbstractEvent {
         }
 
         // Set UserId
-        // setUserId(getUserId(run));
+        setUserId(getUserId(run));
 
         // Set Build Number
         setBuildNumber(Integer.toString(run.getNumber()));
@@ -158,59 +161,53 @@ public abstract class AbstractBuild extends AbstractEvent {
         this.startTime = startTime;
     }
 
-    // protected String getUserId() {
-    // return userId;
-    // }
+    protected String getUserId() {
+        return userId;
+    }
 
-    // protected void setUserId(String userId) {
-    // this.userId = userId;
-    // }
+    protected void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-    // private String getUserId(Run run) {
-    // String userName;
-    // List<CauseAction> actions = null;
-    // try {
-    // actions = run.getActions(CauseAction.class);
-    // }catch(RuntimeException e){
-    // //noop
-    // }
-    // if(actions != null){
-    // for (CauseAction action : actions) {
-    // if (action != null && action.getCauses() != null) {
-    // for (Cause cause : action.getCauses()) {
-    // userName = getUserId(cause);
-    // if (userName != null) {
-    // return userName;
-    // }
-    // }
-    // }
-    // }
-    // }
+    private String getUserId(Run run) {
+        String userName;
+        List<CauseAction> actions = null;
+        actions = run.getActions(CauseAction.class);
+        if (actions != null) {
+            for (CauseAction action : actions) {
+                if (action != null && action.getCauses() != null) {
+                    for (Cause cause : action.getCauses()) {
+                        userName = getUserId(cause);
+                        if (userName != null) {
+                            return userName;
+                        }
+                    }
+                }
+            }
+        }
 
-    // if (run.getParent().getClass().getName().equals("hudson.maven.MavenModule"))
-    // {
-    // return "maven";
-    // }
-    // return "anonymous";
-    // }
+        if (run.getParent().getClass().getName().equals("hudson.maven.MavenModule")) {
+            return "maven";
+        }
+        return "anonymous";
+    }
 
-    // private String getUserId(Cause cause){
-    // if (cause instanceof Cause.UserIdCause) {
-    // String userName = ((Cause.UserIdCause) cause).getUserId();
-    // if (userName != null) {
-    // return userName;
-    // }
-    // } else if (cause instanceof Cause.UpstreamCause) {
-    // for (Cause upstreamCause : ((Cause.UpstreamCause) cause).getUpstreamCauses())
-    // {
-    // String username = getUserId(upstreamCause);
-    // if (username != null) {
-    // return username;
-    // }
-    // }
-    // }
-    // return null;
-    // }
+    private String getUserId(Cause cause) {
+        if (cause instanceof Cause.UserIdCause) {
+            String userName = ((Cause.UserIdCause) cause).getUserId();
+            if (userName != null) {
+                return userName;
+            }
+        } else if (cause instanceof Cause.UpstreamCause) {
+            for (Cause upstreamCause : ((Cause.UpstreamCause) cause).getUpstreamCauses()) {
+                String username = getUserId(upstreamCause);
+                if (username != null) {
+                    return username;
+                }
+            }
+        }
+        return null;
+    }
 
     protected void setParentName(String parentName) {
         this.parentName = parentName;

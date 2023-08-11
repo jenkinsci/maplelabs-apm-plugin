@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins;
+package com.apm.jenkins.plugins.Metrics;
 
 import java.util.logging.Logger;
 
@@ -7,6 +7,7 @@ import hudson.model.Computer;
 import jenkins.model.Jenkins;
 import hudson.model.PeriodicWork;
 
+import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Metrics.DataModel.NodeMetrics;
 import com.apm.jenkins.plugins.Metrics.DataModel.QueueMetrics;
 import com.apm.jenkins.plugins.Metrics.DataModel.JenkinsMetrics;
@@ -41,7 +42,8 @@ public class APMMetricsCollector extends PeriodicWork {
                 logger.info("Instance is null and couldn't retrieve computers.");
             }
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to compute and send Jenkins metrics");
+            logger.severe("Failed to compute and send Jenkins metrics");
+			e.printStackTrace();
         }
     }
 

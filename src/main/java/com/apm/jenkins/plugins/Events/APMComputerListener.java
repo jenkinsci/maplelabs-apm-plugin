@@ -10,7 +10,6 @@ import hudson.model.Computer;
 import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 import hudson.slaves.ComputerListener;
-import com.apm.jenkins.plugins.APMUtil;
 import com.apm.jenkins.plugins.Events.Collector.ComputerEventCollector;
 import com.apm.jenkins.plugins.Events.interfaces.ComputerEvent;
 
@@ -32,10 +31,11 @@ public class APMComputerListener extends ComputerListener {
         try {            
             logger.info("Start APMComputerListener#onOffline");
             eventCollector = new ComputerEventCollector();
-            eventCollector.collectEvent(computer, cause, ComputerEvent.Type.OFFLINE);
+            eventCollector.CollectEventData(computer, cause, ComputerEvent.Type.OFFLINE);
             logger.info("End APMComputerListener#onOffline");
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process computer offline event");
+            logger.severe("Failed to process computer offline event");
+			e.printStackTrace();
         }
     }
     
@@ -44,10 +44,11 @@ public class APMComputerListener extends ComputerListener {
         try {
             logger.info("Start APMComputerListener#onTemporarilyOffline");                        
             eventCollector = new ComputerEventCollector();
-            eventCollector.collectEvent(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);           
+            eventCollector.CollectEventData(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);           
             logger.info("End APMComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process computer temporarily offline event");
+            logger.severe("Failed to process computer temporarily offline event");
+			e.printStackTrace();
         }
     }
 
@@ -57,10 +58,11 @@ public class APMComputerListener extends ComputerListener {
          try {
             logger.info("Start APMComputerListener#onTemporarilyOnline");
             eventCollector = new ComputerEventCollector();
-            eventCollector.collectEvent(computer);
+            eventCollector.CollectEventData(computer);
             logger.info("End APMComputerListener#onTemporarilyOnline");
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process computer temporarily online event");
+            logger.severe("Failed to process computer temporarily online event");
+			e.printStackTrace();
         }
     }
 
@@ -69,10 +71,11 @@ public class APMComputerListener extends ComputerListener {
         try {
             logger.info("Start APMComputerListener#onLaunchFailure");
             eventCollector = new ComputerEventCollector();
-            eventCollector.collectEvent(computer, taskListener);
+            eventCollector.CollectEventData(computer, taskListener);
             logger.info("End APMComputerListener#onLaunchFailure");
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process launch failure");
+            logger.severe("Failed to process launch failure");
+			e.printStackTrace();
         }
     }
 }

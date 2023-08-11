@@ -53,7 +53,7 @@ public class SnappyFlowEs extends SnappyFlow {
 	 */
     @Override
 	@RequirePOST
-    public boolean transmit(HashMap<String, Object> payload) {
+    public boolean transmitData(HashMap<String, Object> payload) {
 		StringEntity data;
 		StringBuilder targetToken = new StringBuilder ();
     	StringBuilder contentType = new StringBuilder ();

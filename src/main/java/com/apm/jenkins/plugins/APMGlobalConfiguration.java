@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 
-import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Client;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowEs;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowKafka;
 
@@ -18,7 +18,7 @@ import jenkins.model.GlobalConfiguration;
 @Extension
 public class APMGlobalConfiguration extends GlobalConfiguration {
 
-	private Communication communicationClient;
+	private Client destinationClient;
 
 	private static final String OTHERS = "Others";
 	private static final String ES = "SnappyflowES";
@@ -64,10 +64,10 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 			case SNAPPYFLOW:
 			switch(targetSnappyFlowDestination) {
 				case ES:
-				communicationClient =  new SnappyFlowEs();
+				destinationClient =  new SnappyFlowEs();
 				break;
 				case KAFKA:
-				communicationClient =  new SnappyFlowKafka();
+				destinationClient =  new SnappyFlowKafka();
 				break;
 				default:
 			}
@@ -265,8 +265,8 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		setKafkaDetails(null, null, null);
 	}
 	
-	public Communication getCommunicationClient() {
-		return this.communicationClient;
+	public Client getDestinationClient() {
+		return this.destinationClient;
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 			e.printStackTrace();
 		}
 		
-		communicationClient = null;
+		destinationClient = null;
 
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
@@ -305,7 +305,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 									formData.getString("targetESUserName"),
 									(pass.length() == 0 ? null : pass)
 								);
-								communicationClient = new SnappyFlowEs();
+								destinationClient = new SnappyFlowEs();
 								setOthersDetail(null, null);
 								setKafkaDetails(null, null, null);
 							break;
@@ -316,7 +316,7 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 									token.length() == 0 ? null : token,
 									formData.getString("targetKafkaTopic")
 								);
-								communicationClient = new SnappyFlowKafka();
+								destinationClient = new SnappyFlowKafka();
 								setOthersDetail(null, null);
 								setESDetails(null,null);
 							break;

@@ -1,31 +1,20 @@
 package com.apm.jenkins.plugins;
 
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.net.Inet4Address;
 import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.logging.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.logging.Logger;
 import java.util.concurrent.TimeUnit;
 
 import hudson.EnvVars;
-import hudson.model.Node;
 import hudson.ExtensionList;
-import hudson.model.Computer;
-import jenkins.model.Jenkins;
-import hudson.model.labels.LabelAtom;
 
 public class APMUtil {
 	public static final long publisherTime = TimeUnit.MINUTES.toMillis(1);
@@ -95,11 +84,9 @@ public class APMUtil {
 	 *         configuration.
 	 */
 	public static APMGlobalConfiguration getAPMGlobalDescriptor() {
-
 		try {
 			return ExtensionList.lookupSingleton(APMGlobalConfiguration.class);
 		} catch (RuntimeException e) {
-			// It can only throw such an exception when running tests
 			return null;
 		}
 	}
@@ -111,22 +98,7 @@ public class APMUtil {
 	}
 
 	public static long currentTimeMillis() {
-		// This method exist so we can mock System.currentTimeMillis in unit tests
 		return System.currentTimeMillis();
-	}
-
-	public static void severe(Logger logger, Throwable e, String message) {
-		if (message == null) {
-			message = e != null ? "An unexpected error occurred" : "";
-		}
-		if (!message.isEmpty()) {
-			logger.severe(message);
-		}
-		if (e != null) {
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			logger.info(message + ": " + sw.toString());
-		}
 	}
 
 	public static String getHostname(EnvVars envVars) {
@@ -134,11 +106,7 @@ public class APMUtil {
 
 		// Check hostname configuration from Jenkins
 		String hostname = null;
-		try {
-			hostname = getAPMGlobalDescriptor().getHostname();
-		} catch (RuntimeException e) {
-			// noop
-		}
+		hostname = getAPMGlobalDescriptor().getHostname();
 
 		// Check hostname using jenkins env variables
 		if (envVars != null) {
@@ -166,7 +134,8 @@ public class APMUtil {
 				reader.close();
 				hostname = out.toString();
 			} catch (Exception e) {
-				severe(logger, e, "Failed to obtain UNIX hostname");
+				logger.severe("Failed to obtain UNIX hostname");
+				e.printStackTrace();
 			}
 
 			// Check hostname
@@ -181,7 +150,7 @@ public class APMUtil {
 		try {
 			hostname = Inet4Address.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
-			logger.fine(String.format("Unknown hostname error received for localhost. Error: %s", e));
+			logger.warning(String.format("Unknown hostname error received for localhost. Error: %s", e));
 		}
 		if (isValidHostname(hostname)) {
 			logger.fine(String.format("Using hostname found via "
@@ -196,47 +165,6 @@ public class APMUtil {
 					+ "the 'Manage Plugins' section under the 'APM Plugin' section.");
 		}
 		return null;
-	}
-
-	public static Map<String, Set<String>> getComputerTags(Computer computer) {
-		Set<LabelAtom> labels = null;
-		Map<String, Set<String>> result = new HashMap<>();
-		Node node = computer.getNode();
-		labels = node != null ? node.getAssignedLabels() : null;
-		if (labels != null) {
-			String nodeHostname = null;
-			try {
-				nodeHostname = computer.getHostName();
-			} catch (IOException | InterruptedException e) {
-				logger.fine("Could not retrieve hostname");
-			}
-			String nodeName = getNodeName(computer);
-			Set<String> nodeNameValues = new HashSet<>();
-			nodeNameValues.add(nodeName);
-			result.put("node_name", nodeNameValues);
-			if (nodeHostname != null) {
-				Set<String> nodeHostnameValues = new HashSet<>();
-				nodeHostnameValues.add(nodeHostname);
-				result.put("node_hostname", nodeHostnameValues);
-			}
-			Set<String> nodeLabelsValues = new HashSet<>();
-			for (LabelAtom label : labels) {
-				nodeLabelsValues.add(label.getName());
-			}
-			result.put("node_label", nodeLabelsValues);
-		}
-		return result;
-	}
-
-	public static String getNodeName(Computer computer) {
-		if (computer == null) {
-			return null;
-		}
-		if (computer instanceof Jenkins.MasterComputer) {
-			return "master";
-		} else {
-			return computer.getName();
-		}
 	}
 
 	/**

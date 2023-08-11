@@ -23,7 +23,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void userCreated(@NonNull String username) {
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(username, SecurityEvent.Type.USER_CREATED);
+        eventCollector.CollectEventData(username, SecurityEvent.Type.USER_CREATED);
     }
 
     /**
@@ -33,7 +33,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void authenticated2(@NonNull UserDetails details) {
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(details);
+        eventCollector.CollectEventData(details);
     }
 
     /**
@@ -43,7 +43,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void failedToAuthenticate(@NonNull String username){
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
+        eventCollector.CollectEventData(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
     }
 
     /**
@@ -53,7 +53,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void loggedIn(@NonNull String username){
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(username, SecurityEvent.Type.LOGGEDIN);
+        eventCollector.CollectEventData(username, SecurityEvent.Type.LOGGEDIN);
     }
 
     /**
@@ -63,7 +63,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void failedToLogIn(@NonNull String username){
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(username, SecurityEvent.Type.FAILEDTOLOGIN);
+        eventCollector.CollectEventData(username, SecurityEvent.Type.FAILEDTOLOGIN);
     }
 
     /**
@@ -73,7 +73,7 @@ public class APMSecurityListner extends SecurityListener{
     @Override
     protected void loggedOut(@NonNull String username){
         eventCollector = new SecurityEventCollector();
-        eventCollector.collectEvent(username, SecurityEvent.Type.LOGGEDOUT);
+        eventCollector.CollectEventData(username, SecurityEvent.Type.LOGGEDOUT);
     }
 
 }

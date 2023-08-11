@@ -5,7 +5,7 @@ import java.util.SortedMap;
 import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Client;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
@@ -146,9 +146,9 @@ public class QueueMetrics implements PublishMetrics {
         jobDetails.put("queueBuildable", getBuildable());
         jobDetails.put("num_job_completed", getCompleted());
 
-        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if(communicationClient != null) {
-            communicationClient.transmit(jobDetails);
+            communicationClient.transmitData(jobDetails);
             clear();
         }
     }

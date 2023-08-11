@@ -12,6 +12,6 @@ public interface SecurityEvent extends Event {
         FAILEDTOLOGIN,
         FAILEDTOAUTHENTICATE,
     }
-    public boolean collectEvent(UserDetails details);
-    public boolean collectEvent(String name, Type type);
+    public boolean CollectEventData(UserDetails details);
+    public boolean CollectEventData(String name, Type type);
 }

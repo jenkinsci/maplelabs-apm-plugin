@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Communication;
+import com.apm.jenkins.plugins.Client.Client;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
@@ -125,9 +125,9 @@ public class JenkinsMetrics implements PublishMetrics {
 		systemDict.put("num_inactive_plugins", getInactivePlugins());
 		systemDict.put("num_plugin_with_update", getUpdateablePlugins());
         
-        Communication communicationClient = APMUtil.getAPMGlobalDescriptor().getCommunicationClient();
+        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if(communicationClient != null) {
-            communicationClient.transmit(systemDict);
+            communicationClient.transmitData(systemDict);
             clear();
         }
     }

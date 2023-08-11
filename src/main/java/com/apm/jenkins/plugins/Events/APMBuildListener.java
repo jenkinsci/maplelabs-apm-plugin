@@ -26,7 +26,7 @@ public class APMBuildListener extends RunListener<Run> {
 		try {
             logger.fine("Start APMBuildListener#onStarted");
             buildCollector = new BuildEventCollector(run, listener);
-            buildCollector.collectEvent(BuildEvent.Type.STARTED);
+            buildCollector.CollectEventData(BuildEvent.Type.STARTED);
             
             // item.getInQueueSince() may raise a NPE if a worker node is spinning up to run the job.
             // This could be expected behavior with ec2 spot instances/ecs containers, meaning no waiting
@@ -43,7 +43,8 @@ public class APMBuildListener extends RunListener<Run> {
 
             logger.info("End APMBuildListener#onStarted");         
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process build start");
+            logger.severe("Failed to process build start");
+			e.printStackTrace();
         }
 	}
 	
@@ -56,10 +57,11 @@ public class APMBuildListener extends RunListener<Run> {
         try {
             logger.fine("Start APMBuildListener#onCompleted");
             buildCollector = new BuildEventCollector(run, listener);
-            buildCollector.collectEvent(BuildEvent.Type.COMPLETED);
+            buildCollector.CollectEventData(BuildEvent.Type.COMPLETED);
             logger.info("End APMBuildListener#onCompleted");
         } catch (Exception e) {
-            APMUtil.severe(logger, e, "Failed to process build completion");
+            logger.severe("Failed to process build completion");
+			e.printStackTrace();
         }
     }
     
