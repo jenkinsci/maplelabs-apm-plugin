@@ -27,7 +27,6 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	private static final String DISPLAY_NAME = "Maplelabs APM Plugin";
 	private static final Logger logger = Logger.getLogger(APMGlobalConfiguration.class.getName());
 
-	private String hostname = null;
 	private String targetAppName = null;
 	private String targetProjectName = null;
 	private String targetInstanceName = null;
@@ -54,12 +53,11 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	@DataBoundConstructor
 	public APMGlobalConfiguration() {
 		load(); // Load the persisted global configuration
-		String hostnameEnvVar = System.getenv("APM_JENKINS_PLUGIN_HOSTNAME");
-		if (StringUtils.isNotBlank(hostnameEnvVar)) {
-			this.hostname = hostnameEnvVar;
-		}
+		init();
+	}
 
-		switch (targetDestination) {
+	public final void init() {
+        switch (targetDestination) {
 			case SNAPPYFLOW:
 				switch (targetSnappyFlowDestination) {
 					case ES:
@@ -75,20 +73,11 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 				break;
 			default:
 		}
-	}
+    }
 
 	@Override
 	public String getDisplayName() {
 		return DISPLAY_NAME;
-	}
-
-	/**
-	 * Getter function for the hostname global configuration.
-	 *
-	 * @return a String containing the hostname global configuration.
-	 */
-	public String getHostname() {
-		return hostname;
 	}
 
 	public String getTargetSnappyFlowDestination() {

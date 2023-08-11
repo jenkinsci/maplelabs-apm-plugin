@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
@@ -27,9 +28,27 @@ import com.apm.jenkins.plugins.Client.Client;
 
 public abstract class SnappyFlow implements Client {
 
+	private HttpPost post;
 	private HttpClient client;
 	private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());
 
+	// This will create post method
+	protected void createPost() {
+		if(post instanceof HttpPost) {
+			return;
+		} else {
+			StringBuilder targetToken = new StringBuilder();
+			StringBuilder contentType = new StringBuilder();
+			StringBuilder targetApiUrl = new StringBuilder();
+			getHeaders(contentType, targetToken, targetApiUrl);
+	
+			post = new HttpPost(targetApiUrl.toString());
+	
+			post.setHeader("Content-Type", contentType.toString());
+			post.setHeader("Authorization", targetToken.toString());
+			post.setHeader("Accept", "application/vnd.kafka.v2+json");
+		}
+	}
 	/**
 	 * This function will default tags for snappyflow
 	 * 
@@ -104,16 +123,23 @@ public abstract class SnappyFlow implements Client {
 	/**
 	 * This function will do HTTP POST andreturns response code
 	 * 
-	 * @param post
-	 * @param payload
+	 * @param data
 	 * @return
 	 */
-	protected int post(HttpPost post, StringEntity payload) {
+	protected int postRequest(StringEntity data) {
 		int responseCode = 0;
 		try {
+			if(post == null) createPost();
+			post.setEntity(data);
+			logger.info("Post Headers:---------------");
+			Header[] headers = post.getAllHeaders();
+			for (Header header : headers) {
+				logger.info(header.getName() + ":" + header.getValue());
+			}
+
 			logger.info("Posted Data is here:---------------");
-			String requestBody = new String(payload.getContent().readAllBytes(), StandardCharsets.UTF_8);
-			logger.info(requestBody);
+			logger.info(new String(post.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8));
+		
 			logger.info("\nSending 'POST' request to URL : " + post.getURI());
 			HttpResponse response = getClient().execute(post);
 			responseCode = response.getStatusLine().getStatusCode();
@@ -122,6 +148,7 @@ public abstract class SnappyFlow implements Client {
 			logger.info(responseBody);
 		} catch (IOException e) {
 			logger.severe("Http Post error");
+			e.printStackTrace();
 		}
 		return responseCode;
 	}

@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.json.JSONObject;
-import org.apache.http.Header;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import com.apm.jenkins.plugins.APMUtil;
@@ -56,27 +54,7 @@ public class SnappyFlowEs extends SnappyFlow {
 	@Override
 	@RequirePOST
 	public boolean transmitData(HashMap<String, Object> payload) {
-		StringEntity data;
-		StringBuilder targetToken = new StringBuilder();
-		StringBuilder contentType = new StringBuilder();
-		StringBuilder targetApiUrl = new StringBuilder();
-		getHeaders(contentType, targetToken, targetApiUrl);
-
-		HttpPost post = new HttpPost(targetApiUrl.toString());
-
-		post.setHeader("Content-Type", contentType.toString());
-		post.setHeader("Authorization", targetToken.toString());
-		post.setHeader("Accept", "application/vnd.kafka.v2+json");
-		data = new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON);
-		post.setEntity(data);
-
-		logger.info("Post Headers:---------------");
-		Header[] headers = post.getAllHeaders();
-		for (Header header : headers) {
-			logger.info(header.getName() + ":" + header.getValue());
-		}
-
-		logger.fine("Response Code : " + post(post, data));
+		logger.info("Response Code : " + postRequest(new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON)));
 		return true;
 	}
 

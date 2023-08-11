@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.json.JSONObject;
-import org.apache.http.Header;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import com.apm.jenkins.plugins.APMUtil;
@@ -35,7 +33,6 @@ public class SnappyFlowKafka extends SnappyFlow {
 
         logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
         logger.info("Authroization for Kafka is: " + targetToken.toString());
-        ;
     }
 
     /**
@@ -48,31 +45,12 @@ public class SnappyFlowKafka extends SnappyFlow {
     public boolean transmitData(HashMap<String, Object> payload) {
         String KafkaData;
         StringEntity data;
-        StringBuilder targetToken = new StringBuilder();
-        StringBuilder contentType = new StringBuilder();
-        StringBuilder targetApiUrl = new StringBuilder();
-        getHeaders(contentType, targetToken, targetApiUrl);
-
-        HttpPost post = new HttpPost(targetApiUrl.toString());
-
-        post.setHeader("Content-Type", contentType.toString());
-        post.setHeader("Authorization", targetToken.toString());
-        post.setHeader("Accept", "application/vnd.kafka.v2+json");
-
         // For Kafka, need to prefix data with `{\"records\":[{\"value\":"`
         KafkaData = new JSONObject(payload).toString().replaceAll("=", ":");
         KafkaData = "{\"records\":[{\"value\":" + KafkaData + "}]}";
         data = new StringEntity(KafkaData, ContentType.APPLICATION_JSON);
 
-        post.setEntity(data);
-
-        logger.info("Post Headers:---------------");
-        Header[] headers = post.getAllHeaders();
-        for (Header header : headers) {
-            logger.info(header.getName() + ":" + header.getValue());
-        }
-
-        logger.fine("Response Code : " + post(post, data));
+        logger.info("Response Code : " + postRequest(data));
         return true;
     }
 

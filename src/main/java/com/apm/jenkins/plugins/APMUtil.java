@@ -106,7 +106,6 @@ public class APMUtil {
 
 		// Check hostname configuration from Jenkins
 		String hostname = null;
-		hostname = getAPMGlobalDescriptor().getHostname();
 
 		// Check hostname using jenkins env variables
 		if (envVars != null) {
