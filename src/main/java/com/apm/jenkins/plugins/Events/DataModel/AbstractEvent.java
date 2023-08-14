@@ -22,7 +22,7 @@ public abstract class AbstractEvent implements Event {
 
     public AbstractEvent() {
         setHost(APMUtil.getHostname(null));
-        setDate(APMUtil.currentTimeMillis() / 1000);
+        setDate(APMUtil.getCurrentTimeInMillis() / 1000);
     }
 
     public void setDate(Long date) {

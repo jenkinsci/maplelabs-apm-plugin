@@ -66,7 +66,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         setJobName(parentJob.getFullName());
 
         setHost(APMUtil.getHostname(envVars));
-        setDate(APMUtil.currentTimeMillis() / 1000);
+        setDate(APMUtil.getCurrentTimeInMillis() / 1000);
     }
 
     protected String getJobName(String value) {

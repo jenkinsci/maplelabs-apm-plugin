@@ -58,7 +58,7 @@ public abstract class SnappyFlow implements Client {
 	 */
 	public static HashMap<String, Object> getSnappyflowTags(String docType) {
 
-		long currTime = System.currentTimeMillis();
+		long currTime = APMUtil.getCurrentTimeInMillis();
 		HashMap<String, Object> result = new HashMap<>();
 		String appName = APMUtil.getAPMGlobalDescriptor().getTargetAppName();
 		String instName = APMUtil.getAPMGlobalDescriptor().getTargetInstanceName();

@@ -106,23 +106,21 @@ public class JenkinsMetrics implements PublishMetrics {
         }
         ;
         setProjects(instance.getAllItems(Project.class).size());
-        PluginManager pluginManager = instance.getPluginManager();
-        if (pluginManager != null) {
-            List<PluginWrapper> plugins = pluginManager.getPlugins();
-            setPlugins(plugins.size());
-            setFailedPlugins(pluginManager.getFailedPlugins().size());
 
-            for (PluginWrapper w : plugins) {
-                if (w.hasUpdate())
-                    incrementUpdateablePlugins();
-                if (w.isActive())
-                    incrementActivePlugins();
-                else
-                    incrementInactivePlugins();
-            }
-        } else {
-            logger.warning("Plugin manager not found");
+        PluginManager pluginManager = instance.getPluginManager();
+        List<PluginWrapper> plugins = pluginManager.getPlugins();
+        setPlugins(plugins.size());
+        setFailedPlugins(pluginManager.getFailedPlugins().size());
+
+        for (PluginWrapper w : plugins) {
+            if (w.hasUpdate())
+                incrementUpdateablePlugins();
+            if (w.isActive())
+                incrementActivePlugins();
+            else
+                incrementInactivePlugins();
         }
+        
         setHostName(APMUtil.getHostname(null));
 
         HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");

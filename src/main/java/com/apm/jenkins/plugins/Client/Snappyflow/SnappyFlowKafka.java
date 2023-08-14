@@ -26,7 +26,7 @@ public class SnappyFlowKafka extends SnappyFlow {
         String port = APMUtil.getAPMGlobalDescriptor().getTargetPort();
         String path = APMUtil.getAPMGlobalDescriptor().getTargetKafkaPath();
         String token = APMUtil.getAPMGlobalDescriptor().getTargetKafkaToken();
-        String toipc = APMUtil.getAPMGlobalDescriptor().getTargetKafkaTopic();
+        // String toipc = APMUtil.getAPMGlobalDescriptor().getTargetKafkaTopic();
 		String protocol = APMUtil.getAPMGlobalDescriptor().getTargetProtocol();
         String profile = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
         targetToken.append(token);

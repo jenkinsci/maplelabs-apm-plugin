@@ -31,7 +31,7 @@ public class APMBuildListener extends RunListener<Run> {
             Queue queue = Queue.getInstance();
             Queue.Item item = queue.getItem(run.getQueueId());
             try {
-                long waitingMs = (APMUtil.currentTimeMillis() - item.getInQueueSince());
+                long waitingMs = (APMUtil.getCurrentTimeInMillis() - item.getInQueueSince());
                 logger.info("Job waiting time: " + TimeUnit.MILLISECONDS.toSeconds(waitingMs));
             } catch (RuntimeException e) {
                 logger.warning("Unable to compute 'waiting' metric. " +
