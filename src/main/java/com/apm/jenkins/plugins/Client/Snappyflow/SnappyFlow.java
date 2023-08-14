@@ -20,6 +20,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
@@ -34,7 +35,7 @@ public abstract class SnappyFlow implements Client {
 
 	// This will create post method
 	protected void createPost() {
-		if(post instanceof HttpPost) {
+		if(post != null) {
 			return;
 		} else {
 			StringBuilder targetToken = new StringBuilder();
@@ -114,6 +115,7 @@ public abstract class SnappyFlow implements Client {
 						.build();
 			} catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
 				logger.severe("Http creation error");
+				e.printStackTrace();
 			}
 
 		}
@@ -126,6 +128,7 @@ public abstract class SnappyFlow implements Client {
 	 * @param data
 	 * @return
 	 */
+	@RequirePOST
 	protected int postRequest(StringEntity data) {
 		int responseCode = 0;
 		try {

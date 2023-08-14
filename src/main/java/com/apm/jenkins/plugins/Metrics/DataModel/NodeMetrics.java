@@ -115,6 +115,8 @@ public class NodeMetrics implements PublishMetrics {
 
                     // Architect
                     computerMap.put("arch", moniter.get("hudson.node_monitors.ArchitectureMonitor"));
+                } else {
+                    logger.warning("Monitor object not available");
                 }
                 addComputerDetails(computerMap);
             }
@@ -124,7 +126,6 @@ public class NodeMetrics implements PublishMetrics {
             logger.severe("No Computer instance");
             return;
         }
-        ;
 
         HashMap<String, Object> computerDetails = SnappyFlow.getSnappyflowTags("nodeStat");
         computerDetails.put("num_nodes", getNumNodes());
@@ -136,6 +137,8 @@ public class NodeMetrics implements PublishMetrics {
         if (communicationClient != null) {
             communicationClient.transmitData(computerDetails);
             clear();
+        }else {
+            logger.warning("Destination client is empty");
         }
     }
 

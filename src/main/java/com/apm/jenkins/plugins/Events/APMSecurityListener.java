@@ -27,7 +27,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#userCreated");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(username, SecurityEvent.Type.USER_CREATED);
-            logger.info("Start SceurityListener#userCreated");
+            logger.info("End SceurityListener#userCreated");
         } catch (Exception e) {
             logger.severe("Failed to process User creation");
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#authenticated2");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(details);
-            logger.info("Start SceurityListener#authenticated2");
+            logger.info("End SceurityListener#authenticated2");
         } catch (Exception e) {
             logger.severe("Failed to process User authenticated");
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#failedToAuthenticate");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
-            logger.info("Start SceurityListener#failedToAuthenticate");
+            logger.info("End SceurityListener#failedToAuthenticate");
         } catch (Exception e) {
             logger.severe("Failed to process User failed to auth");
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#loggedIn");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDIN);
-            logger.info("Start SceurityListener#loggedIn");
+            logger.info("End SceurityListener#loggedIn");
         } catch (Exception e) {
             logger.severe("Failed to process User login");
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#failedToLogIn");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOLOGIN);
-            logger.info("Start SceurityListener#failedToLogIn");
+            logger.info("End SceurityListener#failedToLogIn");
         } catch (Exception e) {
             logger.severe("Failed to process User failed login");
             e.printStackTrace();
@@ -117,7 +117,7 @@ public class APMSecurityListener extends SecurityListener {
             logger.info("Start SceurityListener#loggedOut");
             eventCollector = new SecurityEventCollector();
             eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDOUT);
-            logger.info("Start SceurityListener#loggedOut");
+            logger.info("End SceurityListener#loggedOut");
         } catch (Exception e) {
             logger.severe("Failed to process User log out");
             e.printStackTrace();

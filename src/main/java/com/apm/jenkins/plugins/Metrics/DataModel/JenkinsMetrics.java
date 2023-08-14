@@ -120,6 +120,8 @@ public class JenkinsMetrics implements PublishMetrics {
                 else
                     incrementInactivePlugins();
             }
+        } else {
+            logger.warning("Plugin manager not found");
         }
         setHostName(APMUtil.getHostname(null));
 
@@ -130,12 +132,14 @@ public class JenkinsMetrics implements PublishMetrics {
         systemDict.put("num_active_plugins", getActivePlugins());
         systemDict.put("num_failed_plugins", getFailedPlugins());
         systemDict.put("num_inactive_plugins", getInactivePlugins());
-        systemDict.put("num_plugin_with_update", getUpdateablePlugins());
+        systemDict.put("num_plugin_updateable", getUpdateablePlugins());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if (communicationClient != null) {
             communicationClient.transmitData(systemDict);
             clear();
+        } else {
+            logger.warning("Destination client is empty");
         }
     }
 

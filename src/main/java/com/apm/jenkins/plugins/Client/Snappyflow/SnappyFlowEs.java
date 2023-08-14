@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import com.apm.jenkins.plugins.APMUtil;
 
@@ -52,9 +51,8 @@ public class SnappyFlowEs extends SnappyFlow {
 	 * @param payload
 	 */
 	@Override
-	@RequirePOST
 	public boolean transmitData(HashMap<String, Object> payload) {
-		logger.info("Response Code : " + postRequest(new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON)));
+		logger.fine("Response Code : " + postRequest(new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON)));
 		return true;
 	}
 

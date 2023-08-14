@@ -15,6 +15,7 @@ import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 @Extension
 public class APMMetricsCollector extends PeriodicWork {
+    int i = 0;
     private static final PublishMetrics nodeMetrics = new NodeMetrics();
     private static final PublishMetrics queueMetrics = new QueueMetrics();
     private static final PublishMetrics jenkinsMetrics = new JenkinsMetrics();
@@ -28,7 +29,7 @@ public class APMMetricsCollector extends PeriodicWork {
     @Override
     protected void doRun() {
         try {
-            logger.info("Computing Jenkins metrics");
+            logger.info("Start Computing metrics");
             Jenkins instance = Jenkins.getInstanceOrNull();
 
             if (instance != null) {
@@ -37,10 +38,12 @@ public class APMMetricsCollector extends PeriodicWork {
                 Computer[] computers = instance.getComputers();
                 if (computers != null)
                     nodeMetrics.sendMetrics(computers);
-
+                else
+                    logger.warning("couldn't retrieve computers");
             } else {
-                logger.info("Instance is null and couldn't retrieve computers.");
+                logger.warning("Instance is null");
             }
+            logger.info("End Computing metrics");
         } catch (Exception e) {
             logger.severe("Failed to compute and send Jenkins metrics");
             e.printStackTrace();

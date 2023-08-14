@@ -148,19 +148,21 @@ public class QueueMetrics implements PublishMetrics {
             }
         }
         HashMap<String, Object> jobDetails = SnappyFlow.getSnappyflowTags("jobStat");
-        jobDetails.put("queueStuck", getStuck());
-        jobDetails.put("queueSize", getQueueSize());
-        jobDetails.put("queuePending", getPending());
-        jobDetails.put("queueBlocked", getBlocked());
+        jobDetails.put("queue_stuck", getStuck());
+        jobDetails.put("queue_size", getQueueSize());
+        jobDetails.put("queue_pending", getPending());
+        jobDetails.put("queue_blocked", getBlocked());
         jobDetails.put("num_job_aborted", getAborted());
         jobDetails.put("num_job_started", getStarted());
-        jobDetails.put("queueBuildable", getBuildable());
+        jobDetails.put("queue_buildable", getBuildable());
         jobDetails.put("num_job_completed", getCompleted());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if (communicationClient != null) {
             communicationClient.transmitData(jobDetails);
             clear();
+        }else {
+            logger.warning("Destination client is empty");
         }
     }
 

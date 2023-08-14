@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import com.apm.jenkins.plugins.APMUtil;
 
@@ -24,13 +23,15 @@ public class SnappyFlowKafka extends SnappyFlow {
     @Override
     protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
         String host = APMUtil.getAPMGlobalDescriptor().getTargetHost();
-        String profile = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
-        targetApiUrl.append(host + "/topics/metric-" + profile);
-
+        String port = APMUtil.getAPMGlobalDescriptor().getTargetPort();
+        String path = APMUtil.getAPMGlobalDescriptor().getTargetKafkaPath();
         String token = APMUtil.getAPMGlobalDescriptor().getTargetKafkaToken();
-        contentType.append("application/vnd.kafka.json.v2+json");
+        String toipc = APMUtil.getAPMGlobalDescriptor().getTargetKafkaTopic();
+		String protocol = APMUtil.getAPMGlobalDescriptor().getTargetProtocol();
+        String profile = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
         targetToken.append(token);
-
+        contentType.append("application/vnd.kafka.json.v2+json");
+        targetApiUrl.append(protocol + "://" + host + ":" + port + "/" + path + "/topics/metric-" + profile );
         logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
         logger.info("Authroization for Kafka is: " + targetToken.toString());
     }
@@ -41,7 +42,6 @@ public class SnappyFlowKafka extends SnappyFlow {
      * @param payload
      */
     @Override
-    @RequirePOST
     public boolean transmitData(HashMap<String, Object> payload) {
         String KafkaData;
         StringEntity data;
@@ -50,7 +50,7 @@ public class SnappyFlowKafka extends SnappyFlow {
         KafkaData = "{\"records\":[{\"value\":" + KafkaData + "}]}";
         data = new StringEntity(KafkaData, ContentType.APPLICATION_JSON);
 
-        logger.info("Response Code : " + postRequest(data));
+        logger.fine("Response Code : " + postRequest(data));
         return true;
     }
 
