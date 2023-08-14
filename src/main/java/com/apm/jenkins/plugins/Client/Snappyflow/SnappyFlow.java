@@ -150,7 +150,7 @@ public abstract class SnappyFlow implements Client {
 			String responseBody = EntityUtils.toString((response).getEntity());
 			logger.info(responseBody);
 		} catch (IOException e) {
-			logger.severe("Http Post error");
+			logger.severe("Http Post error : "+e.getMessage());
 			e.printStackTrace();
 		}
 		return responseCode;
