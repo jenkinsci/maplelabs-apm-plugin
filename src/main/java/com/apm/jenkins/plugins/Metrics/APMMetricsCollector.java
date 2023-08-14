@@ -28,25 +28,27 @@ public class APMMetricsCollector extends PeriodicWork {
 
     @Override
     protected void doRun() {
-        try {
-            logger.info("Start Computing metrics");
-            Jenkins instance = Jenkins.getInstanceOrNull();
-
-            if (instance != null) {
-                queueMetrics.sendMetrics(instance);
-                jenkinsMetrics.sendMetrics(instance);
-                Computer[] computers = instance.getComputers();
-                if (computers != null)
-                    nodeMetrics.sendMetrics(computers);
-                else
-                    logger.warning("couldn't retrieve computers");
-            } else {
-                logger.warning("Instance is null");
+        if(APMUtil.getAPMGlobalDescriptor().getIsMetricEnabled()) {
+            try {
+                logger.info("Start Computing metrics");
+                Jenkins instance = Jenkins.getInstanceOrNull();
+    
+                if (instance != null) {
+                    queueMetrics.sendMetrics(instance);
+                    jenkinsMetrics.sendMetrics(instance);
+                    Computer[] computers = instance.getComputers();
+                    if (computers != null)
+                        nodeMetrics.sendMetrics(computers);
+                    else
+                        logger.warning("couldn't retrieve computers");
+                } else {
+                    logger.warning("Instance is null");
+                }
+                logger.info("End Computing metrics");
+            } catch (Exception e) {
+                logger.severe("Failed to compute and send Jenkins metrics");
+                e.printStackTrace();
             }
-            logger.info("End Computing metrics");
-        } catch (Exception e) {
-            logger.severe("Failed to compute and send Jenkins metrics");
-            e.printStackTrace();
         }
     }
 

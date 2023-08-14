@@ -124,13 +124,16 @@ public abstract class AbstractEvent implements Event {
      * @return
      */
     protected boolean sendEvent() {
-        HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
-        payload.put("text", getText());
-        payload.put("host", getHost());
-        payload.put("title", getTitle());
-        payload.put("date_happened", getDate());
-        payload.put("priority", getPriority().name().toLowerCase());
-        payload.put("alert_type", getAlertType().name().toLowerCase());
-        return APMUtil.getAPMGlobalDescriptor().getDestinationClient().transmitData(payload);
+        if(APMUtil.getAPMGlobalDescriptor().getIsEventEnabled()) {
+            HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
+            payload.put("text", getText());
+            payload.put("host", getHost());
+            payload.put("title", getTitle());
+            payload.put("date_happened", getDate());
+            payload.put("priority", getPriority().name().toLowerCase());
+            payload.put("alert_type", getAlertType().name().toLowerCase());
+            return APMUtil.getAPMGlobalDescriptor().getDestinationClient().transmitData(payload);
+        }
+        return false;
     }
 }

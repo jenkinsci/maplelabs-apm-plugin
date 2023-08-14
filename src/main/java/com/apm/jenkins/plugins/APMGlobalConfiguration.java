@@ -9,7 +9,6 @@ import com.apm.jenkins.plugins.Client.Client;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowEs;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowKafka;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -49,6 +48,10 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 	// others
 	private String targetUserName = null;
 	private String targetPassword = null;
+
+	// enable/diable
+	private boolean isEventEnabled = true;
+	private boolean isMetricEnabled = true;
 
 	@DataBoundConstructor
 	public APMGlobalConfiguration() {
@@ -208,6 +211,22 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		return targetUserName;
 	}
 
+	public boolean getIsEventEnabled() {
+		return this.isEventEnabled;
+	}
+
+	public void setIsEventEnabled(boolean isEventEnabled) {
+		this.isEventEnabled = isEventEnabled;
+	}
+
+	public boolean getIsMetricEnabled() {
+		return this.isMetricEnabled;
+	}
+
+	public void setIsMetricEnabled(boolean isMetricsEnabled) {
+		this.isMetricEnabled = isMetricsEnabled;
+	}
+
 	/**
 	 * This function will set config for ES
 	 * 
@@ -274,7 +293,9 @@ public class APMGlobalConfiguration extends GlobalConfiguration {
 		}
 
 		destinationClient = null;
-
+		setIsEventEnabled(formData.getBoolean("isEventEnabled"));
+		setIsMetricEnabled(formData.getBoolean("isMetricEnabled"));
+		
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
 		setTargetProtocol(formData.getString("targetProtocol"));
