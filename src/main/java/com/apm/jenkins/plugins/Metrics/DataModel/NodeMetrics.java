@@ -128,10 +128,10 @@ public class NodeMetrics implements PublishMetrics {
         }
 
         HashMap<String, Object> computerDetails = SnappyFlow.getSnappyflowTags("nodeStat");
-        computerDetails.put("num_nodes", getNumNodes());
+        computerDetails.put("nodes_total", getNumNodes());
         computerDetails.put("computers", getComputerDetails());
-        computerDetails.put("num_nodes_online", getNumNodesOnline());
-        computerDetails.put("num_nodes_offline", getNumNodesOffline());
+        computerDetails.put("nodes_online", getNumNodesOnline());
+        computerDetails.put("nodes_offline", getNumNodesOffline());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if (communicationClient != null) {

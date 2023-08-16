@@ -121,16 +121,16 @@ public class JenkinsMetrics implements PublishMetrics {
                 incrementInactivePlugins();
         }
         
-        setHostName(APMUtil.getHostname(null));
+        setHostName(APMUtil.getHostName(null));
 
         HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");
         systemDict.put("hostName", getHostName());
-        systemDict.put("num_projects", getProjects());
-        systemDict.put("num_plugins", getPlugins());
-        systemDict.put("num_active_plugins", getActivePlugins());
-        systemDict.put("num_failed_plugins", getFailedPlugins());
-        systemDict.put("num_inactive_plugins", getInactivePlugins());
-        systemDict.put("num_plugin_updateable", getUpdateablePlugins());
+        systemDict.put("project_total", getProjects());
+        systemDict.put("plugin_total", getPlugins());
+        systemDict.put("plugins_actived", getActivePlugins());
+        systemDict.put("plugins_failed", getFailedPlugins());
+        systemDict.put("plugins_inactived", getInactivePlugins());
+        systemDict.put("plugins_updateable", getUpdateablePlugins());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if (communicationClient != null) {

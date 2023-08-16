@@ -15,7 +15,6 @@ import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
 
 @Extension
 public class APMMetricsCollector extends PeriodicWork {
-    int i = 0;
     private static final PublishMetrics nodeMetrics = new NodeMetrics();
     private static final PublishMetrics queueMetrics = new QueueMetrics();
     private static final PublishMetrics jenkinsMetrics = new JenkinsMetrics();

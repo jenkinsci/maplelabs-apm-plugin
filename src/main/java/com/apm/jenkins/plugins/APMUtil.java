@@ -35,7 +35,7 @@ public class APMUtil {
 		return System.currentTimeMillis();
 	}
 	
-	private static String getOS() {
+	private static String getOSName() {
 		return System.getProperty("os.name").split(" ")[0].toLowerCase();
 	}
 	
@@ -72,7 +72,7 @@ public class APMUtil {
 	 * @param hostname - A String object containing the name of a host.
 	 * @return a boolean representing the validity of the hostname
 	 */
-	public static Boolean isValidHostname(String hostname) {
+	public static Boolean isValidHostName(String hostname) {
 		if (hostname == null) return false;
 
 		String[] localHosts = { 
@@ -82,7 +82,7 @@ public class APMUtil {
 			"localhost6.localdomain6"
 		};
 				
-		String RFC_1123_HOSTNAME = "^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\\.?$";
+		String HostNamePattern = "^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\\.?$";
 
 		// Check if hostname is local
 		if (Arrays.asList(localHosts).contains(hostname.toLowerCase())) {
@@ -97,7 +97,7 @@ public class APMUtil {
 		}
 
 		// RFC1123
-		return Pattern.compile(RFC_1123_HOSTNAME).matcher(hostname).find();
+		return Pattern.compile(HostNamePattern).matcher(hostname).find();
 	}
 
 	/**
@@ -105,27 +105,27 @@ public class APMUtil {
 	 * @param envVars jenkins env
 	 * @return hostname
 	 */
-	public static String getHostname(EnvVars envVars) {
+	public static String getHostName(EnvVars envVars) {
 		String hostname = null;
 		String[] UNIX_OS = { "mac", "linux", "freebsd", "sunos" };
 
 		// Check hostname using jenkins env variables
 		if (envVars != null) {
 			hostname = envVars.get("HOSTNAME");
-			if (isValidHostname(hostname)) {
+			if (isValidHostName(hostname)) {
 				logger.fine("Jenkins sys env. Hostname: " + hostname);
 				return hostname;
 			}
 		}
 
 		// Check OS specific unix commands
-		String os = getOS();
+		String os = getOSName();
 		if (Arrays.asList(UNIX_OS).contains(os)) {
 
 			String[] cmd = { "/bin/hostname", "-f" };
 			hostname = getTerminalOP(cmd);
 
-			if (isValidHostname(hostname)) {
+			if (isValidHostName(hostname)) {
 				logger.fine(String.format("Using unix hostname found via `/bin/hostname -f`. Hostname: %s",
 						hostname));
 				return hostname;
@@ -134,7 +134,7 @@ public class APMUtil {
 			String[] cmd = {"hostname"};
 			hostname = getTerminalOP(cmd);
 
-			if (isValidHostname(hostname)) {
+			if (isValidHostName(hostname)) {
 				logger.fine(String.format("Using windows hostname found via `hostname `. Hostname: %s",
 						hostname));
 				return hostname;

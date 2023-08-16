@@ -21,7 +21,7 @@ public abstract class AbstractEvent implements Event {
     private Priority priority;
 
     public AbstractEvent() {
-        setHost(APMUtil.getHostname(null));
+        setHost(APMUtil.getHostName(null));
         setDate(APMUtil.getCurrentTimeInMillis() / 1000);
     }
 

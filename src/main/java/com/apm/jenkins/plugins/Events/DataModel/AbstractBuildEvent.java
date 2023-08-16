@@ -55,7 +55,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         setBuildNumber(Integer.toString(run.getNumber()));
 
         // Set Hostname
-        setHostname(APMUtil.getHostname(envVars));
+        setHostname(APMUtil.getHostName(envVars));
 
         // build url
         setBuildUrl(envVars.get("BUILD_URL"));
@@ -65,7 +65,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         setParentName(parentJob.getName());
         setJobName(parentJob.getFullName());
 
-        setHost(APMUtil.getHostname(envVars));
+        setHost(APMUtil.getHostName(envVars));
         setDate(APMUtil.getCurrentTimeInMillis() / 1000);
     }
 
@@ -89,11 +89,11 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         this.result = result;
     }
 
-    protected String getHostname() {
+    protected String getHostName() {
         return hostname;
     }
 
-    protected String getHostname(String value) {
+    protected String getHostName(String value) {
         return APMUtil.getValue(hostname, value);
     }
 

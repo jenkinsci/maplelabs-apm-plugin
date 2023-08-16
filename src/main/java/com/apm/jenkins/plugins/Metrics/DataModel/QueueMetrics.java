@@ -152,10 +152,10 @@ public class QueueMetrics implements PublishMetrics {
         jobDetails.put("queue_size", getQueueSize());
         jobDetails.put("queue_pending", getPending());
         jobDetails.put("queue_blocked", getBlocked());
-        jobDetails.put("num_job_aborted", getAborted());
-        jobDetails.put("num_job_started", getStarted());
+        jobDetails.put("jobs_aborted", getAborted());
+        jobDetails.put("jobs_started", getStarted());
         jobDetails.put("queue_buildable", getBuildable());
-        jobDetails.put("num_job_completed", getCompleted());
+        jobDetails.put("jobs_completed", getCompleted());
 
         Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
         if (communicationClient != null) {
