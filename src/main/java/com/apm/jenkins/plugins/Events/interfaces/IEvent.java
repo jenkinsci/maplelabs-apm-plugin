@@ -1,6 +1,6 @@
 package com.apm.jenkins.plugins.Events.interfaces;
 
-public interface Event {
+public interface IEvent {
 
 	public static enum AlertType {
 		INFO,

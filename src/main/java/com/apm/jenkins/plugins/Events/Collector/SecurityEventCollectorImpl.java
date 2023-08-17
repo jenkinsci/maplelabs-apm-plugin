@@ -2,10 +2,10 @@ package com.apm.jenkins.plugins.Events.Collector;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.apm.jenkins.plugins.Events.DataModel.AbstractEvent;
-import com.apm.jenkins.plugins.Events.interfaces.SecurityEvent;
+import com.apm.jenkins.plugins.Events.Data.AbstractEvent;
+import com.apm.jenkins.plugins.Events.interfaces.ISecurityEvent;
 
-public class SecurityEventCollector extends AbstractEvent implements SecurityEvent {
+public class SecurityEventCollectorImpl extends AbstractEvent implements ISecurityEvent {
 
     /**
      * This function will called when a user is authenticated
@@ -14,14 +14,13 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEventData(UserDetails details) {
+    public void collectEventData(UserDetails details) {
         setEventType(EVENT);
         String title = "User " + details.getUsername() + " authenticated";
         setText(title);
         setTitle(title);
         setAlert(AlertType.INFO);
         setPriority(Priority.NORMAL);
-        return sendEvent();
     }
 
     /**
@@ -31,7 +30,7 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEventData(String name, SecurityEvent.Type type) {
+    public void collectEventData(String name, ISecurityEvent.Type type) {
         setEventType(EVENT);
         // creation, failedToAuthenticate, login, failedToLogIn, logout
         String title = "User " + name + " ";
@@ -68,7 +67,5 @@ public class SecurityEventCollector extends AbstractEvent implements SecurityEve
         }
         setText(title);
         setTitle(title);
-
-        return sendEvent();
     }
 }

@@ -8,10 +8,10 @@ import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.plugins.git.util.BuildData;
 
-import com.apm.jenkins.plugins.Events.interfaces.BuildEvent;
-import com.apm.jenkins.plugins.Events.DataModel.AbstractBuildEvent;
+import com.apm.jenkins.plugins.Events.Data.AbstractBuildEvent;
+import com.apm.jenkins.plugins.Events.interfaces.IBuildEvent;
 
-public class BuildEventCollector extends AbstractBuildEvent implements BuildEvent {
+public class BuildEventCollectorImpl extends AbstractBuildEvent implements IBuildEvent {
     private static final Logger logger = Logger.getLogger(BuildData.class.getName());
 
     /**
@@ -20,7 +20,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
      * @param run
      * @param listener
      */
-    public BuildEventCollector(Run run, TaskListener listener) throws IOException, InterruptedException {
+    public BuildEventCollectorImpl(Run run, TaskListener listener) throws IOException, InterruptedException {
         super(run, listener);
     }
 
@@ -30,7 +30,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
      * @param type
      */
     @Override
-    public boolean collectEventData(Type type) {
+    public void collectEventData(Type type) {
         setEventType(EVENT);
         String userId, jobName, buildUrl, buildNumber, buildResult, title, text;
         switch (type) {
@@ -64,7 +64,7 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
                 text = "\n[Job " + jobName + " User " + userId + " build #" + buildNumber + " Parent " + getParentName()
                         + "](" + buildUrl +
                         ") finished with status " + buildResult.toLowerCase() + " "
-                        + BuildEvent.getFormattedDuration(getDuration(0l)) +
+                        + IBuildEvent.getFormattedDuration(getDuration(0l)) +
                         "\n";
                 setText(text);
                 if (Result.SUCCESS.toString().equals(buildResult)) {
@@ -81,7 +81,6 @@ public class BuildEventCollector extends AbstractBuildEvent implements BuildEven
             default:
         }
 
-        return sendEvent();
     }
 
 }

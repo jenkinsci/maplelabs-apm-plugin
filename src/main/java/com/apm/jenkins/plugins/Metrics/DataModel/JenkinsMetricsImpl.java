@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Client;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Client.IClient;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
-import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
+import com.apm.jenkins.plugins.Metrics.interfaces.IPublishMetrics;
 
 import hudson.PluginManager;
 import hudson.PluginWrapper;
 import hudson.model.Project;
 import jenkins.model.Jenkins;
 
-public class JenkinsMetrics implements PublishMetrics {
+public class JenkinsMetricsImpl implements IPublishMetrics {
 
     private int plugins;
     private int projects;
@@ -23,7 +23,7 @@ public class JenkinsMetrics implements PublishMetrics {
     private int failedPlugins;
     private int inactivePlugins;
     private int updateablePlugins;
-    private static final Logger logger = Logger.getLogger(JenkinsMetrics.class.getName());
+    private static final Logger logger = Logger.getLogger(JenkinsMetricsImpl.class.getName());
 
     private void clear() {
         activePlugins = 0;
@@ -97,12 +97,12 @@ public class JenkinsMetrics implements PublishMetrics {
      * @param details
      */
     @Override
-    public void sendMetrics(Object details) {
+    public HashMap<String, Object> collectMetrics(Object details) {
         clear();
         Jenkins instance = (Jenkins) details;
         if (instance == null) {
             logger.severe("No Jenkins instance");
-            return;
+            return null;
         }
         ;
         setProjects(instance.getAllItems(Project.class).size());
@@ -121,7 +121,7 @@ public class JenkinsMetrics implements PublishMetrics {
                 incrementInactivePlugins();
         }
         
-        setHostName(APMUtil.getHostName(null));
+        setHostName(Utils.getHostName(null));
 
         HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");
         systemDict.put("hostName", getHostName());
@@ -131,14 +131,7 @@ public class JenkinsMetrics implements PublishMetrics {
         systemDict.put("plugins_failed", getFailedPlugins());
         systemDict.put("plugins_inactived", getInactivePlugins());
         systemDict.put("plugins_updateable", getUpdateablePlugins());
-
-        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
-        if (communicationClient != null) {
-            communicationClient.transmitData(systemDict);
-            clear();
-        } else {
-            logger.warning("Destination client is empty");
-        }
+        return systemDict; 
     }
 
 }

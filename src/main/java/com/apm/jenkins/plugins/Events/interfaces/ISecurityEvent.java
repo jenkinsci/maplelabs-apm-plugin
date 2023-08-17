@@ -2,7 +2,7 @@ package com.apm.jenkins.plugins.Events.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-public interface SecurityEvent extends Event {
+public interface ISecurityEvent extends IEvent {
     public String EVENT = "SecurityEvent";
 
     public static enum Type {
@@ -14,7 +14,7 @@ public interface SecurityEvent extends Event {
         FAILEDTOAUTHENTICATE,
     }
 
-    public boolean collectEventData(UserDetails details);
+    public void collectEventData(UserDetails details);
 
-    public boolean collectEventData(String name, Type type);
+    public void collectEventData(String name, Type type);
 }

@@ -12,24 +12,25 @@ import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 import hudson.slaves.ComputerListener;
 
-import com.apm.jenkins.plugins.Events.interfaces.ComputerEvent;
-import com.apm.jenkins.plugins.Events.Collector.ComputerEventCollector;
+import com.apm.jenkins.plugins.Events.interfaces.IComputerEvent;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Events.Collector.ComputerEventCollectorImpl;
 
 @Extension
-public class APMComputerListener extends ComputerListener {
-    ComputerEvent eventCollector;
-    private static final Logger logger = Logger.getLogger(APMComputerListener.class.getName());
+public class ComputerEvents extends ComputerListener {
+    IComputerEvent eventCollector;
+    private static final Logger logger = Logger.getLogger(ComputerEvents.class.getName());
 
     @Override
     public void onOffline(@Nonnull Computer computer, @CheckForNull OfflineCause cause) {
         try {
             logger.info("Start ComputerListener#onOffline");
-            eventCollector = new ComputerEventCollector();
-            eventCollector.collectEventData(computer, cause, ComputerEvent.Type.OFFLINE);
+            eventCollector = new ComputerEventCollectorImpl();
+            eventCollector.collectEventData(computer, cause, IComputerEvent.Type.OFFLINE);
+            Utils.sendEvent(eventCollector);
             logger.info("End ComputerListener#onOffline");
         } catch (Exception e) {
-            logger.severe("Failed to process computer offline event");
-            e.printStackTrace();
+            logger.severe("Failed to process computer offline event : "+e.toString());
         }
     }
 
@@ -37,12 +38,12 @@ public class APMComputerListener extends ComputerListener {
     public void onTemporarilyOffline(Computer computer, OfflineCause cause) {
         try {
             logger.info("Start ComputerListener#onTemporarilyOffline");
-            eventCollector = new ComputerEventCollector();
-            eventCollector.collectEventData(computer, cause, ComputerEvent.Type.TEMPORARILYOFFLINE);
+            eventCollector = new ComputerEventCollectorImpl();
+            eventCollector.collectEventData(computer, cause, IComputerEvent.Type.TEMPORARILYOFFLINE);
+            Utils.sendEvent(eventCollector);
             logger.info("End ComputerListener#onTemporarilyOffline");
         } catch (Exception e) {
-            logger.severe("Failed to process computer temporarily offline event");
-            e.printStackTrace();
+            logger.severe("Failed to process computer temporarily offline event : "+e.toString());
         }
     }
 
@@ -50,12 +51,12 @@ public class APMComputerListener extends ComputerListener {
     public void onTemporarilyOnline(Computer computer) {
         try {
             logger.info("Start ComputerListener#onTemporarilyOnline");
-            eventCollector = new ComputerEventCollector();
+            eventCollector = new ComputerEventCollectorImpl();
             eventCollector.collectEventData(computer);
+            Utils.sendEvent(eventCollector);
             logger.info("End ComputerListener#onTemporarilyOnline");
         } catch (Exception e) {
-            logger.severe("Failed to process computer temporarily online event");
-            e.printStackTrace();
+            logger.severe("Failed to process computer temporarily online event : "+e.toString());
         }
     }
 
@@ -64,12 +65,12 @@ public class APMComputerListener extends ComputerListener {
             throws IOException, InterruptedException {
         try {
             logger.info("Start ComputerListener#onLaunchFailure");
-            eventCollector = new ComputerEventCollector();
+            eventCollector = new ComputerEventCollectorImpl();
             eventCollector.collectEventData(computer, taskListener);
+            Utils.sendEvent(eventCollector);
             logger.info("End ComputerListener#onLaunchFailure");
         } catch (Exception e) {
-            logger.severe("Failed to process launch failure");
-            e.printStackTrace();
+            logger.severe("Failed to process launch failure : "+e.toString());
         }
     }
 }

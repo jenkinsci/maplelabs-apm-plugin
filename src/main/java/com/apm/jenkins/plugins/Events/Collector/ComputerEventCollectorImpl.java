@@ -1,13 +1,13 @@
 package com.apm.jenkins.plugins.Events.Collector;
 
-import com.apm.jenkins.plugins.Events.DataModel.AbstractEvent;
-import com.apm.jenkins.plugins.Events.interfaces.ComputerEvent;
+import com.apm.jenkins.plugins.Events.Data.AbstractEvent;
+import com.apm.jenkins.plugins.Events.interfaces.IComputerEvent;
 
 import hudson.model.Computer;
 import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 
-public class ComputerEventCollector extends AbstractEvent implements ComputerEvent {
+public class ComputerEventCollectorImpl extends AbstractEvent implements IComputerEvent {
 
     /**
      * This function will called when temp offline node is backs online
@@ -16,7 +16,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEventData(Computer computer) {
+    public void collectEventData(Computer computer) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " back online";
@@ -24,7 +24,6 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
         setTitle(title);
         setPriority(Priority.LOW);
         setAlert(AlertType.SUCCESS);
-        return sendEvent();
     }
 
     /**
@@ -35,7 +34,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEventData(Computer computer, OfflineCause cause, Type type) {
+    public void collectEventData(Computer computer, OfflineCause cause, Type type) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is ";
@@ -60,7 +59,6 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
                 setPriority(Priority.HIGH);
                 setAlert(AlertType.WARNING);
         }
-        return sendEvent();
     }
 
     /**
@@ -70,7 +68,7 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
      * @return true if request processed
      */
     @Override
-    public boolean collectEventData(Computer computer, TaskListener taskListener) {
+    public void collectEventData(Computer computer, TaskListener taskListener) {
         setEventType(EVENT);
         String nodeName = getNodeName(computer);
         String title = "Jenkins node " + nodeName + " is" + " failed to launch";
@@ -78,7 +76,6 @@ public class ComputerEventCollector extends AbstractEvent implements ComputerEve
         setTitle(title);
         setPriority(Priority.HIGH);
         setAlert(AlertType.ERROR);
-        return sendEvent();
     }
 
 }

@@ -2,6 +2,6 @@ package com.apm.jenkins.plugins.Client;
 
 import java.util.HashMap;
 
-public interface Client {
+public interface IClient {
     boolean transmitData(HashMap<String, Object> payload);
 }

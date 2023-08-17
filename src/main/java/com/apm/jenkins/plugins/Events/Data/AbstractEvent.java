@@ -1,15 +1,15 @@
-package com.apm.jenkins.plugins.Events.DataModel;
+package com.apm.jenkins.plugins.Events.Data;
 
 import java.util.HashMap;
 
 import hudson.model.Computer;
 import jenkins.model.Jenkins;
 
-import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Events.interfaces.Event;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Events.interfaces.IEvent;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
 
-public abstract class AbstractEvent implements Event {
+public abstract class AbstractEvent implements IEvent {
 
     private Long date;
     private String host;
@@ -21,8 +21,8 @@ public abstract class AbstractEvent implements Event {
     private Priority priority;
 
     public AbstractEvent() {
-        setHost(APMUtil.getHostName(null));
-        setDate(APMUtil.getCurrentTimeInMillis() / 1000);
+        setHost(Utils.getHostName(null));
+        setDate(Utils.getCurrentTimeInMillis() / 1000);
     }
 
     public void setDate(Long date) {
@@ -118,22 +118,22 @@ public abstract class AbstractEvent implements Event {
         }
     }
 
-    /**
-     * This function will assembel details and call client
-     * 
-     * @return
-     */
-    protected boolean sendEvent() {
-        if(APMUtil.getAPMGlobalDescriptor().getIsEventEnabled()) {
-            HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
-            payload.put("text", getText());
-            payload.put("host", getHost());
-            payload.put("title", getTitle());
-            payload.put("date_happened", getDate());
-            payload.put("priority", getPriority().name().toLowerCase());
-            payload.put("alert_type", getAlertType().name().toLowerCase());
-            return APMUtil.getAPMGlobalDescriptor().getDestinationClient().transmitData(payload);
-        }
-        return false;
-    }
+    // /**
+    //  * This function will assembel details and call client
+    //  * 
+    //  * @return
+    //  */
+    // protected boolean sendEvent() {
+    //     if(Util.getGlobalDescriptor().getIsEventEnabled()) {
+    //         HashMap<String, Object> payload = SnappyFlow.getSnappyflowTags(getEventType());
+    //         payload.put("text", getText());
+    //         payload.put("host", getHost());
+    //         payload.put("title", getTitle());
+    //         payload.put("date_happened", getDate());
+    //         payload.put("priority", getPriority().name().toLowerCase());
+    //         payload.put("alert_type", getAlertType().name().toLowerCase());
+    //         return Util.getGlobalDescriptor().getDestinationClient().transmitData(payload);
+    //     }
+    //     return false;
+    // }
 }

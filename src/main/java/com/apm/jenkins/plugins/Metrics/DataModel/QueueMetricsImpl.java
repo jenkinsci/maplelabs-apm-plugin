@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.logging.Logger;
 
-import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Client;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Client.IClient;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
-import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
+import com.apm.jenkins.plugins.Metrics.interfaces.IPublishMetrics;
 
 import hudson.model.Job;
 import hudson.model.Run;
@@ -15,7 +15,7 @@ import hudson.model.Queue;
 import hudson.model.Result;
 import jenkins.model.Jenkins;
 
-public class QueueMetrics implements PublishMetrics {
+public class QueueMetricsImpl implements IPublishMetrics {
 
     private int stuck;
     private int aborted;
@@ -25,7 +25,7 @@ public class QueueMetrics implements PublishMetrics {
     private int buildable;
     private int completed;
     private int queueSize;
-    private static final Logger logger = Logger.getLogger(QueueMetrics.class.getName());
+    private static final Logger logger = Logger.getLogger(QueueMetricsImpl.class.getName());
 
     private void clear() {
         stuck = 0;
@@ -108,11 +108,12 @@ public class QueueMetrics implements PublishMetrics {
      * @params details
      */
     @Override
-    public void sendMetrics(Object details) {
+    public HashMap<String, Object> collectMetrics(Object details) {
+        clear();
         Jenkins instance = (Jenkins) details;
         if (instance == null) {
             logger.severe("No Jenkins instance");
-            return;
+            return null;
         }
         Queue queue = instance.getQueue();
         final Queue.Item[] items = queue.getItems();
@@ -157,13 +158,7 @@ public class QueueMetrics implements PublishMetrics {
         jobDetails.put("queue_buildable", getBuildable());
         jobDetails.put("jobs_completed", getCompleted());
 
-        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
-        if (communicationClient != null) {
-            communicationClient.transmitData(jobDetails);
-            clear();
-        }else {
-            logger.warning("Destination client is empty");
-        }
+        return jobDetails;
     }
 
 }

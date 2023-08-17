@@ -1,6 +1,6 @@
 package com.apm.jenkins.plugins.Events.interfaces;
 
-public interface BuildEvent extends Event {
+public interface IBuildEvent extends IEvent {
     final float MINUTE = 60;
     final float HOUR = 3600;
     public String EVENT = "BuildEvent";
@@ -10,7 +10,7 @@ public interface BuildEvent extends Event {
         COMPLETED
     }
 
-    public boolean collectEventData(Type type);
+    public void collectEventData(Type type);
 
     static String getFormattedDuration(Long duration) {
         if (duration != null) {

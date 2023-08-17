@@ -8,13 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import hudson.Extension;
 import jenkins.security.SecurityListener;
 
-import com.apm.jenkins.plugins.Events.interfaces.SecurityEvent;
-import com.apm.jenkins.plugins.Events.Collector.SecurityEventCollector;
+import com.apm.jenkins.plugins.Events.interfaces.ISecurityEvent;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Events.Collector.SecurityEventCollectorImpl;
 
 @Extension
-public class APMSecurityListener extends SecurityListener {
-    SecurityEvent eventCollector;
-    private static final Logger logger = Logger.getLogger(APMSecurityListener.class.getName());
+public class SecurityEvents extends SecurityListener {
+    ISecurityEvent eventCollector;
+    private static final Logger logger = Logger.getLogger(SecurityEvents.class.getName());
 
     /**
      * This function will hit when user is created
@@ -25,12 +26,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void userCreated(@NonNull String username) {
         try {
             logger.info("Start SceurityListener#userCreated");
-            eventCollector = new SecurityEventCollector();
-            eventCollector.collectEventData(username, SecurityEvent.Type.USER_CREATED);
+            eventCollector = new SecurityEventCollectorImpl();
+            eventCollector.collectEventData(username, ISecurityEvent.Type.USER_CREATED);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#userCreated");
         } catch (Exception e) {
-            logger.severe("Failed to process User creation");
-            e.printStackTrace();
+            logger.severe("Failed to process User creation : "+e.toString());
         }
     }
 
@@ -43,12 +44,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void authenticated2(@NonNull UserDetails details) {
         try {
             logger.info("Start SceurityListener#authenticated2");
-            eventCollector = new SecurityEventCollector();
+            eventCollector = new SecurityEventCollectorImpl();
             eventCollector.collectEventData(details);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#authenticated2");
         } catch (Exception e) {
-            logger.severe("Failed to process User authenticated");
-            e.printStackTrace();
+            logger.severe("Failed to process User authenticated : "+e.toString());
         }
     }
 
@@ -61,12 +62,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void failedToAuthenticate(@NonNull String username) {
         try {
             logger.info("Start SceurityListener#failedToAuthenticate");
-            eventCollector = new SecurityEventCollector();
-            eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOAUTHENTICATE);
+            eventCollector = new SecurityEventCollectorImpl();
+            eventCollector.collectEventData(username, ISecurityEvent.Type.FAILEDTOAUTHENTICATE);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#failedToAuthenticate");
         } catch (Exception e) {
-            logger.severe("Failed to process User failed to auth");
-            e.printStackTrace();
+            logger.severe("Failed to process User failed to auth : "+e.toString());
         }
     }
 
@@ -79,12 +80,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void loggedIn(@NonNull String username) {
         try {
             logger.info("Start SceurityListener#loggedIn");
-            eventCollector = new SecurityEventCollector();
-            eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDIN);
+            eventCollector = new SecurityEventCollectorImpl();
+            eventCollector.collectEventData(username, ISecurityEvent.Type.LOGGEDIN);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#loggedIn");
         } catch (Exception e) {
-            logger.severe("Failed to process User login");
-            e.printStackTrace();
+            logger.severe("Failed to process User login : "+e.toString());
         }
     }
 
@@ -97,12 +98,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void failedToLogIn(@NonNull String username) {
         try {
             logger.info("Start SceurityListener#failedToLogIn");
-            eventCollector = new SecurityEventCollector();
-            eventCollector.collectEventData(username, SecurityEvent.Type.FAILEDTOLOGIN);
+            eventCollector = new SecurityEventCollectorImpl();
+            eventCollector.collectEventData(username, ISecurityEvent.Type.FAILEDTOLOGIN);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#failedToLogIn");
         } catch (Exception e) {
-            logger.severe("Failed to process User failed login");
-            e.printStackTrace();
+            logger.severe("Failed to process User failed login : "+e.toString());
         }
     }
 
@@ -115,12 +116,12 @@ public class APMSecurityListener extends SecurityListener {
     protected void loggedOut(@NonNull String username) {
         try {
             logger.info("Start SceurityListener#loggedOut");
-            eventCollector = new SecurityEventCollector();
-            eventCollector.collectEventData(username, SecurityEvent.Type.LOGGEDOUT);
+            eventCollector = new SecurityEventCollectorImpl();
+            eventCollector.collectEventData(username, ISecurityEvent.Type.LOGGEDOUT);
+            Utils.sendEvent(eventCollector);
             logger.info("End SceurityListener#loggedOut");
         } catch (Exception e) {
-            logger.severe("Failed to process User log out");
-            e.printStackTrace();
+            logger.severe("Failed to process User log out : "+e.toString());
         }
     }
 }

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Client;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Client.IClient;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlow;
-import com.apm.jenkins.plugins.Metrics.interfaces.PublishMetrics;
+import com.apm.jenkins.plugins.Metrics.interfaces.IPublishMetrics;
 
 import hudson.node_monitors.ResponseTimeMonitor.Data;
 import hudson.node_monitors.SwapSpaceMonitor.MemoryUsage2;
@@ -16,12 +16,12 @@ import hudson.node_monitors.DiskSpaceMonitorDescriptor.DiskSpace;
 
 import hudson.model.Computer;
 
-public class NodeMetrics implements PublishMetrics {
+public class NodeMetricsImpl implements IPublishMetrics {
     private int numNodes;
     private int numNodesOnline;
     private int numNodesOffline;
     private ArrayList<HashMap<String, Object>> compuerList;
-    private static final Logger logger = Logger.getLogger(NodeMetrics.class.getName());
+    private static final Logger logger = Logger.getLogger(NodeMetricsImpl.class.getName());
 
     // clear all values
     private void clear() {
@@ -71,7 +71,8 @@ public class NodeMetrics implements PublishMetrics {
      * @param details
      */
     @Override
-    public void sendMetrics(Object details) {
+    public HashMap<String, Object> collectMetrics(Object details) {
+        clear();
         if (details instanceof Computer[]) {
             Computer[] computerList = (Computer[]) details;
             int nodeOnline = 0, nodeOffline = 0;
@@ -124,7 +125,7 @@ public class NodeMetrics implements PublishMetrics {
             setNumNodesOffline(nodeOffline);
         } else {
             logger.severe("No Computer instance");
-            return;
+            return null;
         }
 
         HashMap<String, Object> computerDetails = SnappyFlow.getSnappyflowTags("nodeStat");
@@ -133,13 +134,7 @@ public class NodeMetrics implements PublishMetrics {
         computerDetails.put("nodes_online", getNumNodesOnline());
         computerDetails.put("nodes_offline", getNumNodesOffline());
 
-        Client communicationClient = APMUtil.getAPMGlobalDescriptor().getDestinationClient();
-        if (communicationClient != null) {
-            communicationClient.transmitData(computerDetails);
-            clear();
-        }else {
-            logger.warning("Destination client is empty");
-        }
+        return computerDetails;
     }
 
 }

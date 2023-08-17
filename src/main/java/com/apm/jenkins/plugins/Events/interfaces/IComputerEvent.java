@@ -4,7 +4,7 @@ import hudson.model.Computer;
 import hudson.model.TaskListener;
 import hudson.slaves.OfflineCause;
 
-public interface ComputerEvent extends Event {
+public interface IComputerEvent extends IEvent {
     public String EVENT = "SystemEvent";
 
     public static enum Type {
@@ -14,9 +14,9 @@ public interface ComputerEvent extends Event {
         TEMPORARILYOFFLINE,
     }
 
-    public boolean collectEventData(Computer computer);
+    public void collectEventData(Computer computer);
 
-    public boolean collectEventData(Computer computer, TaskListener taskListener);
+    public void collectEventData(Computer computer, TaskListener taskListener);
 
-    public boolean collectEventData(Computer computer, OfflineCause cause, Type type);
+    public void collectEventData(Computer computer, OfflineCause cause, Type type);
 }

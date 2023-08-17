@@ -7,11 +7,11 @@ import org.json.JSONObject;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Utils;
 
-public class SnappyFlowEs extends SnappyFlow {
+public class SnappyFlowEsImpl extends SnappyFlow {
 
-	private static final Logger logger = Logger.getLogger(SnappyFlowEs.class.getName());
+	private static final Logger logger = Logger.getLogger(SnappyFlowEsImpl.class.getName());
 
 	/**
 	 * This function will set http header
@@ -22,22 +22,22 @@ public class SnappyFlowEs extends SnappyFlow {
 	 */
 	@Override
 	protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
-		String projName = APMUtil.getAPMGlobalDescriptor().getTargetProjectName();
+		String projName = Utils.getGlobalDescriptor().getTargetProjectName();
 
 		if (projName == null) {
 			logger.severe("ProjectName in is null, please fill the required details of snappyflow in Manage Jenkins");
 			return;
 		}
-		String targetUsername = APMUtil.getAPMGlobalDescriptor().getTargetESUserName();
-		String targetPassword = APMUtil.getAPMGlobalDescriptor().getTargetESPassword();
+		String targetUsername = Utils.getGlobalDescriptor().getTargetESUserName();
+		String targetPassword = Utils.getGlobalDescriptor().getTargetESPassword();
 
 		targetToken.append(getBasicAuthenticationHeader(targetUsername, targetPassword));
 		contentType.append("application/json");
 
-		String ds_host = APMUtil.getAPMGlobalDescriptor().getTargetHost();
-		String ds_port = APMUtil.getAPMGlobalDescriptor().getTargetPort();
-		String ds_protocol = APMUtil.getAPMGlobalDescriptor().getTargetProtocol();
-		String profile_id = APMUtil.getAPMGlobalDescriptor().getTargetProfileName();
+		String ds_host = Utils.getGlobalDescriptor().getTargetHost();
+		String ds_port = Utils.getGlobalDescriptor().getTargetPort();
+		String ds_protocol = Utils.getGlobalDescriptor().getTargetProtocol();
+		String profile_id = Utils.getGlobalDescriptor().getTargetProfileName();
 		String ds_index = "metric-" + profile_id + "-" + projName + "-$_write";
 		String ds_type = "_doc";
 		targetApiUrl.append(ds_protocol + "://" + ds_host + ":" + ds_port + "/" + ds_index + "/" + ds_type);

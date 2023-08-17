@@ -24,10 +24,10 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
-import com.apm.jenkins.plugins.APMUtil;
-import com.apm.jenkins.plugins.Client.Client;
+import com.apm.jenkins.plugins.Utils;
+import com.apm.jenkins.plugins.Client.IClient;
 
-public abstract class SnappyFlow implements Client {
+public abstract class SnappyFlow implements IClient {
 
 	private HttpPost post;
 	private HttpClient client;
@@ -58,11 +58,11 @@ public abstract class SnappyFlow implements Client {
 	 */
 	public static HashMap<String, Object> getSnappyflowTags(String docType) {
 
-		long currTime = APMUtil.getCurrentTimeInMillis();
+		long currTime = Utils.getCurrentTimeInMillis();
 		HashMap<String, Object> result = new HashMap<>();
-		String appName = APMUtil.getAPMGlobalDescriptor().getTargetAppName();
-		String instName = APMUtil.getAPMGlobalDescriptor().getTargetInstanceName();
-		String projectName = APMUtil.getAPMGlobalDescriptor().getTargetProjectName();
+		String appName = Utils.getGlobalDescriptor().getTargetAppName();
+		String instName = Utils.getGlobalDescriptor().getTargetInstanceName();
+		String projectName = Utils.getGlobalDescriptor().getTargetProjectName();
 
 		if (projectName != null)
 			result.put("_tag_projectName", projectName);
@@ -114,8 +114,7 @@ public abstract class SnappyFlow implements Client {
 						.setSSLSocketFactory(socketFactory)
 						.build();
 			} catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
-				logger.severe("Http creation error");
-				e.printStackTrace();
+				logger.severe("Http creation error : "+e.toString());
 			}
 
 		}
@@ -150,8 +149,7 @@ public abstract class SnappyFlow implements Client {
 			String responseBody = EntityUtils.toString((response).getEntity());
 			logger.info(responseBody);
 		} catch (IOException e) {
-			logger.severe("Http Post error : "+e.getMessage());
-			e.printStackTrace();
+			logger.severe("Http Post error : "+e.toString());
 		}
 		return responseCode;
 	}

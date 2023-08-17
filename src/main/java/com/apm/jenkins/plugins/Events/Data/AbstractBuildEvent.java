@@ -1,11 +1,11 @@
-package com.apm.jenkins.plugins.Events.DataModel;
+package com.apm.jenkins.plugins.Events.Data;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.apm.jenkins.plugins.APMUtil;
+import com.apm.jenkins.plugins.Utils;
 
 import hudson.EnvVars;
 import hudson.model.Job;
@@ -55,7 +55,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         setBuildNumber(Integer.toString(run.getNumber()));
 
         // Set Hostname
-        setHostname(APMUtil.getHostName(envVars));
+        setHostname(Utils.getHostName(envVars));
 
         // build url
         setBuildUrl(envVars.get("BUILD_URL"));
@@ -65,12 +65,12 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
         setParentName(parentJob.getName());
         setJobName(parentJob.getFullName());
 
-        setHost(APMUtil.getHostName(envVars));
-        setDate(APMUtil.getCurrentTimeInMillis() / 1000);
+        setHost(Utils.getHostName(envVars));
+        setDate(Utils.getCurrentTimeInMillis() / 1000);
     }
 
     protected String getJobName(String value) {
-        return APMUtil.getValue(jobName, value);
+        return Utils.getValue(jobName, value);
     }
 
     protected void setJobName(String jobName) {
@@ -82,7 +82,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected String getResult(String value) {
-        return APMUtil.getValue(result, value);
+        return Utils.getValue(result, value);
     }
 
     protected void setResult(String result) {
@@ -94,7 +94,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected String getHostName(String value) {
-        return APMUtil.getValue(hostname, value);
+        return Utils.getValue(hostname, value);
     }
 
     protected void setHostname(String hostname) {
@@ -106,7 +106,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected String getBuildUrl(String value) {
-        return APMUtil.getValue(buildUrl, value);
+        return Utils.getValue(buildUrl, value);
     }
 
     protected void setBuildUrl(String buildUrl) {
@@ -118,7 +118,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected String getBuildNumber(String value) {
-        return APMUtil.getValue(buildNumber, value);
+        return Utils.getValue(buildNumber, value);
     }
 
     protected void setBuildNumber(String buildNumber) {
@@ -130,7 +130,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected Long getDuration(Long value) {
-        return APMUtil.getValue(duration, value);
+        return Utils.getValue(duration, value);
     }
 
     protected void setDuration(Long duration) {
@@ -142,7 +142,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected Long getEndTime(Long value) {
-        return APMUtil.getValue(endTime, value);
+        return Utils.getValue(endTime, value);
     }
 
     protected void setEndTime(Long endTime) {
@@ -154,7 +154,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected Long getStartTime(Long value) {
-        return APMUtil.getValue(startTime, value);
+        return Utils.getValue(startTime, value);
     }
 
     protected void setStartTime(Long startTime) {
@@ -218,7 +218,7 @@ public abstract class AbstractBuildEvent extends AbstractEvent {
     }
 
     protected String getParentName(String defaultValue) {
-        return APMUtil.getValue(parentName, defaultValue);
+        return Utils.getValue(parentName, defaultValue);
     }
 
     /**
