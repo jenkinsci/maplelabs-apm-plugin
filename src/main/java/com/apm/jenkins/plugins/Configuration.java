@@ -50,8 +50,8 @@ public class Configuration extends GlobalConfiguration {
 	private String targetPassword = null;
 
 	// enable/diable
-	private boolean isEventEnabled = true;
-	private boolean isMetricEnabled = true;
+	private boolean isEventEnabled = false;
+	private boolean isMetricEnabled = false;
 
 	@DataBoundConstructor
 	public Configuration() {

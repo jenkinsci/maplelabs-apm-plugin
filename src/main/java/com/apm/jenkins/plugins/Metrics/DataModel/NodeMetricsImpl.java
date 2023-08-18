@@ -128,7 +128,7 @@ public class NodeMetricsImpl implements IPublishMetrics {
             return null;
         }
 
-        HashMap<String, Object> computerDetails = SnappyFlow.getSnappyflowTags("nodeStat");
+        HashMap<String, Object> computerDetails = SnappyFlow.getSnappyflowTags("nodeMetircs");
         computerDetails.put("nodes_total", getNumNodes());
         computerDetails.put("computers", getComputerDetails());
         computerDetails.put("nodes_online", getNumNodesOnline());

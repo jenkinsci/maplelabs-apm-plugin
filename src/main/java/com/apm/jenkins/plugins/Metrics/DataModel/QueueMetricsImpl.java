@@ -148,7 +148,7 @@ public class QueueMetricsImpl implements IPublishMetrics {
                 }
             }
         }
-        HashMap<String, Object> jobDetails = SnappyFlow.getSnappyflowTags("jobStat");
+        HashMap<String, Object> jobDetails = SnappyFlow.getSnappyflowTags("jobMetrics");
         jobDetails.put("queue_stuck", getStuck());
         jobDetails.put("queue_size", getQueueSize());
         jobDetails.put("queue_pending", getPending());

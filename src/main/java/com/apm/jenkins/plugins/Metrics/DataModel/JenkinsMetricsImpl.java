@@ -123,14 +123,14 @@ public class JenkinsMetricsImpl implements IPublishMetrics {
         
         setHostName(Utils.getHostName(null));
 
-        HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemStat");
+        HashMap<String, Object> systemDict = SnappyFlow.getSnappyflowTags("systemMetrics");
         systemDict.put("hostName", getHostName());
         systemDict.put("project_total", getProjects());
         systemDict.put("plugin_total", getPlugins());
-        systemDict.put("plugins_actived", getActivePlugins());
+        systemDict.put("plugins_active", getActivePlugins());
         systemDict.put("plugins_failed", getFailedPlugins());
-        systemDict.put("plugins_inactived", getInactivePlugins());
-        systemDict.put("plugins_updateable", getUpdateablePlugins());
+        systemDict.put("plugins_inactive", getInactivePlugins());
+        systemDict.put("plugins_updatable", getUpdateablePlugins());
         return systemDict; 
     }
 

@@ -184,12 +184,12 @@ public class Utils {
     }
 
 	/**
-	 * This function will send metrics event
+	 * This function will send metrics if Enable Metric is selected
 	 * @param payload
 	 * @return
 	 */
 	public static boolean sendMetrics(HashMap<String,Object> payload) {
-		if(Utils.getGlobalDescriptor().getIsEventEnabled()) {
+		if(Utils.getGlobalDescriptor().getIsMetricEnabled()) {
             return Utils.getGlobalDescriptor().getDestinationClient().transmitData(payload);
         }
         return false;
