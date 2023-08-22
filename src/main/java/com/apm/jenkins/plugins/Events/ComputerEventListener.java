@@ -17,9 +17,9 @@ import com.apm.jenkins.plugins.Utils;
 import com.apm.jenkins.plugins.Events.Collector.ComputerEventCollectorImpl;
 
 @Extension
-public class ComputerEvents extends ComputerListener {
+public class ComputerEventListener extends ComputerListener {
     IComputerEvent eventCollector;
-    private static final Logger logger = Logger.getLogger(ComputerEvents.class.getName());
+    private static final Logger logger = Logger.getLogger(ComputerEventListener.class.getName());
 
     @Override
     public void onOffline(@Nonnull Computer computer, @CheckForNull OfflineCause cause) {

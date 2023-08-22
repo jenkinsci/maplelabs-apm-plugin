@@ -49,6 +49,8 @@ public class MetricsCollector extends PeriodicWork {
                 logger.severe("Failed to compute and send Jenkins metrics : "+e.toString());
             }
         }
+        else {
+            logger.fine("Metric reporting is not enabled");
+        }
     }
-
 }

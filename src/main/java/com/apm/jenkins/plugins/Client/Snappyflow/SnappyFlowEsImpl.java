@@ -41,8 +41,8 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 		String ds_index = "metric-" + profile_id + "-" + projName + "-$_write";
 		String ds_type = "_doc";
 		targetApiUrl.append(ds_protocol + "://" + ds_host + ":" + ds_port + "/" + ds_index + "/" + ds_type);
-		logger.info("targetApi URL for ES is:" + targetApiUrl.toString());
-		logger.info("Authroization for ES is: " + targetToken.toString());
+		logger.fine("targetApi URL for ES is:" + targetApiUrl.toString());
+		logger.fine("Authroization for ES is: " + targetToken.toString());
 	}
 
 	/**

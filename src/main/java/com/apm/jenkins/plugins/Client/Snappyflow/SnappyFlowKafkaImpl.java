@@ -32,8 +32,8 @@ public class SnappyFlowKafkaImpl extends SnappyFlow {
         targetToken.append(token);
         contentType.append("application/vnd.kafka.json.v2+json");
         targetApiUrl.append(protocol + "://" + host + ":" + port + "/" + path + "/topics/metric-" + profile );
-        logger.info("targetApi URL for Kafka is: " + targetApiUrl.toString());
-        logger.info("Authroization for Kafka is: " + targetToken.toString());
+        logger.fine("targetApi URL for Kafka is: " + targetApiUrl.toString());
+        logger.fine("Authroization for Kafka is: " + targetToken.toString());
     }
 
     /**

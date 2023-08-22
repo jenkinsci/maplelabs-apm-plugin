@@ -13,9 +13,9 @@ import com.apm.jenkins.plugins.Utils;
 import com.apm.jenkins.plugins.Events.Collector.SecurityEventCollectorImpl;
 
 @Extension
-public class SecurityEvents extends SecurityListener {
+public class SecurityEventListener extends SecurityListener {
     ISecurityEvent eventCollector;
-    private static final Logger logger = Logger.getLogger(SecurityEvents.class.getName());
+    private static final Logger logger = Logger.getLogger(SecurityEventListener.class.getName());
 
     /**
      * This function will hit when user is created

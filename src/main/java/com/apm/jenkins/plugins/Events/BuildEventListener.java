@@ -16,9 +16,9 @@ import com.apm.jenkins.plugins.Events.interfaces.IBuildEvent;
 import com.apm.jenkins.plugins.Events.Collector.BuildEventCollectorImpl;
 
 @Extension
-public class BuildEvents extends RunListener<Run> {
+public class BuildEventListener extends RunListener<Run> {
     private IBuildEvent buildCollector;
-    private static final Logger logger = Logger.getLogger(BuildEvents.class.getName());
+    private static final Logger logger = Logger.getLogger(BuildEventListener.class.getName());
 
     @Override
     public void onStarted(Run run, TaskListener listener) {

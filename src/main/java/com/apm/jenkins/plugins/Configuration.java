@@ -12,6 +12,7 @@ import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowKafkaImpl;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
+import hudson.util.Secret;
 import jenkins.model.GlobalConfiguration;
 
 @Extension
@@ -156,7 +157,7 @@ public class Configuration extends GlobalConfiguration {
 	}
 
 	public void setTargetESPassword(String password) {
-		this.targetESPassword = password;
+		this.targetESPassword = password;		
 	}
 
 	public String getTargetESPassword() {
@@ -196,7 +197,7 @@ public class Configuration extends GlobalConfiguration {
 	}
 
 	public void setTargetPassword(String password) {
-		this.targetPassword = password;
+		this.targetPassword = password;		
 	}
 
 	public String getTargetPassword() {
@@ -235,7 +236,7 @@ public class Configuration extends GlobalConfiguration {
 	 */
 	private void setESDetails(String username, String password) {
 		setTargetESUserName(username);
-		setTargetESPassword(password);
+		setTargetESPassword(password);	
 	}
 
 	/**
@@ -280,7 +281,7 @@ public class Configuration extends GlobalConfiguration {
 
 	/**
 	 * This function will invoke when user click apply/save in config page
-	 * This function will store the snappyflow config details
+	 * This function will store the Target configuration details
 	 */
 	@Override
 	public boolean configure(final StaplerRequest req, final JSONObject formData) {
@@ -298,7 +299,7 @@ public class Configuration extends GlobalConfiguration {
 		
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
-		setTargetProtocol(formData.getString("targetProtocol"));
+		setTargetProtocol(formData.getString("targetProtocol"));		
 		if (formData.containsKey("targetDestination")) {
 			setTargetDestination(formData.getString("targetDestination"));
 			switch (getTargetDestination()) {
@@ -311,20 +312,28 @@ public class Configuration extends GlobalConfiguration {
 						setTargetSnappyFlowDestination(formData.getString("targetSnappyFlowDestination"));
 						switch (getTargetSnappyFlowDestination()) {
 							case ES:
-								String pass = formData.getString("targetESPassword");
+								String encPasswd = formData.optString("targetESPassword", "");
+    							Secret decSecret = Secret.fromString(encPasswd);
+    							String pass = decSecret.getPlainText();
+								
 								setESDetails(
 										formData.getString("targetESUserName"),
-										(pass.length() == 0 ? null : pass));
+										(pass.length() == 0 ? null : pass));								
+								
 								destinationClient = new SnappyFlowEsImpl();
 								setOthersDetail(null, null);
 								setKafkaDetails(null, null, null);
 								break;
 							case KAFKA:
-								String token = formData.getString("targetKafkaToken");
-								setKafkaDetails(
+								String encKPasswd = formData.optString("targetKafkaToken", "");
+    							Secret decKSecret = Secret.fromString(encKPasswd);
+    							String token = decKSecret.getPlainText();
+
+								 setKafkaDetails(
 										formData.getString("targetKafkaPath"),
 										token.length() == 0 ? null : token,
 										formData.getString("targetKafkaTopic"));
+
 								destinationClient = new SnappyFlowKafkaImpl();
 								setOthersDetail(null, null);
 								setESDetails(null, null);
@@ -340,9 +349,12 @@ public class Configuration extends GlobalConfiguration {
 					}
 					break;
 				case OTHERS:
-					String pass = formData.getString("targetPassword");
+					String encOPasswd = formData.optString("targetPassword", "");
+    				Secret decOSecret = Secret.fromString(encOPasswd);
+    				String oPass = decOSecret.getPlainText();
+					
 					setTargetUserName(formData.getString("targetUserName"));
-					setTargetPassword(pass.length() == 0 ? null : pass);
+					setTargetPassword(oPass.length() == 0 ? null : oPass);
 					setSnappyConfigNull(true);
 
 					break;

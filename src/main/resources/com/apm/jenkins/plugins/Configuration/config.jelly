@@ -12,9 +12,9 @@
     so it should be straightforward to find them.
 -->
 
-	<f:section title="APM Jenkins Plugin">
+	<f:section title="APM Maplelabs Plugin">
 	<f:entry title="Target Destination">
-	<f:description>Specify if you want to forward metrics to Snappyflow or another destination.</f:description>
+	<f:description>Specify Target destination details below to forward metrics </f:description>
 		<f:entry title="Host" field="targetHost" description="Target url" >
 			<f:textbox field="targetHost" default="${targetHost}" checkMethod="post" />
 		</f:entry>
@@ -54,7 +54,7 @@
 				</f:entry>
 
 				<f:entry title="ES Password" field="targetESPassword">
-					<f:password field="targetESPassword" default="${targetESPassword}" checkMethod="post" />
+					<f:password field="targetESPassword" />
 				</f:entry>
 			</f:radioBlock>
 
@@ -62,7 +62,7 @@
 				checked="${instance.targetSnappyFlowDestination == 'SnappyflowKafka'}" inline="true">
 
 				<f:entry title="token" field="targetKafkaToken">
-					<f:password field="targetKafkaToken" default="${targetKafkaToken}" checkMethod="post" />
+					<f:password field="targetKafkaToken" />
 				</f:entry>
 
 				<f:entry title="Path" field="targetKafkaPath" description="Kafka Path" >
@@ -82,16 +82,16 @@
 			</f:entry>
 
             <f:entry title="Password" field="targetPassword">
-				<f:password field="targetPassword" default="${targetPassword}" checkMethod="post" />
+				<f:password field="targetPassword" />
 			</f:entry>       
 		</f:radioBlock>
 </f:entry>
 
-<f:entry title="Enable Event" field="isEventEnabled" description="If checked, Event will send to specific end point.">
+<f:entry title="Enable Event Reporting" field="isEventEnabled" description="Checking this, enables Reporting of Events.">
 	<f:checkbox/>
 </f:entry>
 
-<f:entry title="Enable Metric" field="isMetricEnabled" description="If checked, Metric will send to specific end point.">
+<f:entry title="Enable Metric Reporting" field="isMetricEnabled" description="Checking this, enables Reporting of Metrics.">
 	<f:checkbox/>
 </f:entry>
 

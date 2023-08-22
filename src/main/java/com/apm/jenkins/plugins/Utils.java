@@ -21,7 +21,7 @@ import hudson.ExtensionList;
 
 public class Utils {
 	private static final Integer MAX_HOSTNAME = 255;
-	public static final long publisherTime = TimeUnit.MINUTES.toMillis(1);
+	public static final long publisherTime = TimeUnit.MINUTES.toMillis(3);
 	private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
 	/**

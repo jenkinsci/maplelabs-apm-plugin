@@ -139,15 +139,15 @@ public abstract class SnappyFlow implements IClient {
 				logger.info(header.getName() + ":" + header.getValue());
 			}
 
-			logger.info("Posted Data is here:---------------");
-			logger.info(new String(post.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8));
+			logger.fine("Posted Data is here:---------------");
+			logger.fine(new String(post.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8));
 		
 			logger.info("\nSending 'POST' request to URL : " + post.getURI());
 			HttpResponse response = getClient().execute(post);
 			responseCode = response.getStatusLine().getStatusCode();
-			logger.info("================================================");
+			logger.fine("================================================");
 			String responseBody = EntityUtils.toString((response).getEntity());
-			logger.info(responseBody);
+			logger.fine(responseBody);
 		} catch (IOException e) {
 			logger.severe("Http Post error : "+e.toString());
 		}
