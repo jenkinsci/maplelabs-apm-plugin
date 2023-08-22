@@ -50,7 +50,7 @@ APM jenkins plugin has following modules
 - Once the metrics are received by snappyflow, they are indexed into ES/kafka on snappyflow at regular intervals.
 - Once the events are generated, they are also reported to Snappyflow.
   
-<img src="https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/apmJenkinsPluginConfiguration.png" alt="APMConfiguration">
+<img src="https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/apmPluginConfiguration.png" alt="APMConfiguration">
 
 **Visualize with snappyflow Dashboards:** 
 
