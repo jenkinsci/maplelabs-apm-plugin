@@ -104,20 +104,20 @@ public class NodeMetricsImpl implements IPublishMetrics {
                 if (moniter != null) {
                     // RAM, SWAP
                     MemoryUsage2 memory = (MemoryUsage2) moniter.get("hudson.node_monitors.SwapSpaceMonitor");
-                    computerMap.put("swap_total(in GB)", memory != null ? Float.parseFloat(convertLongToGB(memory.getTotalSwapSpace())) : null);
-                    computerMap.put("swap_available(in GB)", memory != null ? Float.parseFloat(convertLongToGB(memory.getAvailableSwapSpace())) : null);
-                    computerMap.put("memory_total(in GB)", memory != null ? Float.parseFloat(convertLongToGB(memory.getTotalPhysicalMemory())) : null);
-                    computerMap.put("memory_available(in GB)", memory != null ? Float.parseFloat(convertLongToGB(memory.getAvailablePhysicalMemory())) : null);
+                    computerMap.put("swap_total_in_GB", memory != null ? Float.parseFloat(convertLongToGB(memory.getTotalSwapSpace())) : null);
+                    computerMap.put("swap_available_in_GB", memory != null ? Float.parseFloat(convertLongToGB(memory.getAvailableSwapSpace())) : null);
+                    computerMap.put("memory_total_in_GB", memory != null ? Float.parseFloat(convertLongToGB(memory.getTotalPhysicalMemory())) : null);
+                    computerMap.put("memory_available_in_GB", memory != null ? Float.parseFloat(convertLongToGB(memory.getAvailablePhysicalMemory())) : null);
 
                     // Disk
                     DiskSpace diskSpaceMonitor = (DiskSpace) moniter.get("hudson.node_monitors.DiskSpaceMonitor");
                     computerMap.put("disk_path", diskSpaceMonitor != null ? diskSpaceMonitor.getPath() : null);
-                    computerMap.put("disk_available(in GB)", diskSpaceMonitor != null ? Float.parseFloat(convertLongToGB(diskSpaceMonitor.size)) : null);
+                    computerMap.put("disk_available_in_GB", diskSpaceMonitor != null ? Float.parseFloat(convertLongToGB(diskSpaceMonitor.size)) : null);
 
                     // Temp
                     diskSpaceMonitor = (DiskSpace) moniter.get("hudson.node_monitors.TemporarySpaceMonitor");
                     computerMap.put("temp_path", diskSpaceMonitor != null ? diskSpaceMonitor.getPath() : null);
-                    computerMap.put("temp_available(in GB)", diskSpaceMonitor != null ? Float.parseFloat(convertLongToGB(diskSpaceMonitor.size)) : null);
+                    computerMap.put("temp_available_in_GB", diskSpaceMonitor != null ? Float.parseFloat(convertLongToGB(diskSpaceMonitor.size)) : null);
 
                     // Response
                     Data responseData = (Data) moniter.get("hudson.node_monitors.ResponseTimeMonitor");
