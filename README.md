@@ -15,10 +15,29 @@ It takes four simple steps to gain observability into Jenkins CI/CD pipeline.
 
 # Plugin user interface
 To configure your snappyflow-jenkins-Plugin, navigate to the Manage Jenkins -> Configure System page on your Jenkins installation.  
-Once there, scroll down to find the SnappyflowPlugin section:
+Once there, scroll down to find the APM Maplelabs Plugin section:
 
-![Configure SnappyFlow](https://user-images.githubusercontent.com/12271765/224924743-38e9a3d8-a062-435a-97c0-bda3143dd2a6.png)
+![Configure SnappyFlow](https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/apmPluginConfiguration.png)
+# Description of the input fields:
+**Target Url** : It's the end point address where the data will be posted by the plugin
 
+**Port Number** : The port at which the end point listens. For Elastic Search, the port number is 9200 and for Kafka 343.
+
+**Protocol** : The protocal supported is https.
+
+### Configuring the SnappyFlow option:
+Here the snappyflow project name, application name, instance name, profile which is same for both, elastic search as well as Kafka.
+
+### Configuring the Elastic Search option:
+Provide the username and the password to enable the elastic search.
+
+### Configuring the Kafka option:
+Provide token for authorization, kafka path and the kafka topic(which is optional currently,future enhancements TBD).
+
+### Configuring the other option:
+Currently the option is not supported by the plugin. The destination url and other are TBD.
+
+After this the user can either enable the event reporting or the metric reporitng or both based on the requirement.
 # Contribution
 This plugin is in development phase currently.  
 If you are willing to contribute, follow below link  
