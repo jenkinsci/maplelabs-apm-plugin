@@ -12,9 +12,9 @@ import java.io.IOException;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.apm.jenkins.plugins.Utils;
-import com.apm.jenkins.plugins.Metrics.DataModel.NodeMetricsImpl;
-import com.apm.jenkins.plugins.Metrics.DataModel.QueueMetricsImpl;
-import com.apm.jenkins.plugins.Metrics.DataModel.JenkinsMetricsImpl;
+import com.apm.jenkins.plugins.Metrics.Data.NodeMetricsImpl;
+import com.apm.jenkins.plugins.Metrics.Data.QueueMetricsImpl;
+import com.apm.jenkins.plugins.Metrics.Data.JenkinsMetricsImpl;
 import com.apm.jenkins.plugins.Metrics.interfaces.IPublishMetrics;
 
 
