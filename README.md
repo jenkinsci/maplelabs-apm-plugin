@@ -38,6 +38,9 @@ Provide token for authorization, kafka path and the kafka topic(which is optiona
 Currently the option is not supported by the plugin. The destination url and other are TBD.
 
 After this the user can either enable the event reporting or the metric reporitng or both based on the requirement.
+
+### Metric reporting interval:
+This is the interval at which the metrics are collected and reported to the end point. This value is 2 mins by default which can be changed as per the reqirement. If any change in the reporting interval is made, jenkins must be restarted to apply the changes.
 # Contribution
 This plugin is in development phase currently.  
 If you are willing to contribute, follow below link  
