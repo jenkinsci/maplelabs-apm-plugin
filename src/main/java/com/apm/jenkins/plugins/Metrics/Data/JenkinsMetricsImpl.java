@@ -105,7 +105,7 @@ public class JenkinsMetricsImpl implements IPublishMetrics {
             return null;
         }
         ;
-        setProjects(instance.getAllItems(Project.class).size());
+        setProjects(instance.getAllItems().size());
 
         PluginManager pluginManager = instance.getPluginManager();
         List<PluginWrapper> plugins = pluginManager.getPlugins();
