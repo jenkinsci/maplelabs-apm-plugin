@@ -40,7 +40,7 @@ public class ComputerEventCollectorImpl extends AbstractEvent implements IComput
         String title = "Jenkins node " + nodeName + " is ";
         switch (type) {
             case TEMPORARILYOFFLINE:
-                title += "temporarily offline";
+                title += "offline temporarily";
                 setText(title);
                 setTitle(title);
                 setPriority(Priority.NORMAL);

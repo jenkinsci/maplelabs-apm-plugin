@@ -32,23 +32,20 @@ public abstract class SnappyFlow implements IClient {
 	private HttpPost post;
 	private HttpClient client;
 	private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());
+	boolean previousIsEventValue=false;
 
 	// This will create post method
-	protected void createPost() {
-		if(post != null) {
-			return;
-		} else {
-			StringBuilder targetToken = new StringBuilder();
-			StringBuilder contentType = new StringBuilder();
-			StringBuilder targetApiUrl = new StringBuilder();
-			getHeaders(contentType, targetToken, targetApiUrl);
-	
-			post = new HttpPost(targetApiUrl.toString());
-	
-			post.setHeader("Content-Type", contentType.toString());
-			post.setHeader("Authorization", targetToken.toString());
-			post.setHeader("Accept", "application/vnd.kafka.v2+json");
-		}
+	protected void createPost(boolean isEvent) {
+		StringBuilder targetToken = new StringBuilder();
+		StringBuilder contentType = new StringBuilder();
+		StringBuilder targetApiUrl = new StringBuilder();
+		getHeaders(contentType, targetToken, targetApiUrl,isEvent);
+
+		post = new HttpPost(targetApiUrl.toString());
+
+		post.setHeader("Content-Type", contentType.toString());
+		post.setHeader("Authorization", targetToken.toString());
+		post.setHeader("Accept", "application/vnd.kafka.v2+json");
 	}
 	/**
 	 * This function will default tags for snappyflow
@@ -128,10 +125,10 @@ public abstract class SnappyFlow implements IClient {
 	 * @return
 	 */
 	@RequirePOST
-	protected int postRequest(StringEntity data) {
+	protected int postRequest(StringEntity data,boolean isEvent) {
 		int responseCode = 0;
 		try {
-			if(post == null) createPost();
+			if(post == null || isEventToggled(isEvent)) createPost(isEvent);
 			post.setEntity(data);
 			logger.info("Post Headers:---------------");
 			Header[] headers = post.getAllHeaders();
@@ -153,7 +150,15 @@ public abstract class SnappyFlow implements IClient {
 		}
 		return responseCode;
 	}
+	protected boolean isEventToggled(boolean currentValue){
+		boolean toggled = (currentValue != previousIsEventValue);
+
+        // Update the previous value with the current value
+        previousIsEventValue = currentValue;
+
+        return toggled;
+	}
 
 	abstract protected void getHeaders(StringBuilder contentType, StringBuilder targetToken,
-			StringBuilder targetApiUrl);
+			StringBuilder targetApiUrl,boolean isEvent);
 }

@@ -21,7 +21,7 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 	 * @param targetApiUrl
 	 */
 	@Override
-	protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
+	protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl, boolean isEvent) {
 		String projName = Utils.getGlobalDescriptor().getTargetProjectName();
 
 		if (projName == null) {
@@ -34,11 +34,17 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 		targetToken.append(getBasicAuthenticationHeader(targetUsername, targetPassword));
 		contentType.append("application/json");
 
+		String ds_index="";
 		String ds_host = Utils.getGlobalDescriptor().getTargetHost();
 		String ds_port = Utils.getGlobalDescriptor().getTargetPort();
 		String ds_protocol = Utils.getGlobalDescriptor().getTargetProtocol();
 		String profile_id = Utils.getGlobalDescriptor().getTargetProfileName();
-		String ds_index = "metric-" + profile_id + "-" + projName + "-$_write";
+		if(isEvent) {
+			ds_index = "log-" + profile_id + "-" + projName + "-$_write";
+		}
+		else{
+			ds_index = "metric-" + profile_id + "-" + projName + "-$_write";
+		}
 		String ds_type = "_doc";
 		targetApiUrl.append(ds_protocol + "://" + ds_host + ":" + ds_port + "/" + ds_index + "/" + ds_type);
 		logger.fine("targetApi URL for ES is:" + targetApiUrl.toString());
@@ -51,8 +57,8 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 	 * @param payload
 	 */
 	@Override
-	public boolean transmitData(HashMap<String, Object> payload) {
-		logger.fine("Response Code : " + postRequest(new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON)));
+	public boolean transmitData(HashMap<String, Object> payload,boolean isEvent) {
+		logger.fine("Response Code : " + postRequest(new StringEntity(new JSONObject(payload).toString().replaceAll("=", ":"), ContentType.APPLICATION_JSON),isEvent));
 		return true;
 	}
 
