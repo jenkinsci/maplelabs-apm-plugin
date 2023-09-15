@@ -34,14 +34,14 @@ public abstract class SnappyFlow implements IClient {
 	private static final Logger logger = Logger.getLogger(SnappyFlow.class.getName());
 
 	// This will create post method
-	protected void createPost() {
+	protected void createPost(boolean isEvent) {
 		if(post != null) {
 			return;
 		} else {
 			StringBuilder targetToken = new StringBuilder();
 			StringBuilder contentType = new StringBuilder();
 			StringBuilder targetApiUrl = new StringBuilder();
-			getHeaders(contentType, targetToken, targetApiUrl);
+			getHeaders(contentType, targetToken, targetApiUrl,isEvent);
 	
 			post = new HttpPost(targetApiUrl.toString());
 	
@@ -128,10 +128,10 @@ public abstract class SnappyFlow implements IClient {
 	 * @return
 	 */
 	@RequirePOST
-	protected int postRequest(StringEntity data) {
+	protected int postRequest(StringEntity data,boolean isEvent) {
 		int responseCode = 0;
 		try {
-			if(post == null) createPost();
+			if(post == null) createPost(isEvent);
 			post.setEntity(data);
 			logger.info("Post Headers:---------------");
 			Header[] headers = post.getAllHeaders();
@@ -155,5 +155,5 @@ public abstract class SnappyFlow implements IClient {
 	}
 
 	abstract protected void getHeaders(StringBuilder contentType, StringBuilder targetToken,
-			StringBuilder targetApiUrl);
+			StringBuilder targetApiUrl,boolean isEvent);
 }

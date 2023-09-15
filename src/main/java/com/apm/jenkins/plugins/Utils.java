@@ -178,7 +178,7 @@ public class Utils {
             payload.put("date_happened", event.getDate());
             payload.put("priority", event.getPriority().name().toLowerCase());
             payload.put("alert_type", event.getAlertType().name().toLowerCase());
-            return Utils.getGlobalDescriptor().getDestinationClient().transmitData(payload);
+            return Utils.getGlobalDescriptor().getDestinationClient().transmitEventData(payload);
         }
         return false;
     }
@@ -190,7 +190,7 @@ public class Utils {
 	 */
 	public static boolean sendMetrics(HashMap<String,Object> payload) {
 		if(Utils.getGlobalDescriptor().getIsMetricEnabled()) {
-            return Utils.getGlobalDescriptor().getDestinationClient().transmitData(payload);
+            return Utils.getGlobalDescriptor().getDestinationClient().transmitMetricData(payload);
         }
         return false;
 	}
