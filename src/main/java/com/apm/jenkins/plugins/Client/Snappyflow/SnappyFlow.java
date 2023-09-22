@@ -128,7 +128,7 @@ public abstract class SnappyFlow implements IClient {
 	protected int postRequest(StringEntity data,boolean isEvent) {
 		int responseCode = 0;
 		try {
-			if(post == null || hasToggled(isEvent)) createPost(isEvent);
+			if(post == null || isEventToggled(isEvent)) createPost(isEvent);
 			post.setEntity(data);
 			logger.info("Post Headers:---------------");
 			Header[] headers = post.getAllHeaders();
@@ -150,7 +150,7 @@ public abstract class SnappyFlow implements IClient {
 		}
 		return responseCode;
 	}
-	protected boolean hasToggled(boolean currentValue){
+	protected boolean isEventToggled(boolean currentValue){
 		boolean toggled = (currentValue != previousIsEventValue);
 
         // Update the previous value with the current value
