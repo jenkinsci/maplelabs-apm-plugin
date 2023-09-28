@@ -21,7 +21,7 @@ public class SnappyFlowKafkaImpl extends SnappyFlow {
      * @param targetApiUrl
      */
     @Override
-    protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl) {
+    protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl,boolean isEvent) {
         String host = Utils.getGlobalDescriptor().getTargetHost();
         String port = Utils.getGlobalDescriptor().getTargetPort();
         String path = Utils.getGlobalDescriptor().getTargetKafkaPath();
@@ -31,7 +31,12 @@ public class SnappyFlowKafkaImpl extends SnappyFlow {
         String profile = Utils.getGlobalDescriptor().getTargetProfileName();
         targetToken.append(token);
         contentType.append("application/vnd.kafka.json.v2+json");
-        targetApiUrl.append(protocol + "://" + host + ":" + port + "/" + path + "/topics/metric-" + profile );
+        if(isEvent){
+            targetApiUrl.append(protocol + "://" + host + ":" + port + "/" + path + "/topics/metric-" + profile );
+        }
+        else{
+            targetApiUrl.append(protocol + "://" + host + ":" + port + "/" + path + "/topics/log-" + profile );
+        }
         logger.fine("targetApi URL for Kafka is: " + targetApiUrl.toString());
         logger.fine("Authroization for Kafka is: " + targetToken.toString());
     }
@@ -42,7 +47,7 @@ public class SnappyFlowKafkaImpl extends SnappyFlow {
      * @param payload
      */
     @Override
-    public boolean transmitData(HashMap<String, Object> payload) {
+    public boolean transmitData(HashMap<String, Object> payload, boolean isEvent) {
         String KafkaData;
         StringEntity data;
         // For Kafka, need to prefix data with `{\"records\":[{\"value\":"`
@@ -50,7 +55,7 @@ public class SnappyFlowKafkaImpl extends SnappyFlow {
         KafkaData = "{\"records\":[{\"value\":" + KafkaData + "}]}";
         data = new StringEntity(KafkaData, ContentType.APPLICATION_JSON);
 
-        logger.fine("Response Code : " + postRequest(data));
+        logger.fine("Response Code : " + postRequest(data,isEvent));
         return true;
     }
 
