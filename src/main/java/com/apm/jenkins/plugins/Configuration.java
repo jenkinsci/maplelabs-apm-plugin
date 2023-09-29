@@ -8,6 +8,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import com.apm.jenkins.plugins.Client.IClient;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowEsImpl;
 import com.apm.jenkins.plugins.Client.Snappyflow.SnappyFlowKafkaImpl;
+import hudson.Util;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -307,7 +308,9 @@ public class Configuration extends GlobalConfiguration {
 					setTargetAppName(formData.getString("targetAppName"));
 					setTargetProfileName(formData.getString("targetProfileName"));
 					setTargetProjectName(formData.getString("targetProjectName"));
-					setTargetInstanceName(formData.getString("targetInstanceName"));
+					targetInstanceName = formData.getString("targetInstanceName");
+					if(targetInstanceName.compareTo("")==0) setTargetInstanceName(Util.getHostName());
+					else setTargetInstanceName(targetInstanceName);
 					if (formData.containsKey("targetSnappyFlowDestination")) {
 						setTargetSnappyFlowDestination(formData.getString("targetSnappyFlowDestination"));
 						switch (getTargetSnappyFlowDestination()) {
