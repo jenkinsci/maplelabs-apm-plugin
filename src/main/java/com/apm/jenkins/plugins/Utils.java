@@ -194,4 +194,22 @@ public class Utils {
         }
         return false;
 	}
+	public static String replaceCapsWithUnderscore(String project){
+		StringBuilder result = new StringBuilder();
+
+        boolean hasUppercase = false;
+
+        for (int i = 0; i < project.length(); i++) {
+            char currentChar = project.charAt(i);
+
+            if (Character.isUpperCase(currentChar)) {
+                result.append("_").append(Character.toLowerCase(currentChar));
+                hasUppercase = true;
+            } else {
+                result.append(currentChar);
+            }
+        }
+
+        return hasUppercase ? result.toString() : project;
+    }
 }

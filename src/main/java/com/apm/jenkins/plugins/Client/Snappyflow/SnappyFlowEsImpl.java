@@ -28,6 +28,7 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 			logger.severe("ProjectName in is null, please fill the required details of snappyflow in Manage Jenkins");
 			return;
 		}
+		projName = Utils.replaceCapsWithUnderscore(projName);
 		String targetUsername = Utils.getGlobalDescriptor().getTargetESUserName();
 		String targetPassword = Utils.getGlobalDescriptor().getTargetESPassword();
 
