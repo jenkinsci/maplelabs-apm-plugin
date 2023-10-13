@@ -21,8 +21,8 @@
   
     Below are the events reported to snappyflow:     
 
-    1. Job Events - (Build start, failure, success, etc).
-    2. System Events - (System related config change, node status change(offline, temporary offline or online) etc).
+    1. Job Events - (Build start, failure, success, checkout etc).
+    2. Computer Events - (OnTemporaryOnline, OnTemporaryOflline, offline, LaunchFailure)
     3. Security Events - (user authentication, authentication failure, login, logout, login failures etc). 
     
 
@@ -39,8 +39,8 @@ APM jenkins plugin has following modules
 **Collect Metrics/Events on Jenkins:** 
 
 - APM Jenkins Plugin once installed will be running on Jenkins to collect the metrics at regular intervals.
-- Node metrics, job metrics & jenkins metrics (as mentioned above) are collected at regular intervals.
-- In addition to the metrics, various events are also collected in the form of metrics and reported on event basis.
+- Metrics are reported at regular intervals, if metric/event reporting is enabled.
+- In addition to the metrics, various events are also collected in the form of metrics and reported on Event generation.
 
 **Index & Store Data in Snappyflow (Elasticsearch & Kafka):** 
 

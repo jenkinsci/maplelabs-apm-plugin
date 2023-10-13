@@ -1,4 +1,4 @@
-package com.apm.jenkins.plugins.Metrics.DataModel;
+package com.apm.jenkins.plugins.Metrics.Data;
 
 import java.util.List;
 import java.util.HashMap;

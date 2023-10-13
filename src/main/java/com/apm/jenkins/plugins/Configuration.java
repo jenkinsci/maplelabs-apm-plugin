@@ -55,6 +55,8 @@ public class Configuration extends GlobalConfiguration {
 	private boolean isEventEnabled = false;
 	private boolean isMetricEnabled = false;
 
+	private int reportingInterval = 2;
+
 	@DataBoundConstructor
 	public Configuration() {
 		load(); // Load the persisted global configuration
@@ -229,6 +231,14 @@ public class Configuration extends GlobalConfiguration {
 		this.isMetricEnabled = isMetricsEnabled;
 	}
 
+	public int getReportingInterval() {
+		return this.reportingInterval;
+	}
+
+	public void setReportingInterval(int reportingInterval) {
+		this.reportingInterval = reportingInterval;
+	}
+
 	/**
 	 * This function will set config for ES
 	 * 
@@ -297,6 +307,7 @@ public class Configuration extends GlobalConfiguration {
 		destinationClient = null;
 		setIsEventEnabled(formData.getBoolean("isEventEnabled"));
 		setIsMetricEnabled(formData.getBoolean("isMetricEnabled"));
+		setReportingInterval(formData.getInt("reportingInterval"));
 		
 		setTargetPort(formData.getString("targetPort"));
 		setTargetHost(formData.getString("targetHost"));
