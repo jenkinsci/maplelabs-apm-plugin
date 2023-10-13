@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-  This plugin is used to forward metrics to your account at Snappyflow automatically.
+  This plugin will automatically forward metrics, events, and service checks to your Snappyflow account.
 </div>
