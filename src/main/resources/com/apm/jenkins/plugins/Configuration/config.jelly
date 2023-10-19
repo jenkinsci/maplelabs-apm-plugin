@@ -15,89 +15,124 @@
 	<f:section title="APM Maplelabs Plugin">
 	<f:entry title="Target Destination">
 	<f:description>Specify Target destination details below to forward metrics </f:description>
-		<f:entry title="Host" field="targetHost" description="Target url" >
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1; margin-right: 10px;">
+            <f:entry title="Host" field="targetHost" description="Target url" >
 			<f:textbox field="targetHost" default="${targetHost}" checkMethod="post" />
-		</f:entry>
-
-		<f:entry title="Port" field="targetPort" description="Port number" >
-			<f:textbox field="targetPort" default="${targetPort}" checkMethod="post" />
-		</f:entry>
-
-		<f:entry title="Protocol" field="targetProtocol" description="Protocol used for communication" >
-			<f:textbox field="targetProtocol" default="${targetProtocol}" checkMethod="post" />
-		</f:entry>
+			</f:entry>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+            <f:entry title="Port" field="targetPort" description="Port number" >
+			<f:textbox field="targetPort" default="${targetPort}" checkMethod="post" style="width: 100px;" />
+			</f:entry>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+            <f:entry title="Protocol" field="targetProtocol" description="Protocol used for communication" >
+			<f:textbox field="targetProtocol" default="${targetProtocol}" checkMethod="post" style="width: 100px;" />
+			</f:entry>
+        </div>
+    </div>
 
 		<f:radioBlock title="Snappyflow" name="targetDestination" value="Snappyflow" 
         	checked="${instance.targetDestination == 'Snappyflow'}" inline="true">	
 
-			<f:entry title="Snappyflow Project Name" field="targetProjectNameEntry" description="Project Name where API key is validated." >
+			<div style="display: flex; justify-content: space-between;">
+        	<div style="flex: 1; margin-right: 10px;">
+            	<f:entry title="Snappyflow Project Name" field="targetProjectNameEntry" description="Project Name in Snappyflow to which data is sent." >
 				<f:textbox field="targetProjectName" default="${targetProjectName}" checkMethod="post" />
-			</f:entry>
-
-			<f:entry title="Snappyflow Application Name" field="targetAppNameEntry" description="Application Name where API key is validated." >
+				</f:entry>
+        	</div>
+        	<div style="flex: 1;">
+            	<f:entry title="Snappyflow Application Name" field="targetAppNameEntry" description="Application Name in Snappyflow to which data is sent." >
 				<f:textbox field="targetAppName" default="${targetAppName}" checkMethod="post" />
-			</f:entry>
+				</f:entry>
+        	</div>
+    		</div>
 
-			<f:entry title="Snappyflow Instance Name" field="targetInstanceNameEntry" description="Instance Name where API key is validated." >
+			<div style="display: flex; justify-content: space-between;">
+        	<div style="flex: 1; margin-right: 10px;">
+            	<f:entry title="Snappyflow Instance Name (Optional)" field="targetInstanceNameEntry" description="Instance Name of the jenkins which we need to monitor." >
 				<f:textbox field="targetInstanceName" default="${targetInstanceName}" checkMethod="post" />
-			</f:entry>
-
-			<f:entry title="Profile" field="targetProfileName" description="Profile Name" >
+				</f:entry>
+        	</div>
+        	<div style="flex: 1;">
+            	<f:entry title="Profile" field="targetProfileName" description="Profile Name of Snappyflow to which data is sent" >
 					<f:textbox field="targetProfileName" default="${targetProfileName}" checkMethod="post" />
-			</f:entry>
+				</f:entry>
+        	</div>
+    		</div>
 
 			<f:radioBlock title="Snappyflow Elasticsearch" name="targetSnappyFlowDestination" value="SnappyflowES" 
 				checked="${instance.targetSnappyFlowDestination == 'SnappyflowES'}" inline="true">	
-
-				<f:entry title="ES User Name" field="targetESUserName" description="ES User Name" >
+				<div style="display: flex; justify-content: space-between;">
+        		<div style="flex: 1; margin-right: 10px;">
+            		<f:entry title="ES User Name" field="targetESUserName" description="Elastic search User Name" >
 					<f:textbox field="targetESUserName" default="${targetESUserName}" checkMethod="post" />
-				</f:entry>
-
-				<f:entry title="ES Password" field="targetESPassword">
+					</f:entry>
+        		</div>
+        		<div style="flex: 1;">
+            		<f:entry title="ES Password" field="targetESPassword" description="Elastic Search password">
 					<f:password field="targetESPassword" />
-				</f:entry>
+					</f:entry>
+        		</div>
+    			</div>
 			</f:radioBlock>
 
 			<f:radioBlock title="Snappyflow Kafka" name="targetSnappyFlowDestination" value="SnappyflowKafka" 
 				checked="${instance.targetSnappyFlowDestination == 'SnappyflowKafka'}" inline="true">
-
-				<f:entry title="token" field="targetKafkaToken">
+				
+				<f:entry title="token" field="targetKafkaToken" description="Authorization Token">
 					<f:password field="targetKafkaToken" />
 				</f:entry>
-
-				<f:entry title="Path" field="targetKafkaPath" description="Kafka Path" >
-					<f:textbox field="targetKafkaPath" default="${targetKafkaPath}" checkMethod="post" />
-				</f:entry>
-
-				<f:entry title="Kafka Topic" field="targetKafkaTopic" description="Kafka Topic" >
-					<f:textbox field="targetKafkaTopic" default="${targetKafkaTopic}" checkMethod="post" />
-				</f:entry> 
+				<div style="display: flex; justify-content: space-between;">
+        		<div style="flex: 1; margin-right: 10px;">	
+					<f:entry title="Path" field="targetKafkaPath" description="Url of Snappyflow where data is to be sent" >
+						<f:textbox field="targetKafkaPath" default="${targetKafkaPath}" checkMethod="post" />
+					</f:entry>
+				</div>
+				<div style="flex: 1;">
+					<f:entry title="Kafka Topic (Optional)" field="targetKafkaTopic" description="Kafka Topic" >
+						<f:textbox field="targetKafkaTopic" default="${targetKafkaTopic}" checkMethod="post" />
+					</f:entry>
+				</div>
+				</div>
 			</f:radioBlock>
 
 		</f:radioBlock>
 		<f:radioBlock title="Others" name="targetDestination" value="Others" 
-        	checked="${instance.targetDestination == 'Others'}" inline="true">	
-			<f:entry title="User Name" field="targetUserName" description="User Name" >
-				<f:textbox field="targetUserName" default="${targetUserName}" checkMethod="post" />
+        	checked="${instance.targetDestination == 'Others'}" inline="true">
+			<div style="display: flex; justify-content: space-between;">
+        	<div style="flex: 1; margin-right: 10px;">	
+				<f:entry title="User Name" field="targetUserName" description="User Name" >
+					<f:textbox field="targetUserName" default="${targetUserName}" checkMethod="post" />
+				</f:entry>
+			</div>
+        	<div style="flex: 1;">
+            	<f:entry title="Password" field="targetPassword" description="Password">
+					<f:password field="targetPassword" />
+				</f:entry> 
+			</div>
+			</div>      
+			</f:radioBlock>
+</f:entry>
+
+	<div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1; margin-right: 10px;">
+            <f:entry title="Enable Event Reporting" field="isEventEnabled" description="Checking this, enables Reporting of Events.">
+				<f:checkbox/>
 			</f:entry>
-
-            <f:entry title="Password" field="targetPassword">
-				<f:password field="targetPassword" />
-			</f:entry>       
-		</f:radioBlock>
-</f:entry>
-
-<f:entry title="Enable Event Reporting" field="isEventEnabled" description="Checking this, enables Reporting of Events.">
-	<f:checkbox/>
-</f:entry>
-
-<f:entry title="Enable Metric Reporting" field="isMetricEnabled" description="Checking this, enables Reporting of Metrics.">
-	<f:checkbox/>
-</f:entry>
-
-<f:entry title="Metrics Reporting Interval (in minutes)" field="reportingInterval">
-    <f:textbox field="reportingInterval" default="${reportingInterval}" checkMethod="post" />
-</f:entry>
+        </div>
+        <div style="flex: 1; margin-right: 10px;">
+            <f:entry title="Enable Metric Reporting" field="isMetricEnabled" description="Checking this, enables Reporting of Metrics.">
+				<f:checkbox/>
+			</f:entry>
+        </div>
+		<div style="flex: 1;">
+			<f:entry title="Metrics Reporting Interval (in minutes)" field="reportingInterval">
+    			<f:textbox field="reportingInterval" default="${reportingInterval}" checkMethod="post" style="width: 100px;" />
+			</f:entry>
+		</div>
+    </div>
 
 </f:section>
 </j:jelly>
