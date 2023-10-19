@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
@@ -13,6 +14,7 @@
 	<artifactId>MapleLabs-apm</artifactId>
 	<version>${revision}${changelist}</version>
 	<packaging>hpi</packaging>
+
 	<name>Maplelabs APM Plugin</name>
 	<url>https://github.com/jenkinsci/apm-jenkins-plugin</url>
 
@@ -68,41 +70,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-job</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-cps</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-basic-steps</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-durable-task-step</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.13</version>
-		</dependency>
-		<dependency>
-    			<groupId>com.timgroup</groupId>
-    			<artifactId>java-statsd-client</artifactId>
-    			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-    			<groupId>com.cloudbees.jenkins.plugins</groupId>
-    			<artifactId>cloudbees-credentials</artifactId>
-    			<version>3.3</version>
-		</dependency>
-		<dependency>
-    			<groupId>org.jenkins-ci.plugins</groupId>
-    			<artifactId>mailer</artifactId>
-    			<version>438.v02c7f0a_12fa_4</version>
 		</dependency>
 		<dependency>
     			<groupId>org.jenkins-ci.plugins</groupId>
@@ -113,12 +83,6 @@
    			<groupId>org.jenkins-ci.plugins</groupId>
     			<artifactId>git-client</artifactId>
     			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>3.4.0</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>	
 	
