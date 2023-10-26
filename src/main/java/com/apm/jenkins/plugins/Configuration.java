@@ -39,16 +39,19 @@ public class Configuration extends GlobalConfiguration {
 	private String targetProtocol = null;
 	// ES
 	private String targetESUserName = null;
+	// lgtm[jenkins/plaintext-storage]
 	private String targetESPassword = null;
 	private String targetProfileName = null;
 
 	// Kafka
 	private String targetKafkaPath = null;
+	// lgtm[jenkins/plaintext-storage]
 	private String targetKafkaToken = null;
 	private String targetKafkaTopic = null;
 
 	// others
 	private String targetUserName = null;
+	// lgtm[jenkins/plaintext-storage]
 	private String targetPassword = null;
 
 	// enable/diable
