@@ -11,7 +11,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>io.jenkins.plugins</groupId>
-	<artifactId>maplelabs-apm-jenkins</artifactId>
+	<artifactId>maplelabs-apm</artifactId>
 	<version>${revision}${changelist}</version>
 	<packaging>hpi</packaging>
 
