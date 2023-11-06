@@ -50,23 +50,23 @@ public class Utils {
 	 * @return
 	 */
 	public static String getTerminalOP(String[] cmd ) {
-		Process proc;
-		String op = "";
-		try {
-			proc = Runtime.getRuntime().exec(cmd);
-			InputStream in = proc.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
-			StringBuilder out = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				out.append(line);
-			}
-			reader.close();
-			op = out.toString();
-		} catch (IOException e) {
-			logger.warning("Terminal cmd execution error : "+e.toString());
-		}
-		return op;
+		ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+    	String op = "";
+    	try {
+    	    Process proc = processBuilder.start();
+    	    InputStream in = proc.getInputStream();
+    	    BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+    	    StringBuilder out = new StringBuilder();
+    	    String line;
+    	    while ((line = reader.readLine()) != null) {
+    	        out.append(line);
+    	    }
+    	    reader.close();
+    	    op = out.toString();
+    	} catch (IOException e) {
+    	    logger.warning("Terminal cmd execution error: " + e.toString());
+    	}
+    	return op;
 	}
 
 	/**
