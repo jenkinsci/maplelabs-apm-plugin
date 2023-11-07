@@ -10,7 +10,7 @@
 		<version>4.71</version>
 		<relativePath/>
 	</parent>
-	<groupId>io.jenkins.plugins</groupId>
+	<groupId>org.maplelabs.jenkins.plugins</groupId>
 	<artifactId>maplelabs-apm</artifactId>
 	<version>${revision}${changelist}</version>
 	<packaging>hpi</packaging>
@@ -70,19 +70,23 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
+    		<groupId>org.jenkins-ci.plugins</groupId>
+    		<artifactId>apache-httpcomponents-client-4-api</artifactId>
 		</dependency>
 		<dependency>
-    		<groupId>org.jenkins-ci.plugins</groupId>
-    		<artifactId>git</artifactId>
-    		<version>3.6.0</version>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>20231013</version>
+		</dependency>
+		<dependency>
+    			<groupId>org.jenkins-ci.plugins</groupId>
+    			<artifactId>git</artifactId>
+    			<version>5.0.0</version>
 		</dependency>
 		<dependency>
    			<groupId>org.jenkins-ci.plugins</groupId>
-    		<artifactId>git-client</artifactId>
-    		<version>2.5.0</version>
+    			<artifactId>git-client</artifactId>
+    			<version>4.1.0</version>
 		</dependency>
 	</dependencies>	
 	
