@@ -1,0 +1,4 @@
+Jenkins URL: http://172.26.18.4:8080
+Username: admin
+Password: Maplelabs@123
+api: 11912d6752c64abc7a2839e23e740937bb
