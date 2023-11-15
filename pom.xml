@@ -10,7 +10,7 @@
 		<version>4.71</version>
 		<relativePath/>
 	</parent>
-	<groupId>org.maplelabs.jenkins.plugins</groupId>
+	<groupId>io.jenkins.plugins</groupId>
 	<artifactId>maplelabs-apm</artifactId>
 	<version>${revision}${changelist}</version>
 	<packaging>hpi</packaging>
