@@ -49,9 +49,6 @@ public abstract class SnappyFlow implements IClient {
 	}
 	/**
 	 * This function will default tags for snappyflow
-	 * 
-	 * @param docType
-	 * @return
 	 */
 	public static HashMap<String, Object> getSnappyflowTags(String docType) {
 
@@ -79,10 +76,6 @@ public abstract class SnappyFlow implements IClient {
 
 	/**
 	 * This function return http authentication detail as a String
-	 * 
-	 * @param username
-	 * @param password
-	 * @return
 	 */
 	protected String getBasicAuthenticationHeader(String username, String password) {
 		String valueToEncode = username + ":" + password;
@@ -92,8 +85,6 @@ public abstract class SnappyFlow implements IClient {
 
 	/**
 	 * This function will return http client
-	 * 
-	 * @return
 	 */
 	protected HttpClient getClient() {
 		if (client != null)
@@ -120,9 +111,6 @@ public abstract class SnappyFlow implements IClient {
 
 	/**
 	 * This function will do HTTP POST andreturns response code
-	 * 
-	 * @param data
-	 * @return
 	 */
 	@RequirePOST
 	protected int postRequest(StringEntity data,boolean isEvent) {

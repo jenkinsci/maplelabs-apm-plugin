@@ -103,9 +103,6 @@ public abstract class AbstractEvent implements IEvent {
 
     /**
      * Get given computers name
-     * 
-     * @param computer
-     * @return
      */
     protected static String getNodeName(Computer computer) {
         if (computer == null) {
@@ -120,8 +117,6 @@ public abstract class AbstractEvent implements IEvent {
 
     // /**
     //  * This function will assembel details and call client
-    //  * 
-    //  * @return
     //  */
     // protected boolean sendEvent() {
     //     if(Util.getGlobalDescriptor().getIsEventEnabled()) {

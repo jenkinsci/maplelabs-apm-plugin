@@ -11,9 +11,6 @@ public class ComputerEventCollectorImpl extends AbstractEvent implements IComput
 
     /**
      * This function will called when temp offline node is backs online
-     * 
-     * @param computer
-     * @return true if request processed
      */
     @Override
     public void collectEventData(Computer computer) {
@@ -28,10 +25,6 @@ public class ComputerEventCollectorImpl extends AbstractEvent implements IComput
 
     /**
      * This function will called when node is offline/ temp offline
-     * 
-     * @param computer
-     * @param cause
-     * @return true if request processed
      */
     @Override
     public void collectEventData(Computer computer, OfflineCause cause, Type type) {
@@ -63,9 +56,6 @@ public class ComputerEventCollectorImpl extends AbstractEvent implements IComput
 
     /**
      * This function will called when node is failed to launch
-     * 
-     * @param computer
-     * @return true if request processed
      */
     @Override
     public void collectEventData(Computer computer, TaskListener taskListener) {

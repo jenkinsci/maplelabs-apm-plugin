@@ -46,8 +46,6 @@ public class Utils {
 	
 	/**
 	 * This function will execute command in terminal and return output
-	 * @param cmd
-	 * @return
 	 */
 	public static String getTerminalOP(String[] cmd ) {
 		ProcessBuilder processBuilder = new ProcessBuilder(cmd);
@@ -72,9 +70,6 @@ public class Utils {
 	/**
 	 * Validator function to ensure that the hostname is valid. Also, fails on
 	 * empty String.
-	 *
-	 * @param hostname - A String object containing the name of a host.
-	 * @return a boolean representing the validity of the hostname
 	 */
 	public static Boolean isValidHostName(String hostname) {
 		if (hostname == null) return false;
@@ -106,8 +101,6 @@ public class Utils {
 
 	/**
 	 * This function will get hostname
-	 * @param envVars jenkins env
-	 * @return hostname
 	 */
 	public static String getHostName(EnvVars envVars) {
 		String hostname = null;
@@ -154,11 +147,6 @@ public class Utils {
 
 	/**
 	 * This function will get a value if value not found return defaultvalue
-	 * 
-	 * @param <T>          Generic Type
-	 * @param value
-	 * @param defaultValue
-	 * @return
 	 */
 	public static <T> T getValue(T value, T defaultValue) {
 		return value != null ? value : defaultValue;
@@ -166,8 +154,6 @@ public class Utils {
 
 	/**
      * This function will assembel Event details and call client
-     * 
-     * @return
      */
     public static boolean sendEvent(IEvent event) {
         if(Utils.getGlobalDescriptor().getIsEventEnabled()) {
@@ -185,8 +171,6 @@ public class Utils {
 
 	/**
 	 * This function will send metrics if Enable Metric is selected
-	 * @param payload
-	 * @return
 	 */
 	public static boolean sendMetrics(HashMap<String,Object> payload) {
 		if(Utils.getGlobalDescriptor().getIsMetricEnabled()) {

@@ -15,10 +15,6 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 
 	/**
 	 * This function will set http header
-	 * 
-	 * @param contentType
-	 * @param targetToken
-	 * @param targetApiUrl
 	 */
 	@Override
 	protected void getHeaders(StringBuilder contentType, StringBuilder targetToken, StringBuilder targetApiUrl, boolean isEvent) {
@@ -54,8 +50,6 @@ public class SnappyFlowEsImpl extends SnappyFlow {
 
 	/**
 	 * This function will post payload to snappyflow ES
-	 * 
-	 * @param payload
 	 */
 	@Override
 	public boolean transmitData(HashMap<String, Object> payload,boolean isEvent) {

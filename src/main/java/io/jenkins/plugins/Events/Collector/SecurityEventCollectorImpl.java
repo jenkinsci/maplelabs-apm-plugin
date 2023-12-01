@@ -9,9 +9,6 @@ public class SecurityEventCollectorImpl extends AbstractEvent implements ISecuri
 
     /**
      * This function will called when a user is authenticated
-     * 
-     * @param details
-     * @return true if request processed
      */
     @Override
     public void collectEventData(UserDetails details) {
@@ -25,9 +22,6 @@ public class SecurityEventCollectorImpl extends AbstractEvent implements ISecuri
 
     /**
      * This function will called when a user created/ failed to login/ login/ logout
-     * 
-     * @param details
-     * @return true if request processed
      */
     @Override
     public void collectEventData(String name, ISecurityEvent.Type type) {

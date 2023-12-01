@@ -16,9 +16,6 @@ public class BuildEventCollectorImpl extends AbstractBuildEvent implements IBuil
 
     /**
      * Create Build details
-     * 
-     * @param run
-     * @param listener
      */
     public BuildEventCollectorImpl(Run run, TaskListener listener) throws IOException, InterruptedException {
         super(run, listener);
@@ -26,8 +23,6 @@ public class BuildEventCollectorImpl extends AbstractBuildEvent implements IBuil
 
     /**
      * This function will handle Start and completion of a job
-     * 
-     * @param type
      */
     @Override
     public void collectEventData(Type type) {

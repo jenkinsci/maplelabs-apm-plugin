@@ -104,8 +104,6 @@ public class QueueMetricsImpl implements IPublishMetrics {
 
     /**
      * This function will set queue details and send details to client
-     * 
-     * @params details
      */
     @Override
     public HashMap<String, Object> collectMetrics(Object details) {

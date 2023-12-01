@@ -93,8 +93,6 @@ public class JenkinsMetricsImpl implements IPublishMetrics {
 
     /**
      * This function will set Jenkins properties and send details to client
-     * 
-     * @param details
      */
     @Override
     public HashMap<String, Object> collectMetrics(Object details) {

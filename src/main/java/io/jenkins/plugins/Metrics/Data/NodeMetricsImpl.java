@@ -76,8 +76,6 @@ public class NodeMetricsImpl implements IPublishMetrics {
 
     /**
      * This function will set node properties and send details to client
-     * 
-     * @param details
      */
     @Override
     public HashMap<String, Object> collectMetrics(Object details) {
