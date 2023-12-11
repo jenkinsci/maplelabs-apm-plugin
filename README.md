@@ -1,4 +1,4 @@
-# snappyflow-jenkins-plugin
+# apm-jenkins-plugin
 Jenkins monitoring plugin will provide ability to monitor the Jenkins operations.
 It will give high-level overview of how the jobs are performing and their current status.
 
@@ -17,7 +17,7 @@ It takes four simple steps to gain observability into Jenkins CI/CD pipeline.
 To configure your snappyflow-jenkins-Plugin, navigate to the Manage Jenkins -> Configure System page on your Jenkins installation.  
 Once there, scroll down to find the APM Maplelabs Plugin section:
 
-![Configure SnappyFlow](https://github.com/maplelabs/apm-jenkins-plugin/blob/releasev1_dev/images/apmPluginConfiguration.png)
+![Configure SnappyFlow](https://github.com/jenkinsci/maplelabs-apm-plugin/blob/releasev2_dev/images/apmPluginConfiguration.png)
 # Description of the input fields:
 **Target Url** : It's the end point address where the data will be posted by the plugin
 
@@ -44,5 +44,5 @@ This is the interval at which the metrics are collected and reported to the end 
 # Contribution
 This plugin is in development phase currently.  
 If you are willing to contribute, follow below link  
-[Contribution Details](https://github.com/snappyflow/snappyflow-jenkins-plugin/blob/releasev1_dev/Contribution.md)
+[Contribution Details](https://github.com/jenkinsci/maplelabs-apm-plugin/blob/releasev2_dev/Contribution.md)
 
